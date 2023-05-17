@@ -8,7 +8,7 @@ using System.Windows;
 using System.Threading;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Shapes;
-
+using Avalonia.Svg.Skia;
 namespace Avalonia3.Views
 {
     public partial class MainWindow : Window

@@ -10,6 +10,9 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
+    <None Remove="Assets\clipboard-check-svgrepo-com.svg" />
+    <None Remove="Assets\clipboard-copy-memory-editor-copy-paste-svgrepo-com.svg" />
+    <None Remove="Assets\file-add-svgrepo-com.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +25,7 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Svg.Skia" Version="0.10.18" />
     <PackageReference Include="CodingSeb.Avalonia.EventSetter" Version="1.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="MessageBox.Avalonia" Version="2.1.0" />

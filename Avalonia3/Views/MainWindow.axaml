@@ -4,6 +4,7 @@
 		xmlns:services="using:Avalonia3.Services"
 		xmlns:e="using:Avalonia.Styling"
 		xmlns:models="using:Avalonia3.Models"
+		xmlns:svg="using:Avalonia.Svg.Skia"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -16,23 +17,80 @@
 		<services:TypePropToColorConverter x:Key="TypePropToColorConverter"/>
 		<services:JvalueConverter x:Key="ValueConverter"/>
 	</Window.Resources>
-	<Window.DataTemplates>
-	
-	</Window.DataTemplates>
+	<Window.Styles>
+
+		
+		<Style Selector="TabControl WrapPanel">
+			<Setter Property="Background" Value="#bcbde5"/>
+			<Setter Property="Height" Value="35"/>
+		</Style>
+		<Style Selector="TabItem">
+			<Setter Property="FontSize" Value="15"/>
+		
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
+		
+		<Style Selector="TabItem:selected">
+			<Setter Property="Foreground" Value="#2B579A"/>
+			<Setter Property="Margin" Value="0 0 0 0"/>
+			<Setter Property="Padding" Value="0 0 0 0"/>
+			<Setter Property="Height" Value="1"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="BorderBrush" Value="Red"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Template">
+				<ControlTemplate>
+					<DockPanel>
+						<Button>
+							<DockPanel>
+							<TextBlock Text="{Binding Header}"></TextBlock>
+							<Image  Height="15" Width="15" Margin="5 0 0 0" Cursor="Hand"  Source="C:\Users\kacper\source\repos\Avalonia3\Avalonia3\images\cross.png"></Image>
+							</DockPanel>
+						</Button>
+						
+					</DockPanel>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+
+	</Window.Styles>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="30"></RowDefinition>
 			<RowDefinition Height="*"></RowDefinition>
 		</Grid.RowDefinitions>
 
-		<DockPanel Grid.Row="0" Background="#d7ecff" >
-			<Button Background="#e9e9fc" FontWeight="SemiBold" Foreground="#5e5e5e" >Nowy plik</Button>
+		<DockPanel Grid.Row="0" Background="#d7ecff">
+			<DockPanel.Styles>
+				<Style Selector="Button">
+					<Setter Property="Background" Value="#e9e9fc"/>
+					<Setter Property="FontWeight" Value="SemiBold"/>
+					<Setter Property="Foreground" Value="#5e5e5e"/>
+					<Setter Property="Margin" Value="0 0 2 0"/>
+				
+				</Style>
+			</DockPanel.Styles>
+			<Button>
+				<DockPanel>
+					<Image Source="{SvgImage /Assets/file-add-svgrepo-com.svg}"/>
+					<TextBlock Text=" Nowy Plik"></TextBlock>
+				</DockPanel>
+			</Button>
+			<Button>
+				<DockPanel>
+					<Image Source="{SvgImage /Assets/clipboard-copy-memory-editor-copy-paste-svgrepo-com.svg}"/>
+					<TextBlock Text=" Dodaj ze schowka"></TextBlock>
+				</DockPanel>
+			</Button>
 		</DockPanel>
-		<TabControl  Grid.Row="1" Name="tabControl" Initialized="TabLoaded">
+		<TabControl Background="AliceBlue" Grid.Row="1" Name="tabControl" Initialized="TabLoaded">
 
 			<TabControl.ItemTemplate>
 				<DataTemplate>
-					<TextBlock Text="{Binding Header}"></TextBlock>
+					<DockPanel>
+						<TextBlock Text="{Binding Header}"></TextBlock>
+						
+					</DockPanel>
 				</DataTemplate>
 			</TabControl.ItemTemplate>
 
@@ -50,13 +108,13 @@
 							<RowDefinition Height="*" ></RowDefinition>
 						</Grid.RowDefinitions>
 						<DockPanel Grid.Column="0" Grid.Row="0"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  LastChildFill="True">
-							<TextBox IsReadOnly="True" Text="{Binding Text}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+							<TextBox IsHitTestVisible="False" Margin="10 0 10 20" IsReadOnly="True" Text="{Binding Text}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
 						</DockPanel>
 
 
 						<DockPanel  Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True">
 							
-							<TreeView   Items="{Binding Json}" Padding="20" Margin="3" Name="JsonTreeView" DockPanel.Dock="Bottom" BorderThickness="0"  HorizontalAlignment="Stretch">
+							<TreeView Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 0 0 20" Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
 								<TreeView.DataTemplates>
 									<TreeDataTemplate  DataType="models:JObjectTree" ItemsSource="{Binding ChildrenCollection}" >
 										<StackPanel  Orientation="Horizontal" Margin="1" Tag="{Binding}">
