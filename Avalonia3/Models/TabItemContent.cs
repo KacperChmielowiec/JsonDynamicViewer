@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using ReactiveUI;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -7,25 +10,28 @@ using System.Threading.Tasks;
 
 namespace Avalonia3.Models
 {
-    public class TabItemContent : INotifyPropertyChanged
-    {
+    public class TabItemContent : ReactiveObject { 
+
         private string _header;
 
 
         public string Header
         {
-            get { return _header; }
-            set { _header = value; OnPropertyChanged("Header"); }
+            get => _header;
+            set => this.RaiseAndSetIfChanged(ref _header, value);
         }
 
         private string _text;
 
-
+        public TabItemContent()
+        {
+           
+        }
 
         public string Text
         {
             get { return _text; }
-            set { _text = value; OnPropertyChanged("Text"); }
+            set { this.RaiseAndSetIfChanged(ref _text, value); }
         }
 
 
@@ -34,11 +40,11 @@ namespace Avalonia3.Models
 
         public JContainerTree Json
         {
-
-            get { return _json; }
-            set { _json = value; OnPropertyChanged("Json"); }
-
+            get => _json;
+            set => this.RaiseAndSetIfChanged(ref _json, value);
         }
+
+
 
         public int Tag { get; set; }
 
@@ -46,12 +52,12 @@ namespace Avalonia3.Models
 
         public JsonFile ctx { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //private void OnPropertyChanged(string propertyName)
+        //{
+        //    if (PropertyChanged != null)
+        //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
 
 
     }

@@ -10,6 +10,20 @@ namespace Avalonia3.Models
 {
     internal class JValueTree :  ItreeToken
     {
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ItreeToken);
+        }
+        public bool Equals(ItreeToken obj)
+        {
+            return false;
+        }
+
+
         public enum ValueType
         {
             Boolean, Byte, Char, Decimal, Double, Int, String, Null, Float

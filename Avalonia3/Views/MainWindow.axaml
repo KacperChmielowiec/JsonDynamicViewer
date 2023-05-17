@@ -1,21 +1,105 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Avalonia3.ViewModels"
-		xmlns:m="using:Avalonia3.Models"
+		xmlns:services="using:Avalonia3.Services"
+		xmlns:e="using:Avalonia.Styling"
+		xmlns:models="using:Avalonia3.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Avalonia3.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Avalonia3">
+	<Window.Resources>
+		<services:JarrayLengthConverter x:Key="JArrayLengthConverter"/>
+		<services:TypeConverter x:Key="TypeConverter"/>
+		<services:TypePropToColorConverter x:Key="TypePropToColorConverter"/>
+		<services:JvalueConverter x:Key="ValueConverter"/>
+	</Window.Resources>
+	<Window.DataTemplates>
+	
+	</Window.DataTemplates>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+		</Grid.RowDefinitions>
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-		<vm:MainModelView/>
-    </Design.DataContext>
+		<DockPanel Grid.Row="0" Background="#d7ecff" >
+			<Button Background="#e9e9fc" FontWeight="SemiBold" Foreground="#5e5e5e" >Nowy plik</Button>
+		</DockPanel>
+		<TabControl  Grid.Row="1" Name="tabControl" Initialized="TabLoaded">
+
+			<TabControl.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Header}"></TextBlock>
+				</DataTemplate>
+			</TabControl.ItemTemplate>
+
+			<TabControl.ContentTemplate>
 
 
+				<DataTemplate x:DataType="models:TabItemContent">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition  Width="*"></ColumnDefinition>
+							<ColumnDefinition  Width="*"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
 
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" ></RowDefinition>
+						</Grid.RowDefinitions>
+						<DockPanel Grid.Column="0" Grid.Row="0"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  LastChildFill="True">
+							<TextBox IsReadOnly="True" Text="{Binding Text}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+						</DockPanel>
+
+
+						<DockPanel  Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True">
+							
+							<TreeView   Items="{Binding Json}" Padding="20" Margin="3" Name="JsonTreeView" DockPanel.Dock="Bottom" BorderThickness="0"  HorizontalAlignment="Stretch">
+								<TreeView.DataTemplates>
+									<TreeDataTemplate  DataType="models:JObjectTree" ItemsSource="{Binding ChildrenCollection}" >
+										<StackPanel  Orientation="Horizontal" Margin="1" Tag="{Binding}">
+											<TextBlock Text=" "/>
+											<TextBlock  Text="{Binding Path='Type', StringFormat={}{0 } {{ }} }" Foreground="#729fcf"/>
+										</StackPanel>
+									</TreeDataTemplate>
+									<TreeDataTemplate DataType="models:JPropertyTree" ItemsSource="{Binding Value.ChildrenCollection}" >
+										<StackPanel Orientation="Horizontal" Margin="1" Tag="{Binding}">
+											
+											<TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+											<TextBlock Text=" : "/>
+											<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0" IsVisible="{Binding Value.Type, Converter={StaticResource	TypeConverter},ConverterParameter=Array}"/>
+											<TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+											<TextBlock Text="{}{ }" Foreground="#729fcf" IsVisible="{Binding Value.Type, Converter={StaticResource	TypeConverter},ConverterParameter=Object}"/>
+											<TextBlock Text=" " IsVisible="{Binding Value.Type, Converter={StaticResource TypeConverter},ConverterParameter=Value}" />
+											<TextBlock TextWrapping="Wrap" Text="{Binding Value, Converter={StaticResource ValueConverter}}" Foreground="{Binding Converter={StaticResource TypePropToColorConverter}}" />
+											
+										</StackPanel>
+									</TreeDataTemplate>
+									<TreeDataTemplate DataType="models:JArrayTree" ItemsSource="{Binding ChildrenCollection}">
+										<StackPanel Orientation="Horizontal" Margin="1" Tag="{Binding}">
+											<TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+											<TextBlock Text=" : "/>
+											<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+											<TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+										</StackPanel>
+									</TreeDataTemplate>
+									
+								</TreeView.DataTemplates>
+							</TreeView>
+
+						</DockPanel>
+
+					</Grid>
+				</DataTemplate>
+			</TabControl.ContentTemplate>
+
+
+		</TabControl>
+
+	</Grid>
+	
+	
 
 </Window>

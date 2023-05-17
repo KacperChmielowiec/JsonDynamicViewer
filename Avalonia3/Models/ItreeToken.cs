@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Avalonia3.Models
 {
-    public interface ItreeToken
+    public interface ItreeToken 
     {
         public enum JTokenType
         {

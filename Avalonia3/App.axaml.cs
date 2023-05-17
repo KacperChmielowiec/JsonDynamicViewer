@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia3.ViewModels;
 using Avalonia3.Views;
+using System;
 
 namespace Avalonia3
 {
@@ -10,6 +11,7 @@ namespace Avalonia3
     {
         public override void Initialize()
         {
+            GC.KeepAlive(typeof(Avalonia.Styling.EventSetter).Assembly);
             AvaloniaXamlLoader.Load(this);
         }
 
@@ -22,7 +24,7 @@ namespace Avalonia3
                     DataContext = new MainModelView()
                 };
             }
-
+           
             base.OnFrameworkInitializationCompleted();
         }
     }

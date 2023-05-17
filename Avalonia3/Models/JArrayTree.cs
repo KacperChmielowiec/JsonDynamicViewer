@@ -16,8 +16,19 @@ namespace Avalonia3.Models
             this.Type = ItreeToken.JTokenType.Array;
             this.ChildrenCollection = new ObservableCollection<ItreeToken>();
         }
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ItreeToken);
+        }
+        public bool Equals(ItreeToken obj)
+        {
+            return false;
+        }
 
-       
         public override void Add(ItreeToken token)
         {
            if(token is JPropertyTree)

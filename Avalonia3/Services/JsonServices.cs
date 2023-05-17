@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using Avalonia3.ViewModels;
 using Avalonia3.Models;
 using MessageBox.Avalonia.Enums;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls;
+using Avalonia.Collections;
+using System.Collections.ObjectModel;
 
 namespace Avalonia3.Services
 {
@@ -60,16 +64,20 @@ namespace Avalonia3.Services
                 var json = _item.TreeToken;
                 var desc = _item.TreeToken.ToString();
 
-                var tab = Application.Current.MainWindow.FindName("tabControl") as TabControl;
-                if (result == MessageBoxResult.No && View.Schemes.Count() > 0)
+                var tab = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow.Find<TabControl>("tabControl");
+
+                if (result == ButtonResult.No && View.Schemes.Count() > 0)
                 {
                     View.Schemes[View.Selected].Text = desc;
-          
+
                     View.Schemes[View.Selected].Json = json as JContainerTree;
                     View.Schemes[View.Selected].File = guid;
                     View.Schemes[View.Selected].ctx = _data;
 
-                    tab.Items[View.Selected] = View.Schemes[View.Selected];
+                    var temp = tab.Items as AvaloniaList<TabItemContent>;
+                    temp[View.Selected] = View.Schemes[View.Selected];
+                    tab.Items = temp;
+
                     tab.SelectedIndex = View.Selected;
 
                     View.Schemes[View.Selected].Header = _data.path.Split("\\").Last();

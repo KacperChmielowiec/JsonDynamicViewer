@@ -1,4 +1,5 @@
 ﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Avalonia3.Models
         public JContainerTree() {
 
         }
-        public ObservableCollection<ItreeToken> ChildrenCollection;
+        public ObservableCollection<ItreeToken> ChildrenCollection { get; set; }
         public abstract IList<ItreeToken> Children();
         public abstract void Add(ItreeToken token);
 

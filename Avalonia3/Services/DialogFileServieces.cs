@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia3.Models;
+using Avalonia3.Views;
 using Newtonsoft.Json;
 
 namespace Avalonia3.Services
@@ -28,25 +30,27 @@ namespace Avalonia3.Services
         
         }
 
-        public Guid Show()
+        public async Task<Guid> Show()
         {
 
             var dialog = new OpenFileDialog();
 
             
 
-            dialog.FileName = this.Name ?? "Document"; 
-            dialog.DefaultExt = this.Ext ?? ".json"; // Default file extension
-            dialog.Filters = this.Filter ?? "Text documents (.json)|*.json"; // Filter files by extension
+            dialog.InitialFileName = this.Name ?? "Document";
+
+            //this.Filter ?? "Text documents (.json)|*.json"; // Filter files by extension
+            dialog.Filters = new List<FileDialogFilter>() { new FileDialogFilter { Name="*", Extensions= new List<string>() { "json" } } };
 
             // Show open file dialog box
-            bool? result = dialog.ShowDialog();
+            var window = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
+            var result = await dialog.ShowAsync(window);
 
             // Process open file dialog box results
-            if (result == true)
+            if (result != null)
             {
                 // Open document
-                string filename = dialog.FileName;
+                string filename = result[0];
 
                 string fileContent = "";
 

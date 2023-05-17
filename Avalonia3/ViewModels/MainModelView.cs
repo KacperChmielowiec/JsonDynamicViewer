@@ -15,6 +15,10 @@ using Avalonia3.Services;
 using Avalonia3.Models;
 using Avalonia.Controls.ApplicationLifetimes;
 using System.Threading.Tasks;
+using Avalonia.Collections;
+using Avalonia3.Views;
+using System.Collections.Generic;
+using Avalonia.Controls.Generators;
 
 namespace Avalonia3.ViewModels
 {
@@ -32,7 +36,7 @@ namespace Avalonia3.ViewModels
 
         public ItreeToken SelectedItem { get; set; }
 
-
+        Window Parent { get; set; }
 
         [ObservableProperty]
         private int _selected;
@@ -41,7 +45,8 @@ namespace Avalonia3.ViewModels
         [ObservableProperty]
         private bool _enable = false;
 
-
+        [ObservableProperty]
+        private string _text1 = "";
 
 
         public ObservableCollection<TabItemContent> Schemes { get; set; } = new ObservableCollection<TabItemContent>();
@@ -52,10 +57,12 @@ namespace Avalonia3.ViewModels
                 new MessageBoxStandardParams
                 {
                     ButtonDefinitions = ButtonEnum.YesNo,
-                    ContentTitle = "title",
-                    ContentHeader = "header",
-                    ContentMessage = "Message",
-                    WindowIcon = new WindowIcon("icon-rider.png")
+                    ContentTitle = "Message",
+                    ContentHeader = "Plik Json",
+                    ContentMessage = "Czy chcesz otowrzyć nowe okno ",
+                    WindowIcon = new WindowIcon("C:\\Users\\kacper\\source\\repos\\Avalonia3\\Avalonia3\\images\\question_mark.png"),
+                    Icon = MessageBox.Avalonia.Enums.Icon.Question,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
                 });
         }
 
@@ -72,9 +79,9 @@ namespace Avalonia3.ViewModels
             Dialog = new DialogFileServieces("JsonDOM", ".json", "Text documents (.json)|*.json");
             MainModelView.instance = this;
             this.Selected = 0;
-
+            Parent = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
+            TreeContainerIndex s = new TreeContainerIndex();
         }
-
         private void OpenModifyDialog()
         {
 
@@ -88,8 +95,8 @@ namespace Avalonia3.ViewModels
             Selected = Schemes.Count;
             header = String.Format("{0} {1}", header, Selected + 1);
 
-            var _itemTab = new TabItemContent() { Header = header, Json = default(JContainerTree), Text = content, Tag = this.Schemes.Count };
-
+            var _itemTab = new TabItemContent() { Header = header, Text = content, Tag = this.Schemes.Count };
+            
             this.Schemes.Add(_itemTab);
             this.AddTab(Selected);
 
@@ -101,11 +108,16 @@ namespace Avalonia3.ViewModels
         {
 
             //var tab = Application.Current.MainWindow.FindName("tabControl") as TabControl;
-            var tab = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow.Find<Grid>("grid");
+            var window = Parent as Window;
+            var tab = window.FindControl<TabControl>("tabControl");
+
+            var temp = tab.Items as AvaloniaList<TabItemContent> ?? new AvaloniaList<TabItemContent>();
+            temp.Add(this.Schemes[i]);
+            tab.Items = temp;
+            tab.SelectedIndex = temp.Count - 1;
 
 
-            //tab.Items.Add(this.Schemes[i]);
-            //tab.SelectedIndex = tab.Items.Count - 1;
+        
 
 
 
@@ -128,13 +140,13 @@ namespace Avalonia3.ViewModels
 
         private async void LoadDialog()
         {
-            var result = await TabDialog().Show();
+            var result = await TabDialog().Show(Parent);
 
-            if (result != ButtonResult.Yes)
+            if (result != null)
             {
                 try
                 {
-                    Guid guid = Dialog.Show();
+                    Guid guid = await Dialog.Show();
 
                     if (guid != Guid.Empty)
                         this.LoadDialogJson(result, guid);
