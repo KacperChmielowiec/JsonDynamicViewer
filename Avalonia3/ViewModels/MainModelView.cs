@@ -19,6 +19,7 @@ using Avalonia.Collections;
 using Avalonia3.Views;
 using System.Collections.Generic;
 using Avalonia.Controls.Generators;
+using Avalonia;
 
 namespace Avalonia3.ViewModels
 {
@@ -47,7 +48,6 @@ namespace Avalonia3.ViewModels
 
         [ObservableProperty]
         private string _text1 = "";
-
 
         public ObservableCollection<TabItemContent> Schemes { get; set; } = new ObservableCollection<TabItemContent>();
 

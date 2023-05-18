@@ -11,6 +11,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls;
 using Avalonia.Collections;
 using System.Collections.ObjectModel;
+using Avalonia.Markup.Xaml.Templates;
+using Avalonia.Controls.Templates;
 
 namespace Avalonia3.Services
 {
@@ -65,11 +67,11 @@ namespace Avalonia3.Services
                 var desc = _item.TreeToken.ToString();
 
                 var tab = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow.Find<TabControl>("tabControl");
-
+               
                 if (result == ButtonResult.No && View.Schemes.Count() > 0)
                 {
                     View.Schemes[View.Selected].Text = desc;
-
+                 
                     View.Schemes[View.Selected].Json = json as JContainerTree;
                     View.Schemes[View.Selected].File = guid;
                     View.Schemes[View.Selected].ctx = _data;

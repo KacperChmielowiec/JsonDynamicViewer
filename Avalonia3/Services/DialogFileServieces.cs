@@ -54,18 +54,8 @@ namespace Avalonia3.Services
 
                 string fileContent = "";
 
-                StringBuilder sb = new StringBuilder();
-
-                using (StreamReader sr = new StreamReader(filename))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        // Przetwarzaj każdą linijkę osobno
-                      sb.AppendLine(line);
-                    }
-                }
-                fileContent = sb.ToString();
+              
+                fileContent = File.ReadAllText(filename);
 
                 JsonTextReader reader = new JsonTextReader(new StringReader(fileContent));
                 Dictionary<Guid, ObjectContext> keyValuePairs = new Dictionary<Guid, ObjectContext>();
@@ -74,15 +64,15 @@ namespace Avalonia3.Services
                 try
                 {
 
-                    var jObject = Process.ProcessJsonData(reader, keyValuePairs);
+                    var jObject = await Process.ProcessJsonData(reader, keyValuePairs);
                     JsonMap.files.Add(new JsonFile(_guid, keyValuePairs, jObject.Id, filename));
 
                     return _guid;
 
                 }
-                catch(ApplicationException e)
+                catch(Exception e)
                 {
-                    throw new ApplicationException();
+                    throw;
                 }
                 
                 

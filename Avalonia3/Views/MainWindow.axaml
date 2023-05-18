@@ -1,10 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Avalonia3.ViewModels"
+		xmlns:v="using:Avalonia3.Views"
 		xmlns:services="using:Avalonia3.Services"
 		xmlns:e="using:Avalonia.Styling"
 		xmlns:models="using:Avalonia3.Models"
 		xmlns:svg="using:Avalonia.Svg.Skia"
+		xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -17,9 +19,12 @@
 		<services:TypePropToColorConverter x:Key="TypePropToColorConverter"/>
 		<services:JvalueConverter x:Key="ValueConverter"/>
 	</Window.Resources>
+	<Window.DataContext>
+		<vm:MainModelView/>
+	</Window.DataContext>
 	<Window.Styles>
 
-		
+		<StyleInclude Source="avares://AvaloniaEdit/AvaloniaEdit.xaml" />
 		<Style Selector="TabControl WrapPanel">
 			<Setter Property="Background" Value="#bcbde5"/>
 			<Setter Property="Height" Value="35"/>
@@ -70,7 +75,7 @@
 				
 				</Style>
 			</DockPanel.Styles>
-			<Button>
+			<Button Command="{Binding LoadDialog}">
 				<DockPanel>
 					<Image Source="{SvgImage /Assets/file-add-svgrepo-com.svg}"/>
 					<TextBlock Text=" Nowy Plik"></TextBlock>
@@ -83,7 +88,8 @@
 				</DockPanel>
 			</Button>
 		</DockPanel>
-		<TabControl Background="AliceBlue" Grid.Row="1" Name="tabControl" Initialized="TabLoaded">
+		
+		<TabControl Background="AliceBlue" Grid.Row="1" Grid.Column="0"  Name="tabControl" Initialized="TabLoaded">
 
 			<TabControl.ItemTemplate>
 				<DataTemplate>
@@ -97,7 +103,7 @@
 			<TabControl.ContentTemplate>
 
 
-				<DataTemplate x:DataType="models:TabItemContent">
+				<DataTemplate  x:DataType="models:TabItemContent">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition  Width="*"></ColumnDefinition>
@@ -107,14 +113,17 @@
 						<Grid.RowDefinitions>
 							<RowDefinition Height="*" ></RowDefinition>
 						</Grid.RowDefinitions>
-						<DockPanel Grid.Column="0" Grid.Row="0"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  LastChildFill="True">
-							<TextBox IsHitTestVisible="False" Margin="10 0 10 20" IsReadOnly="True" Text="{Binding Text}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
-						</DockPanel>
 
+						<ScrollViewer>
+							<DockPanel Grid.Column="0" Grid.Row="0"  >
+									<v:EditorControl DataContext="{Binding}"/>
+							</DockPanel>
+						</ScrollViewer>
+					
 
-						<DockPanel  Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True">
+						<DockPanel  Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True"> 
 							
-							<TreeView Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 0 0 20" Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
+							<TreeView Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 20 0 20"  Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
 								<TreeView.DataTemplates>
 									<TreeDataTemplate  DataType="models:JObjectTree" ItemsSource="{Binding ChildrenCollection}" >
 										<StackPanel  Orientation="Horizontal" Margin="1" Tag="{Binding}">

@@ -12,7 +12,7 @@ namespace Avalonia3.Services
 {
     internal class Process
     {
-        public static ItreeToken ProcessJsonData(JsonTextReader reader, Dictionary<Guid, ObjectContext> keyValuePairs, string State = "")
+        public static async Task<ItreeToken> ProcessJsonData(JsonTextReader reader, Dictionary<Guid, ObjectContext> keyValuePairs, string State = "")
         {
             JObjectTree newObject = new JObjectTree();
             JArrayTree newArray = new JArrayTree();
@@ -90,7 +90,7 @@ namespace Avalonia3.Services
                         {
                             State = nameof(JObjectTree);
                             typeStart = reader.TokenType;
-                            var _item = ProcessJsonData(reader, keyValuePairs, State);
+                            var _item =  await ProcessJsonData(reader, keyValuePairs, State);
                             _item.Parent = newObject;
                             _item.ParentId = guid;
                             JPropertyTree prop = new JPropertyTree(lastProp, _item);
@@ -107,7 +107,7 @@ namespace Avalonia3.Services
                             if (reader.Depth > 0)
                             {
                                 State = nameof(JArrayTree);
-                                var _item = ProcessJsonData(reader, keyValuePairs, nameof(JObjectTree));
+                                var _item = await ProcessJsonData(reader, keyValuePairs, nameof(JObjectTree));
                                 _item.ParentId = guid;
                                 _item.Parent = newArray;
 
@@ -132,7 +132,7 @@ namespace Avalonia3.Services
 
                         if (lastProp != "" && State == nameof(JObjectTree))
                         {
-                            var _item = ProcessJsonData(reader, keyValuePairs, nameof(JArrayTree));
+                            var _item = await ProcessJsonData(reader, keyValuePairs, nameof(JArrayTree));
                             _item.ParentId = guid;
                             _item.Parent = newObject;
 
@@ -179,7 +179,7 @@ namespace Avalonia3.Services
                     }
                     else
                     {
-                        throw new NotSupportedException();
+                        throw new NotSupportedException("error1");
                     }
 
 
@@ -188,8 +188,8 @@ namespace Avalonia3.Services
 
             }
             return State == nameof(JObjectTree) ? 
-                (typeEnd != JsonToken.EndObject ? throw new ApplicationException() : newObject) : 
-                    (typeEnd != JsonToken.EndArray ? throw new ApplicationException() : newArray);
+                (typeEnd != JsonToken.EndObject ? throw new ApplicationException("error2") : newObject) : 
+                    (typeEnd != JsonToken.EndArray ? throw new ApplicationException("error3") : newArray);
 
         }
 
