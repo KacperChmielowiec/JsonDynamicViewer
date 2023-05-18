@@ -92,19 +92,14 @@
 		</DockPanel>
 		
 		<TabControl Background="AliceBlue" Grid.Row="1" Grid.Column="0"  Name="tabControl" Initialized="TabLoaded">
-
 			<TabControl.ItemTemplate>
 				<DataTemplate>
 					<DockPanel>
 						<TextBlock Text="{Binding Header}"></TextBlock>
-						
 					</DockPanel>
 				</DataTemplate>
 			</TabControl.ItemTemplate>
-
 			<TabControl.ContentTemplate>
-
-
 				<DataTemplate  x:DataType="models:TabItemContent">
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -121,10 +116,7 @@
 									<v:EditorControl DataContext="{Binding}"/>
 							</DockPanel>
 						</ScrollViewer>
-					
-
 						<DockPanel  Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True"> 
-							
 							<TreeView Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 20 0 20"  Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
 								<TreeView.DataTemplates>
 									<TreeDataTemplate  DataType="models:JObjectTree" ItemsSource="{Binding ChildrenCollection}" >
@@ -135,7 +127,6 @@
 									</TreeDataTemplate>
 									<TreeDataTemplate DataType="models:JPropertyTree" ItemsSource="{Binding Value.ChildrenCollection}" >
 										<StackPanel Orientation="Horizontal" Margin="1" Tag="{Binding}">
-											
 											<TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
 											<TextBlock Text=" : "/>
 											<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0" IsVisible="{Binding Value.Type, Converter={StaticResource	TypeConverter},ConverterParameter=Array}"/>
@@ -143,7 +134,6 @@
 											<TextBlock Text="{}{ }" Foreground="#729fcf" IsVisible="{Binding Value.Type, Converter={StaticResource	TypeConverter},ConverterParameter=Object}"/>
 											<TextBlock Text=" " IsVisible="{Binding Value.Type, Converter={StaticResource TypeConverter},ConverterParameter=Value}" />
 											<TextBlock TextWrapping="Wrap" Text="{Binding Value, Converter={StaticResource ValueConverter}}" Foreground="{Binding Converter={StaticResource TypePropToColorConverter}}" />
-											
 										</StackPanel>
 									</TreeDataTemplate>
 									<TreeDataTemplate DataType="models:JArrayTree" ItemsSource="{Binding ChildrenCollection}">
@@ -154,21 +144,12 @@
 											<TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
 										</StackPanel>
 									</TreeDataTemplate>
-									
 								</TreeView.DataTemplates>
 							</TreeView>
-
 						</DockPanel>
-
 					</Grid>
 				</DataTemplate>
 			</TabControl.ContentTemplate>
-
-
 		</TabControl>
-
 	</Grid>
-	
-	
-
 </Window>
