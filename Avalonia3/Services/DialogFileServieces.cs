@@ -34,15 +34,8 @@ namespace Avalonia3.Services
         {
 
             var dialog = new OpenFileDialog();
-
-            
-
             dialog.InitialFileName = this.Name ?? "Document";
-
-            //this.Filter ?? "Text documents (.json)|*.json"; // Filter files by extension
             dialog.Filters = new List<FileDialogFilter>() { new FileDialogFilter { Name="*", Extensions= new List<string>() { "json" } } };
-
-            // Show open file dialog box
             var window = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
             var result = await dialog.ShowAsync(window);
 
@@ -74,11 +67,6 @@ namespace Avalonia3.Services
                 {
                     throw;
                 }
-                
-                
-
-
-
             }
             else
             {

@@ -28,18 +28,14 @@ namespace Avalonia3.Models
         {
             return false;
         }
+        public override ItreeToken GetValue()
+        {
+            return this;
+        }
 
         public override void Add(ItreeToken token)
         {
-           if(token is JPropertyTree)
-           {
-               JPropertyTree val = (JPropertyTree)token;
-               ChildrenCollection.Add(val.Value);
-           }
-           else
-           {
-                ChildrenCollection.Add(token);
-           }
+            ChildrenCollection.Add(token.GetValue());
         }
 
         public override ObservableCollection<ItreeToken> Children()

@@ -10,24 +10,19 @@ namespace Avalonia3.Models
 {
     internal class JValueTree :  ItreeToken
     {
-        public override int GetHashCode()
-        {
-            return this.Id.GetHashCode();
-        }
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ItreeToken);
-        }
-        public bool Equals(ItreeToken obj)
-        {
-            return false;
-        }
-
+        public Guid Id { get; set; }
+        public Guid ParentId { get; set; }
+        public object Value { get; set; }
+        public ItreeToken.JTokenType Type { get; set; }
+        public ValueType valueType { get; set; }
+        public Guid File { get; set; }
+        public JContainerTree Parent { get; set; }
 
         public enum ValueType
         {
             Boolean, Byte, Char, Decimal, Double, Int, String, Null, Float
         }
+
         public JValueTree(object value)
         {
 
@@ -72,7 +67,8 @@ namespace Avalonia3.Models
                     case "String":
                         valueType = ValueType.String;
                         break;
-                    default: valueType = ValueType.Null;
+                    default:
+                        valueType = ValueType.Null;
                         break;
 
                 }
@@ -86,27 +82,31 @@ namespace Avalonia3.Models
 
         }
 
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ItreeToken);
+        }
+        public bool Equals(ItreeToken obj)
+        {
+            return false;
+        }
+        public ItreeToken GetValue()
+        {
+            return this;
+        }
         public override string ToString()
         {
             return Value.ToString();
         }
-
-
         public string ToString(int c)
         {
             return Value.ToString();
         }
 
-
-
-        public Guid Id { get; set; }
-        public Guid ParentId { get; set; }
-
-        public object Value { get; set; }
-
-        public ItreeToken.JTokenType Type { get; set; }
-        public ValueType valueType { get; set; }
-        public Guid File { get; set; }
-        public JContainerTree Parent { get; set; }
     }
 }

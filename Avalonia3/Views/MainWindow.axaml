@@ -12,7 +12,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Avalonia3.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Avalonia3">
+        Title="Avalonia3"
+		WindowStartupLocation="CenterScreen">
+	
 	<Window.Resources>
 		<services:JarrayLengthConverter x:Key="JArrayLengthConverter"/>
 		<services:TypeConverter x:Key="TypeConverter"/>
@@ -49,7 +51,7 @@
 						<Button>
 							<DockPanel>
 							<TextBlock Text="{Binding Header}"></TextBlock>
-							<Image  Height="15" Width="15" Margin="5 0 0 0" Cursor="Hand"  Source="C:\Users\kacper\source\repos\Avalonia3\Avalonia3\images\cross.png"></Image>
+							<Image PointerPressed="Remove_LeftButtondDown" Height="15" Width="15" Margin="5 0 0 0" Cursor="Hand"  Source="C:\Users\kacper\source\repos\Avalonia3\Avalonia3\images\cross.png"></Image>
 							</DockPanel>
 						</Button>
 						

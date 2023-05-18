@@ -44,21 +44,11 @@ namespace Avalonia3.Models
             set => this.RaiseAndSetIfChanged(ref _json, value);
         }
 
-
-
         public int Tag { get; set; }
 
         public Guid File { get; set; }
 
         public JsonFile ctx { get; set; }
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //private void OnPropertyChanged(string propertyName)
-        //{
-        //    if (PropertyChanged != null)
-        //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
-
 
     }
 }

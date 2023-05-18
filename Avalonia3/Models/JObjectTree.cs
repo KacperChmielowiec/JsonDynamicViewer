@@ -13,7 +13,18 @@ namespace Avalonia3.Models
     internal class JObjectTree : JContainerTree, INotifyPropertyChanged
     {
         private Dictionary<string,JPropertyTree> _children;
-       
+
+        public JObjectTree()
+        {
+            this._children = new Dictionary<string, JPropertyTree>();
+            this.ChildrenCollection = new ObservableCollection<ItreeToken> { };
+            this.Type = ItreeToken.JTokenType.Object;
+
+        }
+        public override ItreeToken GetValue()
+        {
+            return this;
+        }
         public override int GetHashCode()
         {
             return this._children.GetHashCode();
@@ -38,21 +49,12 @@ namespace Avalonia3.Models
         public void Add(string name,ItreeToken token)
         {
             ItreeToken item;
-            if(token is JPropertyTree) {
-
-                item = (token as JPropertyTree).Value;
-            }
-            else
-            {
-                item = token;
-            }
+            item = token.GetValue();
             JPropertyTree prop = new JPropertyTree(name, item);
             prop.ParentId = item.ParentId;
             prop.Id = item.Id;
             _children.TryAdd(name,prop);
             ChildrenCollection.Add(prop);
-
-            
         }
 
         public override ObservableCollection<ItreeToken> Children()
@@ -60,16 +62,6 @@ namespace Avalonia3.Models
             this.ChildrenCollection = new ObservableCollection<ItreeToken>(_children.Values);
             return this.ChildrenCollection;
         } 
-
-
-        public JObjectTree()
-        {
-            this._children = new Dictionary<string,JPropertyTree>();
-            this.ChildrenCollection = new ObservableCollection<ItreeToken> { };
-            this.Type = ItreeToken.JTokenType.Object;
-      
-        }
-       
 
         public JPropertyTree this[string i]
         {

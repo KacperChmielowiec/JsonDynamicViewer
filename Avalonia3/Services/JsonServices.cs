@@ -31,10 +31,7 @@ namespace Avalonia3.Services
 
             if (token is JObjectTree || token is JArrayTree)
             {
-
-
                 var _item = _file.KeyValueMap[_token.Id];
-
                 View.Schemes[View.Selected].Text = _item.TreeToken.ToString();
                 View.SelectedItem = _item.TreeToken;
             }
@@ -42,12 +39,9 @@ namespace Avalonia3.Services
             {
                 var _itemParent = _file.KeyValueMap[_token.ParentId];
                 var _item = _itemParent.Children.First(x => x.Id == _token.Id);
-
                 View.Schemes[View.Selected].Text = _item.ToString();
                 View.SelectedItem = _item;
-
             }
-
             View.Enable = true;
             return;
 
@@ -66,7 +60,7 @@ namespace Avalonia3.Services
                 var json = _item.TreeToken;
                 var desc = _item.TreeToken.ToString();
 
-                var tab = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow.Find<TabControl>("tabControl");
+                var tab = View.Parent.Find<TabControl>("tabControl");
                
                 if (result == ButtonResult.No && View.Schemes.Count() > 0)
                 {
@@ -86,9 +80,10 @@ namespace Avalonia3.Services
                 }
                 else
                 {
-                    View.CreateTab();
-
+                    View.CreateTab(new Models.TabItemContent() { Text = desc, Json = json as JContainerTree, File = guid, ctx = _data, Header = _data.path.Split("\\").Last() });
                 }
+
+                
             }
             else
             {
@@ -97,7 +92,7 @@ namespace Avalonia3.Services
            
 
          }
-        public static void RemoveItemJson(this MainModelView View,ItreeToken.JTokenType Type)
+        public static void RemoveItemJson(this MainModelView View, ItreeToken.JTokenType Type)
         {
             switch (Type)
             {
@@ -107,7 +102,9 @@ namespace Avalonia3.Services
                     JPropertyTree val_prop = (JPropertyTree)View.SelectedItem;
                     val_prop.Parent.Remove(val_prop);
                     break;
+
                 case ItreeToken.JTokenType.Object:
+
                     JObjectTree val_obj = (JObjectTree)View.SelectedItem;
                     if (val_obj.Parent != null)
                     {
@@ -118,7 +115,9 @@ namespace Avalonia3.Services
                         View.Schemes[View.Selected].Json = null;
                     }
                     break;
+
                 case ItreeToken.JTokenType.Array:
+
                     JArrayTree val_arr = (JArrayTree)View.SelectedItem;
                     if (val_arr.Parent != null)
                     {

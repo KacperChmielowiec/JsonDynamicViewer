@@ -12,35 +12,24 @@ namespace Avalonia3.Models
     internal class JPropertyTree : ItreeToken
     {
         
-
         public JContainerTree Parent;
+        JContainerTree ItreeToken.Parent { get => Value.Parent; set => Value.Parent = value; }
         public Guid Id { get; set; }
         public Guid ParentId { get; set; }
 
-        public override int GetHashCode()
+        public ItreeToken.JTokenType Type { get; set; }
+        public ItreeToken Value { get; set; }
+        public string Name { get; set; }
+
+        public JPropertyTree(string name, ItreeToken token)
         {
-            return this.Value.GetHashCode();
-        }
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as JPropertyTree);
-        }
-        public bool Equals(JPropertyTree obj)
-        {
-            return true;
-        }
-        public JPropertyTree(string name,ItreeToken token) {
 
             if (token == null) throw new ArgumentNullException();
-            else if ( token is JPropertyTree)
-            {
-                Value = (token as JPropertyTree).Value;
-            }
-            Value = token;
+            Value = token.GetValue();
             Name = name;
 
             this.Type = ItreeToken.JTokenType.Property;
-        
+
         }
         public JPropertyTree(string name, object token)
         {
@@ -58,7 +47,23 @@ namespace Avalonia3.Models
             }
 
         }
+        public ItreeToken GetValue()
+        {
+            return this.Value;
+        }
 
+        public override int GetHashCode()
+        {
+            return this.Value.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as JPropertyTree);
+        }
+        public bool Equals(JPropertyTree obj)
+        {
+            return true;
+        }
         public void CheckType()
         {
 
@@ -81,12 +86,7 @@ namespace Avalonia3.Models
         {
             return Value.ToString(c + 2);
         }
-        public ItreeToken.JTokenType Type { get; set; }
-        public  ItreeToken Value { get; set; }
-        public string Name { get; set; }
-
-      
-        JContainerTree ItreeToken.Parent { get => Value.Parent; set => Value.Parent = value; }
+       
       
     }
 }

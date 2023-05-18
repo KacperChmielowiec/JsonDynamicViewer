@@ -17,8 +17,6 @@ namespace Avalonia3.Models
         }
         public ObservableCollection<ItreeToken> ChildrenCollection { get; set; }
         public abstract IList<ItreeToken> Children();
-        public abstract void Add(ItreeToken token);
-
         public ItreeToken.JTokenType Type { get; set; }
         public JContainerTree Parent { get; set; }
         public  Guid Id { get; set; }
@@ -28,6 +26,7 @@ namespace Avalonia3.Models
 
         bool ICollection<ItreeToken>.IsReadOnly => ((ICollection<ItreeToken>)ChildrenCollection).IsReadOnly;
 
+        public abstract ItreeToken GetValue();
         public abstract int Count();
 
         public abstract bool IsReadOnly();
@@ -43,6 +42,8 @@ namespace Avalonia3.Models
         public abstract bool Remove(ItreeToken item);
 
         public abstract bool Remove(Guid id);
+
+        public abstract void Add(ItreeToken token);
         public abstract IEnumerator<ItreeToken> GetEnumerator();
         
         IEnumerator IEnumerable.GetEnumerator()

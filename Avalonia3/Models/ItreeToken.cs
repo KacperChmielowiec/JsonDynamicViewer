@@ -23,5 +23,7 @@ namespace Avalonia3.Models
 
         public string ToString(int c);
 
+        public ItreeToken GetValue();
+
     }
 }

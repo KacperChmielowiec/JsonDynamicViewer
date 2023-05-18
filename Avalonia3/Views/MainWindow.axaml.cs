@@ -9,6 +9,11 @@ using System.Threading;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Shapes;
 using Avalonia.Svg.Skia;
+using Avalonia3.Models;
+using Avalonia.Collections;
+using Avalonia.Input;
+using Avalonia;
+
 namespace Avalonia3.Views
 {
     public partial class MainWindow : Window
@@ -19,9 +24,6 @@ namespace Avalonia3.Views
             InitializeComponent();
             ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow = this;
             DataContextChanged += OnDataContextChanged;
-
-           
-            
         }
 
         private async void OnDataContextChanged(object sender, EventArgs e)
@@ -38,7 +40,7 @@ namespace Avalonia3.Views
         {
             if (modelView != null)
             {
-                modelView.CreateTab();
+                modelView.CreateTab(new Models.TabItemContent() {Text = ""});
             }
             else
             {
@@ -46,6 +48,26 @@ namespace Avalonia3.Views
                 // ...
             }
         }
-      
+
+        private void Remove_LeftButtondDown(object sender, PointerPressedEventArgs args)
+        {
+            if (sender is Image img)
+            {
+                // Wykonaj ¿¹dane dzia³ania, korzystaj¹c z w³aœciwoœci Tag elementu TabItem
+                //int i = int.Parse((img.Tag as Models.TabItemContent).Tag.ToString());
+
+                TabControl tabControl = this.FindControl<TabControl>("tabControl") as TabControl;
+
+                tabControl.Items = new AvaloniaList<TabItemContent>();
+
+             
+              
+
+
+
+            }
+
+        }
+
     }
 }
