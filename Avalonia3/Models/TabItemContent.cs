@@ -15,7 +15,7 @@ namespace Avalonia3.Models
 
         private string _header;
 
-
+        
         public string Header
         {
             get => _header;
@@ -43,6 +43,13 @@ namespace Avalonia3.Models
         {
             get => _json;
             set => this.RaiseAndSetIfChanged(ref _json, value);
+        }
+
+        private bool _isVisible;
+        public bool IsVisible
+        {
+            get => this._isVisible;
+            set => this.RaiseAndSetIfChanged(ref _isVisible, value);
         }
 
         public int Tag { get; set; }

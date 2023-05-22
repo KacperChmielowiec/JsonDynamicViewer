@@ -13,6 +13,7 @@ using Avalonia3.Models;
 using Avalonia.Collections;
 using Avalonia.Input;
 using Avalonia;
+using Avalonia.Diagnostics;
 
 namespace Avalonia3.Views
 {
@@ -54,6 +55,12 @@ namespace Avalonia3.Views
                ModelView.removeLeftButton();
             }
         }
-
+        private void Load_Text_Event(object sender, PointerPressedEventArgs args)
+        {
+           if(sender is Control token)
+           {
+                ModelView.LoadText(token.Tag);
+           }
+        }
     }
 }

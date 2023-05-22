@@ -20,5 +20,7 @@ namespace Avalonia3.Interface
         public JContainerTree Json {get; set;}
 
         public string Text { get; set; }
+
+        public bool IsVisible { get; set; }
     }
 }

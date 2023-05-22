@@ -25,20 +25,11 @@ namespace Avalonia3.Services
         private ObservableCollection<ITabItem> Schemes = TabControlReferences.Schemes;
         private MainModelView View = MainModelView.Instance;
 
-        public void LoadTextJson(object token)
+        public void LoadTextJson(ItreeToken token)
         {
-
-            Guid _fileGuid = View.Schemes[View.Selected].File;
-
-            var _file = JsonMap.files.Where(x => x.IdJson == _fileGuid).First();
-            var _token = token as ItreeToken;
-            var _item = _file.KeyValueMap[_token.Id];
-            View.Schemes[View.Selected].Text = _item.TreeToken.ToString();
-            View.SelectedItem = _item.TreeToken;
-           
+            View.Schemes[View.Selected].Text = token.ToString();
             View.Enable = true;
             return;
-
         }
         public void LoadDialogJson( ButtonResult result, Guid guid)
         {
@@ -69,7 +60,7 @@ namespace Avalonia3.Services
                     View.Schemes[tab.SelectedIndex].Json = json as JContainerTree;
                     View.Schemes[tab.SelectedIndex].File = guid;
                     View.Schemes[tab.SelectedIndex].ctx = _data;
-
+                    View.Schemes[tab.SelectedIndex].IsVisible = true;
                     var temp = tab.Items as AvaloniaList<ITabItem>;
                     temp[tab.SelectedIndex] = View.Schemes[tab.SelectedIndex];
                     tab.Items = temp;
@@ -81,7 +72,7 @@ namespace Avalonia3.Services
                 else if (result == ButtonResult.Yes)
                 {
                     View.VisibleIconEmpty = false;
-                    View.CreateTab(new Models.TabItemContent() { Text = desc, Json = json as JContainerTree, File = guid, ctx = _data, Header = _data.path.Split("\\").Last(), Tag = View.Selected });
+                    View.CreateTab(new Models.TabItemContent() { Text = desc, Json = json as JContainerTree, File = guid, ctx = _data, Header = _data.path.Split("\\").Last(), Tag = View.Selected, IsVisible = true});
                 }
                
                 

@@ -52,7 +52,7 @@ namespace Avalonia3.ViewModels
         private string _text1 = "";
 
         [ObservableProperty]
-        private bool _visibleIconEmpty = true;
+        private bool _visibleIconEmpty = false;
 
         public ObservableCollection<ITabItem> Schemes { get; set; } = TabControlReferences.Schemes;
 
@@ -68,7 +68,6 @@ namespace Avalonia3.ViewModels
             MainModelView.instance = this;
             this.Selected = 0;
             Parent = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
-            TreeContainerIndex s = new TreeContainerIndex();
             _jsonServices = new JsonServices();
             _tabControlService = new TabControlService(Parent);
           
@@ -85,7 +84,7 @@ namespace Avalonia3.ViewModels
         {
             try
             {
-                _jsonServices.LoadTextJson(token);
+                _jsonServices.LoadTextJson(token as ItreeToken);
                 return;
             }
             catch (Exception ex)

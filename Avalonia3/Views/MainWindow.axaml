@@ -102,7 +102,9 @@
 				</DataTemplate>
 			</TabControl.ItemTemplate>
 			<TabControl.ContentTemplate>
+				
 				<DataTemplate  x:DataType="models:TabItemContent">
+				
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition  Width="*"></ColumnDefinition>
@@ -118,18 +120,20 @@
 									<v:EditorControl DataContext="{Binding}"/>
 							</DockPanel>
 						</ScrollViewer>
-						
-						<DockPanel  IsVisible="{ Binding !$parent[Window].DataContext.VisibleIconEmpty}" Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True"> 
+						<DockPanel ZIndex="100" Grid.Row="1" Height="400" Width="300"  Opacity=".1" Margin="0 0 0 37" IsVisible="{Binding !IsVisible}" Grid.ColumnSpan="2">
+							<Image Source="{SvgImage /Assets/document-error-svgrepo-com.svg}"/>
+						</DockPanel>
+						<DockPanel  IsVisible="{Binding IsVisible}" Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True"> 
 							<TreeView  Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 20 0 20"  Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
 								<TreeView.DataTemplates>
 									<TreeDataTemplate  DataType="models:JObjectTree" ItemsSource="{Binding ChildrenCollection}" >
-										<StackPanel  Orientation="Horizontal" Margin="1" Tag="{Binding}">
+										<StackPanel PointerPressed="Load_Text_Event"  Orientation="Horizontal" Margin="1" Tag="{Binding}">
 											<TextBlock Text=" "/>
 											<TextBlock  Text="{Binding Path='Type', StringFormat={}{0 } {{ }} }" Foreground="#729fcf"/>
 										</StackPanel>
 									</TreeDataTemplate>
 									<TreeDataTemplate DataType="models:JPropertyTree" ItemsSource="{Binding Value.ChildrenCollection}" >
-										<StackPanel Orientation="Horizontal" Margin="1" Tag="{Binding}">
+										<StackPanel PointerPressed="Load_Text_Event"  Orientation="Horizontal" Margin="1" Tag="{Binding}">
 											<TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
 											<TextBlock Text=" : "/>
 											<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0" IsVisible="{Binding Value.Type, Converter={StaticResource	TypeConverter},ConverterParameter=Array}"/>
@@ -140,7 +144,7 @@
 										</StackPanel>
 									</TreeDataTemplate>
 									<TreeDataTemplate DataType="models:JArrayTree" ItemsSource="{Binding ChildrenCollection}">
-										<StackPanel Orientation="Horizontal" Margin="1" Tag="{Binding}">
+										<StackPanel PointerPressed="Load_Text_Event" Orientation="Horizontal" Margin="1" Tag="{Binding}">
 											<TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
 											<TextBlock Text=" : "/>
 											<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>

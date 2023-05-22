@@ -21,11 +21,14 @@ namespace Avalonia3.Services
         private Avalonia.Controls.Window Main;
         private ObservableCollection<ITabItem> Schemes;
         private MainModelView MainModelView;
+
+        public event EventHandler<ITabItemArg> TabIconChange;
         public TabControlService(Avalonia.Controls.Window View) 
         { 
             Main = View;
             Schemes = TabControlReferences.Schemes;
             MainModelView = MainModelView.Instance;
+            TabIconChange += SwapIcon;
         }
         public void RemoveItem()
         {
@@ -35,6 +38,10 @@ namespace Avalonia3.Services
             temp.RemoveAt(selectedIndex);
             this.Schemes.RemoveAt(selectedIndex);
             MainModelView.Selected -= 1;
+            if(MainModelView.Selected == -1)
+            {
+                this.TabIconChange.Invoke(null,new TabItemArg());
+            }
            
         }
         public void CreateItem(ITabItem item)
@@ -45,6 +52,7 @@ namespace Avalonia3.Services
                 string header = String.Format("{0} {1}", "New", MainModelView.Selected + 1);
                 item.Header = header;
             }
+            if(item.Text == string.Empty) { item.IsVisible = false; }
             this.Schemes.Add(item);
             this.AddTab(MainModelView.Selected);
         }
@@ -59,5 +67,14 @@ namespace Avalonia3.Services
             tab.Items = temp;
             tab.SelectedIndex = temp.Count - 1;
         }
+
+        public void SwapIcon(object? sender, ITabItemArg arg)
+        {
+            if(MainModelView.VisibleIconEmpty == false)
+                MainModelView.VisibleIconEmpty = true;
+            else 
+                MainModelView.VisibleIconEmpty = false;
+        }
+
     }
 }
