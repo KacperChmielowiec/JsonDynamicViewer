@@ -23,6 +23,7 @@ namespace Avalonia3.Views
         {
             InitializeComponent();
             ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow = this;
+            ModelView = MainModelView.Instance;
             DataContextChanged += OnDataContextChanged;
         }
         private async void OnDataContextChanged(object sender, EventArgs e)
@@ -38,7 +39,7 @@ namespace Avalonia3.Views
         {
             if (ModelView != null)
             {
-                ModelView.CreateTab(new Models.TabItemContent() {Text = ""});
+                ModelView.CreateTab(new Models.TabItemContent() {Text = "", Tag = 0 });
             }
             else
             {
@@ -48,10 +49,9 @@ namespace Avalonia3.Views
         }
         private void Remove_LeftButtondDown(object sender, PointerPressedEventArgs args)
         {
-            if (sender is Image img)
+            if (sender is Image img && img.Tag is TabItemContent)
             {
-                TabControl tabControl = this.FindControl<TabControl>("tabControl") as TabControl;
-                tabControl.Items = new AvaloniaList<TabItemContent>();
+               ModelView.removeLeftButton();
             }
         }
 

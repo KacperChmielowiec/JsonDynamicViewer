@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia3.Models;
 using Avalonia3.Views;
+using MessageBox.Avalonia.Enums;
 using Newtonsoft.Json;
 
 namespace Avalonia3.Services
@@ -33,7 +34,9 @@ namespace Avalonia3.Services
         public async Task<Guid> Show()
         {
 
+
             var dialog = new OpenFileDialog();
+
             dialog.InitialFileName = this.Name ?? "Document";
             dialog.Filters = new List<FileDialogFilter>() { new FileDialogFilter { Name="*", Extensions= new List<string>() { "json" } } };
             var window = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;

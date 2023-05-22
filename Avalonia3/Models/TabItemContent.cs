@@ -7,10 +7,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia3.Interface;
 
 namespace Avalonia3.Models
 {
-    public class TabItemContent : ReactiveObject { 
+    public class TabItemContent : ReactiveObject, ITabItem { 
 
         private string _header;
 

@@ -179,7 +179,7 @@ namespace Avalonia3.Services
                     }
                     else
                     {
-                        throw new NotSupportedException("error1");
+                        throw new NotSupportedException("Niepoprawna budowa pliku");
                     }
 
 
@@ -188,8 +188,8 @@ namespace Avalonia3.Services
 
             }
             return State == nameof(JObjectTree) ? 
-                (typeEnd != JsonToken.EndObject ? throw new ApplicationException("error2") : newObject) : 
-                    (typeEnd != JsonToken.EndArray ? throw new ApplicationException("error3") : newArray);
+                (typeEnd != JsonToken.EndObject ? throw new ApplicationException("Niepoprawne budowa obiektu") : newObject) : 
+                    (typeEnd != JsonToken.EndArray ? throw new ApplicationException("Niepoprawne budowa tablicy") : newArray);
 
         }
 

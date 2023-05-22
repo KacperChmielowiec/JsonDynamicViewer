@@ -14,24 +14,22 @@ namespace Avalonia3.Services
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is JContainerTree)) return null;
-            ItreeToken jToken = (value as ItreeToken).GetValue();
+            ItreeToken jToken = (value as ItreeToken);
             if (jToken == null)
                 return null;
-
-            switch (jToken.Type)
+            var jTokenValue = jToken.GetValue();
+           
+            
+            switch (jTokenValue.Type)
             {
                 case ItreeToken.JTokenType.Array:
-                    var arrayLen = (jToken as JContainerTree).Children().Count();
+                    var arrayLen = (jTokenValue as JContainerTree).Children().Count();
                     return string.Format("[{0}]", arrayLen);
-                case ItreeToken.JTokenType.Property:
-                    var propertyArrayLen = (jToken as JContainerTree).Children().Count();
-                    return string.Format("[ {0} ]", propertyArrayLen);
                 case ItreeToken.JTokenType.Object:
-                    var ObjLen = (jToken as JContainerTree).Children().Count();
+                    var ObjLen = (jTokenValue as JContainerTree).Children().Count();
                     return string.Format("[ {0} ]", ObjLen);
                 default:
-                    throw new Exception("Type should be JProperty or JArray");
+                    return null;
             }
         }
 

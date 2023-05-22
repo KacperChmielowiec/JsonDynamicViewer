@@ -20,7 +20,10 @@ using Avalonia3.Views;
 using System.Collections.Generic;
 using Avalonia.Controls.Generators;
 using Avalonia;
-
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
+using Avalonia3.References;
+using Avalonia3.Interface;
 
 namespace Avalonia3.ViewModels
 {
@@ -30,6 +33,7 @@ namespace Avalonia3.ViewModels
         public ICommand LostCommand { get; set; }
         public ICommand RemoveCommand { get; set; }
 
+        public ICommand RemoveLeftButton { get; set; }
         public ICommand ModifyDialog { get; set; }
 
         public Avalonia3.Services.DialogFileServieces Dialog;
@@ -41,51 +45,47 @@ namespace Avalonia3.ViewModels
         [ObservableProperty]
         private int _selected;
 
-
         [ObservableProperty]
         private bool _enable = false;
 
         [ObservableProperty]
         private string _text1 = "";
 
-        public ObservableCollection<TabItemContent> Schemes { get; set; } = new ObservableCollection<TabItemContent>();
+        [ObservableProperty]
+        private bool _visibleIconEmpty = true;
+
+        public ObservableCollection<ITabItem> Schemes { get; set; } = TabControlReferences.Schemes;
+
+        private JsonServices _jsonServices;
+        private TabControlService _tabControlService;
         public MainModelView()
         {
             DialogCommand = new RelayCommand(LoadDialog);
             LostCommand = new RelayCommand(LostFocus);
-            RemoveCommand = new RelayCommand(RemoveItem);
+            RemoveLeftButton = new RelayCommand(removeLeftButton);
             _enable = false;
             Dialog = new DialogFileServieces("JsonDOM", ".json", "Text documents (.json)|*.json");
             MainModelView.instance = this;
             this.Selected = 0;
             Parent = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
             TreeContainerIndex s = new TreeContainerIndex();
+            _jsonServices = new JsonServices();
+            _tabControlService = new TabControlService(Parent);
+          
         }
-        public void CreateTab(TabItemContent item)
+        public void removeLeftButton()
         {
-            Selected = Schemes.Count;
-            if(item.Header == null) {
-
-                string header = String.Format("{0} {1}", "New", Selected + 1);
-                item.Header = header;
-            }
-            this.Schemes.Add(item);
-            this.AddTab(Selected);
+            _tabControlService.RemoveItem();
         }
-        private void AddTab(int i)
+        public void CreateTab(ITabItem item)
         {
-            var window = Parent as Window;
-            var tab = window.FindControl<TabControl>("tabControl");
-            var temp = tab.Items as AvaloniaList<TabItemContent> ?? new AvaloniaList<TabItemContent>();
-            temp.Add(this.Schemes[i]);
-            tab.Items = temp;
-            tab.SelectedIndex = temp.Count - 1;
+            _tabControlService.CreateItem(item);
         }
         public async void LoadText(object token)
         {
             try
             {
-                this.LoadTextJson(token);
+                _jsonServices.LoadTextJson(token);
                 return;
             }
             catch (Exception ex)
@@ -97,14 +97,14 @@ namespace Avalonia3.ViewModels
         {
             var result = await MessageService.TabDialog().Show(Parent);
 
-            if (result != null)
+            if (result != null && result != ButtonResult.None)
             {
                 try
                 {
                     Guid guid = await Dialog.Show();
 
-                    if (guid != Guid.Empty)
-                        this.LoadDialogJson(result, guid);
+                    if (guid != Guid.Empty || guid != null)
+                        _jsonServices.LoadDialogJson(result, guid);
 
                 }
                 catch (Exception ex)
@@ -117,11 +117,7 @@ namespace Avalonia3.ViewModels
         {
             Enable = false;
         }
-        public void RemoveItem()
-        {
-            ItreeToken.JTokenType Type = SelectedItem.Type;
-            this.RemoveItemJson(Type);
-        }
+       
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

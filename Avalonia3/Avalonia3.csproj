@@ -12,6 +12,7 @@
     <None Remove=".gitignore" />
     <None Remove="Assets\clipboard-check-svgrepo-com.svg" />
     <None Remove="Assets\clipboard-copy-memory-editor-copy-paste-svgrepo-com.svg" />
+    <None Remove="Assets\document-error-svgrepo-com.svg" />
     <None Remove="Assets\file-add-svgrepo-com.svg" />
   </ItemGroup>
 

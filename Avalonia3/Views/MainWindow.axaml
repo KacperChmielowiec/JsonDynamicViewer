@@ -51,7 +51,7 @@
 						<Button>
 							<DockPanel>
 							<TextBlock Text="{Binding Header}"></TextBlock>
-							<Image PointerPressed="Remove_LeftButtondDown" Height="15" Width="15" Margin="5 0 0 0" Cursor="Hand"  Source="C:\Users\kacper\source\repos\Avalonia3\Avalonia3\images\cross.png"></Image>
+							<Image PointerPressed="Remove_LeftButtondDown" Tag="{Binding}" Height="15" Width="15" Margin="5 0 0 0" Cursor="Hand"  Source="C:\Users\kacper\source\repos\Avalonia3\Avalonia3\images\cross.png"></Image>
 							</DockPanel>
 						</Button>
 						
@@ -90,7 +90,9 @@
 				</DockPanel>
 			</Button>
 		</DockPanel>
-		
+		<DockPanel ZIndex="100" Grid.Row="1" Height="400" Width="300"  Opacity=".1" IsVisible="{Binding	VisibleIconEmpty}">
+			<Image Source="{SvgImage /Assets/document-error-svgrepo-com.svg}"/>
+		</DockPanel>
 		<TabControl Background="AliceBlue" Grid.Row="1" Grid.Column="0"  Name="tabControl" Initialized="TabLoaded">
 			<TabControl.ItemTemplate>
 				<DataTemplate>
@@ -116,8 +118,9 @@
 									<v:EditorControl DataContext="{Binding}"/>
 							</DockPanel>
 						</ScrollViewer>
-						<DockPanel  Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True"> 
-							<TreeView Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 20 0 20"  Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
+						
+						<DockPanel  IsVisible="{ Binding !$parent[Window].DataContext.VisibleIconEmpty}" Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True"> 
+							<TreeView  Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 20 0 20"  Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
 								<TreeView.DataTemplates>
 									<TreeDataTemplate  DataType="models:JObjectTree" ItemsSource="{Binding ChildrenCollection}" >
 										<StackPanel  Orientation="Horizontal" Margin="1" Tag="{Binding}">
