@@ -24,6 +24,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
 using Avalonia3.References;
 using Avalonia3.Interface;
+using AvaloniaEdit;
+using AvaloniaEdit.Search;
 
 namespace Avalonia3.ViewModels
 {
@@ -70,6 +72,8 @@ namespace Avalonia3.ViewModels
             Parent = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
             _jsonServices = new JsonServices();
             _tabControlService = new TabControlService(Parent);
+           
+
           
         }
         public void removeLeftButton()

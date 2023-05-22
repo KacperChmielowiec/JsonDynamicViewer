@@ -7,6 +7,7 @@
 		xmlns:models="using:Avalonia3.Models"
 		xmlns:svg="using:Avalonia.Svg.Skia"
 		xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+		xmlns:search="clr-namespace:AvaloniaEdit.Search;assembly=AvaloniaEdit"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -87,6 +88,7 @@
 				<DockPanel>
 					<Image Source="{SvgImage /Assets/clipboard-copy-memory-editor-copy-paste-svgrepo-com.svg}"/>
 					<TextBlock Text=" Dodaj ze schowka"></TextBlock>
+					
 				</DockPanel>
 			</Button>
 		</DockPanel>
@@ -118,6 +120,7 @@
 						<ScrollViewer>
 							<DockPanel Grid.Column="0" Grid.Row="0"  >
 									<v:EditorControl DataContext="{Binding}"/>
+								
 							</DockPanel>
 						</ScrollViewer>
 						<DockPanel ZIndex="100" Grid.Row="1" Height="400" Width="300"  Opacity=".1" Margin="0 0 0 37" IsVisible="{Binding !IsVisible}" Grid.ColumnSpan="2">

@@ -7,23 +7,27 @@
 			 xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Avalonia3.Views.EditorControl">
-	<Grid >
-		<ae:TextEditor x:Name="textCode"
+	<Grid>
+         <ae:TextEditor Name="textCode"
 					   Padding="20" Margin="0 0 0 20"
-                      
+					   
 					   ShowLineNumbers="True"
 					   FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
                        Foreground="Black"
                        SyntaxHighlighting="C#"
+					  
                        HorizontalScrollBarVisibility="Auto"
                        VerticalScrollBarVisibility="Auto"
-				       IsHitTestVisible="False"
+				       IsReadOnly="True"
                        FontWeight="Normal"
                        FontSize="14"
                        WordWrap="False">
 			<i:Interaction.Behaviors>
 				<behaviors:DocumentTextBindingBehavior Text="{Binding Text, Mode=TwoWay}"/>
 			</i:Interaction.Behaviors>
+			 
 		</ae:TextEditor>
+	
+		
 	</Grid>
 </UserControl>
