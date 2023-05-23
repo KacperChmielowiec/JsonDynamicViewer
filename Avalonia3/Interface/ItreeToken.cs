@@ -4,10 +4,11 @@ using System.Linq;
 
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia3.Models;
 
-namespace Avalonia3.Models
+namespace Avalonia3.Interface
 {
-    public interface ItreeToken 
+    public interface ItreeToken
     {
         public enum JTokenType
         {
@@ -17,7 +18,7 @@ namespace Avalonia3.Models
         Guid Id { get; set; }
         Guid ParentId { get; set; }
 
-        JContainerTree Parent { get; set; } 
+        JContainerTree Parent { get; set; }
 
         JTokenType Type { get; set; }
 

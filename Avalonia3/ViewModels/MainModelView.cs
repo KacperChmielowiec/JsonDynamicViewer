@@ -12,7 +12,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using Avalonia3.Services;
-using Avalonia3.Models;
 using Avalonia.Controls.ApplicationLifetimes;
 using System.Threading.Tasks;
 using Avalonia.Collections;
@@ -26,6 +25,7 @@ using Avalonia3.References;
 using Avalonia3.Interface;
 using AvaloniaEdit;
 using AvaloniaEdit.Search;
+using Avalonia3.Models;
 
 namespace Avalonia3.ViewModels
 {
@@ -34,7 +34,7 @@ namespace Avalonia3.ViewModels
         public ICommand DialogCommand { get; set; }
         public ICommand LostCommand { get; set; }
         public ICommand RemoveCommand { get; set; }
-
+        public ICommand OpenTextDialog { get; set; }
         public ICommand RemoveLeftButton { get; set; }
         public ICommand ModifyDialog { get; set; }
 
@@ -43,6 +43,8 @@ namespace Avalonia3.ViewModels
         public ItreeToken SelectedItem { get; set; }
 
         public Window Parent { get; set; }
+
+        public TabControl TabControl { get; set; }
 
         [ObservableProperty]
         private int _selected;
@@ -60,11 +62,16 @@ namespace Avalonia3.ViewModels
 
         private JsonServices _jsonServices;
         private TabControlService _tabControlService;
+
+       
         public MainModelView()
         {
+
             DialogCommand = new RelayCommand(LoadDialog);
             LostCommand = new RelayCommand(LostFocus);
             RemoveLeftButton = new RelayCommand(removeLeftButton);
+            RemoveCommand = new DelegateCommand(RemoveItem);
+            OpenTextDialog = new RelayCommand(OpenText);
             _enable = false;
             Dialog = new DialogFileServieces("JsonDOM", ".json", "Text documents (.json)|*.json");
             MainModelView.instance = this;
@@ -72,10 +79,19 @@ namespace Avalonia3.ViewModels
             Parent = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
             _jsonServices = new JsonServices();
             _tabControlService = new TabControlService(Parent);
-           
 
-          
+
         }
+
+        public void RemoveItem(object item)
+        {
+            _jsonServices.RemoveItemJson(SelectedItem,TabControl.SelectedIndex);
+        }
+        public void SetSelectedItem(ItreeToken item)
+        {
+            this.SelectedItem = item;
+        }
+
         public void removeLeftButton()
         {
             _tabControlService.RemoveItem();
@@ -120,7 +136,14 @@ namespace Avalonia3.ViewModels
         {
             Enable = false;
         }
-       
+        public void OpenText()
+        {
+
+            var ServiceDialog = new TextDialogService();
+            var Model = new TextModelView();
+            ServiceDialog.OpenDialog<ResultDialog>(Model, this.Parent);
+
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

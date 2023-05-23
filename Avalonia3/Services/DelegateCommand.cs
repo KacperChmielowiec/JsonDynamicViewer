@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Avalonia3.Models
+namespace Avalonia3.Services
 {
     public class DelegateCommand : ICommand
     {

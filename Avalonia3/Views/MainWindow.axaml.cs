@@ -14,6 +14,7 @@ using Avalonia.Collections;
 using Avalonia.Input;
 using Avalonia;
 using Avalonia.Diagnostics;
+using Avalonia3.Interface;
 
 namespace Avalonia3.Views
 {
@@ -41,6 +42,7 @@ namespace Avalonia3.Views
             if (ModelView != null)
             {
                 ModelView.CreateTab(new Models.TabItemContent() {Text = "", Tag = 0 });
+                ModelView.TabControl = ModelView.Parent.Find<TabControl>("tabControl");
             }
             else
             {
@@ -60,6 +62,7 @@ namespace Avalonia3.Views
            if(sender is Control token)
            {
                 ModelView.LoadText(token.Tag);
+                ModelView.SetSelectedItem(token.Tag as ItreeToken);
            }
         }
     }

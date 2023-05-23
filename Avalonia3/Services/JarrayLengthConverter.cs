@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia3.Models;
 using Avalonia3.ViewModels;
+using Avalonia3.Interface;
 
 namespace Avalonia3.Services
 {
-    public class JarrayLengthConverter : IValueConverter
+    public class JarrayLengthConverter : IValueConverter 
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -6,14 +6,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Avalonia3.Interface;
 
 namespace Avalonia3.Models
 {
-    internal class JPropertyTree : ItreeToken
+    public class JPropertyTree : ItreeToken
     {
         
-        public JContainerTree Parent;
-        JContainerTree ItreeToken.Parent { get => Value.Parent; set => Value.Parent = value; }
+        public JContainerTree Parent { get; set; }
         public Guid Id { get; set; }
         public Guid ParentId { get; set; }
 

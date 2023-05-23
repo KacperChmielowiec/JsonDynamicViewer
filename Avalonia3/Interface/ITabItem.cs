@@ -17,7 +17,7 @@ namespace Avalonia3.Interface
 
         public JsonFile ctx { get; set; }
 
-        public JContainerTree Json {get; set;}
+        public JContainerTree Json { get; set; }
 
         public string Text { get; set; }
 

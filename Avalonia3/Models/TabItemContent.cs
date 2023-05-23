@@ -11,7 +11,7 @@ using Avalonia3.Interface;
 
 namespace Avalonia3.Models
 {
-    public class TabItemContent : ReactiveObject, ITabItem { 
+    public class TabItemContent : ReactiveObject, ITabItem  { 
 
         private string _header;
 
@@ -58,5 +58,6 @@ namespace Avalonia3.Models
 
         public JsonFile ctx { get; set; }
 
+       
     }
 }

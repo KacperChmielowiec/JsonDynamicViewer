@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia3.Interface;
 
 namespace Avalonia3.Models
 {
@@ -91,7 +92,13 @@ namespace Avalonia3.Models
 
         public override bool Remove(ItreeToken item)
         {
-            return this.ChildrenCollection.Remove(item);
+            int index = this.ChildrenCollection
+                    .Select((x, y) => (x, y))
+                    .Where(x => x.x.Id == item.Id)
+                    .Select(x => x.y).FirstOrDefault();
+            
+            this.ChildrenCollection.RemoveAt(index);
+            return true;
         }
         public override bool Remove(Guid item)
         {

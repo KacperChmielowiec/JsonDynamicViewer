@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia3.Models;
 using Microsoft.Win32.SafeHandles;
+using Avalonia3.Interface;
 
 namespace Avalonia3.Services
 {

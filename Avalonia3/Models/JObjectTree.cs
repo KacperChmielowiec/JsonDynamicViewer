@@ -1,25 +1,29 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Avalonia.FreeDesktop.DBusIme;
+using Avalonia3.Interface;
+using DynamicData;
+using Fizzler;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Avalonia3.Models
 {
-    internal class JObjectTree : JContainerTree, INotifyPropertyChanged
+    public class JObjectTree : JContainerTree, INotifyPropertyChanged
     {
-        private Dictionary<string,JPropertyTree> _children;
+
+        
 
         public JObjectTree()
         {
-            this._children = new Dictionary<string, JPropertyTree>();
-            this.ChildrenCollection = new ObservableCollection<ItreeToken> { };
+            this.ChildrenCollection = new ObservableCollection<ItreeToken>();
             this.Type = ItreeToken.JTokenType.Object;
-
         }
         public override ItreeToken GetValue()
         {
@@ -27,7 +31,7 @@ namespace Avalonia3.Models
         }
         public override int GetHashCode()
         {
-            return this._children.GetHashCode();
+            return this.ChildrenCollection.GetHashCode();
         }
         public override bool Equals(object obj)
         {
@@ -39,47 +43,28 @@ namespace Avalonia3.Models
         }
         public override void Add(ItreeToken token)
         {
-            if(!(token is JPropertyTree))
+            if (token is JPropertyTree property)
             {
-                throw new ArgumentException();
+                ChildrenCollection.Add(property);
             }
-            _children.TryAdd((token as JPropertyTree).Name, (token as JPropertyTree));
-            ChildrenCollection.Add(token);
+            else
+                throw new ArgumentException($"Bad Type for {this.GetType()}. Element is {token.GetType()} Type (Method Add)");
         }
         public void Add(string name,ItreeToken token)
         {
+            if (token is JPropertyTree property) throw new ArgumentException($"Bad Type for {this.GetType()} Method's Add(string,token). Element is {token.GetType()} Type");
             ItreeToken item;
             item = token.GetValue();
             JPropertyTree prop = new JPropertyTree(name, item);
             prop.ParentId = item.ParentId;
             prop.Id = item.Id;
-            _children.TryAdd(name,prop);
             ChildrenCollection.Add(prop);
         }
 
         public override ObservableCollection<ItreeToken> Children()
         {
-            this.ChildrenCollection = new ObservableCollection<ItreeToken>(_children.Values);
-            return this.ChildrenCollection;
+            return this.ChildrenCollection.OfType<ItreeToken>() as ObservableCollection<ItreeToken>;
         } 
-
-        public JPropertyTree this[string i]
-        {
-            get
-            {
-                if (_children.ContainsKey(i))
-                {
-                    return _children[i];
-                }
-                else
-                {
-                    return null;
-                }
-
-            }
-            set { _children[i] = value; }
-        }
-
 
         public override string ToString()
         {
@@ -92,10 +77,13 @@ namespace Avalonia3.Models
             stringBuilder.AppendLine("{");
            
             stringBuilder.Append(new string(' ', c + 2));
-            foreach (var item in _children)
+            foreach (var item in this.ChildrenCollection)
             {
-                stringBuilder.AppendLine(item.Key + ": " + item.Value.ToString(c+2));
-                stringBuilder.Append(new string(' ', c+2));
+                if (item is JPropertyTree property)
+                {
+                    stringBuilder.AppendLine(property.Name + ": " + property.Value.ToString(c + 2));
+                    stringBuilder.Append(new string(' ', c + 2));
+                }
             }
             stringBuilder.Remove(stringBuilder.Length - 2, 2);
         
@@ -111,10 +99,10 @@ namespace Avalonia3.Models
             if (item != null)
             {
 
-                string name = (item as JPropertyTree).Name;
-                _children.Remove(name);
+                return this.ChildrenCollection.Remove(item);
+
             }
-            return this.ChildrenCollection.Remove(item);
+            return false;
         }
 
 
@@ -139,7 +127,7 @@ namespace Avalonia3.Models
 
         public override void Clear()
         {
-            this._children.Clear();
+          
             this.ChildrenCollection.Clear();
            
         }
@@ -156,15 +144,31 @@ namespace Avalonia3.Models
 
         public override bool Remove(ItreeToken item)
         {
-            string name = (item as JPropertyTree).Name;
-            _children.Remove(name);
-            return ChildrenCollection.Remove(item);
+            if (item is JPropertyTree property)
+            {
+                int index = this.ChildrenCollection
+                    .Select((x, y) => (x,y))
+                    .Where(x => x.x.Id == property.Id)
+                    .Select(x => x.y).FirstOrDefault();
+               
+                this.ChildrenCollection.RemoveAt(index);
+                return true;
+            }
+            throw new ArgumentException($"Bad Type for {this.GetType()}. Element is {item.GetType()} Type (Method Remove)");
 
         }
 
         public override IEnumerator<ItreeToken> GetEnumerator()
         {
             yield return this;
+        }
+        public JPropertyTree this[string i]
+        {
+            get
+            {
+                return this.ChildrenCollection.OfType<JPropertyTree>().ToList().FirstOrDefault(x => x.Name == i);
+            }
+            
         }
     }
 }

@@ -75,6 +75,10 @@ namespace Avalonia3.Services
             else 
                 MainModelView.VisibleIconEmpty = false;
         }
+        public void InvokeEvent()
+        {
+            this.TabIconChange.Invoke(null, new TabItemArg());
+        }
 
     }
 }

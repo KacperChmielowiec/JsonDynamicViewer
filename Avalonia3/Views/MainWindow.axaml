@@ -84,11 +84,18 @@
 					<TextBlock Text=" Nowy Plik"></TextBlock>
 				</DockPanel>
 			</Button>
-			<Button>
+			<Button Command="{Binding OpenTextDialog}">
 				<DockPanel>
 					<Image Source="{SvgImage /Assets/clipboard-copy-memory-editor-copy-paste-svgrepo-com.svg}"/>
 					<TextBlock Text=" Dodaj ze schowka"></TextBlock>
 					
+				</DockPanel>
+			</Button>
+			<Button Command="{Binding RemoveCommand}">
+				<DockPanel>
+					<Image Source="{SvgImage /Assets/delete-svgrepo-com.svg}"/>
+					<TextBlock Text=" Usuń element"></TextBlock>
+
 				</DockPanel>
 			</Button>
 		</DockPanel>

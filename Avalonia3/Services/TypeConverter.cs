@@ -5,8 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Avalonia3.Models;
 using Avalonia3.ViewModels;
+using Avalonia3.Interface;
 
 namespace Avalonia3.Services
 {

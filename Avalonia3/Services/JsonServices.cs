@@ -17,6 +17,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Avalonia3.Views;
 using Avalonia3.References;
 using Avalonia3.Interface;
+using System.Threading.Tasks.Dataflow;
 
 namespace Avalonia3.Services
 {
@@ -27,8 +28,12 @@ namespace Avalonia3.Services
 
         public void LoadTextJson(ItreeToken token)
         {
-            View.Schemes[View.Selected].Text = token.ToString();
+            if (token != null)
+                View.Schemes[View.Selected].Text = token.ToString();
+            else
+                View.Schemes[View.Selected].Text = string.Empty;
             View.Enable = true;
+            
             return;
         }
         public void LoadDialogJson( ButtonResult result, Guid guid)
@@ -57,7 +62,7 @@ namespace Avalonia3.Services
                     View.VisibleIconEmpty = false;
                     View.Schemes[tab.SelectedIndex].Text = desc;
                  
-                    View.Schemes[tab.SelectedIndex].Json = json as JContainerTree;
+                    View.Schemes[tab.SelectedIndex].Json = json as JObjectTree;
                     View.Schemes[tab.SelectedIndex].File = guid;
                     View.Schemes[tab.SelectedIndex].ctx = _data;
                     View.Schemes[tab.SelectedIndex].IsVisible = true;
@@ -72,7 +77,7 @@ namespace Avalonia3.Services
                 else if (result == ButtonResult.Yes)
                 {
                     View.VisibleIconEmpty = false;
-                    View.CreateTab(new Models.TabItemContent() { Text = desc, Json = json as JContainerTree, File = guid, ctx = _data, Header = _data.path.Split("\\").Last(), Tag = View.Selected, IsVisible = true});
+                    View.CreateTab(new Models.TabItemContent() { Text = desc, Json = json as JObjectTree, File = guid, ctx = _data, Header = _data.path.Split("\\").Last(), Tag = View.Selected, IsVisible = true});
                 }
                
                 
@@ -84,35 +89,25 @@ namespace Avalonia3.Services
            
 
          }
-        public void RemoveItemJson(ItreeToken.JTokenType Type)
+        public void RemoveItemJson(ItreeToken item, int index)
         {
-            switch (Type)
+            if (item != null)
             {
-                
-                case ItreeToken.JTokenType.Property:
+                var value = item;
+                if (value.Parent != null)
+                {
+                    value.Parent.Remove(value);
+                    View.LoadText(this.Schemes[index].Json);
+                }
+                else
+                {
 
-                    JPropertyTree val_prop = (JPropertyTree)View.SelectedItem;
-                    val_prop.Parent.Remove(val_prop);
-                    break;
+                    this.Schemes[index].Json = null;
+                    View.LoadText(this.Schemes[index].Json);
+                    this.Schemes[index].IsVisible = false;
 
-                case ItreeToken.JTokenType.Object:
-                case ItreeToken.JTokenType.Array:
-
-                    JContainerTree val_arr = (JContainerTree)View.SelectedItem;
-                    if (val_arr.Parent != null)
-                    {
-
-                        val_arr.Parent.Remove(val_arr.Id);
-                    }
-                    else
-                    {
-                        View.Schemes[View.Selected].Json = null;
-                    }
-                    break;
-
+                }
             }
-            View.Schemes[View.Selected].Text = String.Empty;
-
         }
       
 

@@ -1,4 +1,5 @@
 ﻿
+using Avalonia3.Interface;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Avalonia3.Models
 {
-    public abstract class JContainerTree : ItreeToken, ICollection<ItreeToken>
+    public abstract class JContainerTree : ItreeToken , ICollection<ItreeToken>
     {
         public JContainerTree() {
 
@@ -22,9 +23,9 @@ namespace Avalonia3.Models
         public  Guid Id { get; set; }
         public  Guid ParentId { get; set; }
 
-        int ICollection<ItreeToken>.Count => ChildrenCollection.Count();
+        int ICollection<ItreeToken>.Count => throw new NotImplementedException();
 
-        bool ICollection<ItreeToken>.IsReadOnly => ((ICollection<ItreeToken>)ChildrenCollection).IsReadOnly;
+        bool ICollection<ItreeToken>.IsReadOnly => throw new NotImplementedException();
 
         public abstract ItreeToken GetValue();
         public abstract int Count();
@@ -45,7 +46,7 @@ namespace Avalonia3.Models
 
         public abstract void Add(ItreeToken token);
         public abstract IEnumerator<ItreeToken> GetEnumerator();
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

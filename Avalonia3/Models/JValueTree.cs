@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Avalonia3.Interface;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Avalonia3.Models
 {
-    internal class JValueTree :  ItreeToken
+    internal class JValueTree : ItreeToken
     {
         public Guid Id { get; set; }
         public Guid ParentId { get; set; }
