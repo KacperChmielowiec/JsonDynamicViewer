@@ -33,7 +33,7 @@ namespace Avalonia3.Views
             if (DataContext != null)
             {
                 ModelView = (MainModelView)DataContext;
-             
+
                 TabLoaded(null, null);
             }
         }

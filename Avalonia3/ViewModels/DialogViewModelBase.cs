@@ -25,5 +25,9 @@ namespace Avalonia3.ViewModels
             DialogResult = result;
             dialog.Close();
         }
+        public virtual void SetWindow(T window)
+        {
+
+        }
     }
 }

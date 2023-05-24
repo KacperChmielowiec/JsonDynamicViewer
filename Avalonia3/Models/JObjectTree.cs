@@ -63,7 +63,7 @@ namespace Avalonia3.Models
 
         public override ObservableCollection<ItreeToken> Children()
         {
-            return this.ChildrenCollection.OfType<ItreeToken>() as ObservableCollection<ItreeToken>;
+            return this.ChildrenCollection;
         } 
 
         public override string ToString()

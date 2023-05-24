@@ -22,58 +22,38 @@ namespace Avalonia3.Services
         public string Ext { get; set; }
         
         public string Filter { get; set; }
+
+        public string FileName { get;set; }
+        public JsonServices Services { get; set; } = new JsonServices();
         public DialogFileServieces(string _name, string _ext, string _filter) { 
         
             Name = _name;
             Ext = _ext;
             Filter = _filter;  
-        
-        
+            
         }
 
-        public async Task<Guid> Show()
+        public async Task<string> ShowFileDialog(Window window)
         {
 
-
             var dialog = new OpenFileDialog();
-
             dialog.InitialFileName = this.Name ?? "Document";
             dialog.Filters = new List<FileDialogFilter>() { new FileDialogFilter { Name="*", Extensions= new List<string>() { "json" } } };
-            var window = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
             var result = await dialog.ShowAsync(window);
 
             // Process open file dialog box results
             if (result != null)
             {
                 // Open document
-                string filename = result[0];
-
+                FileName = result[0];
                 string fileContent = "";
-
-              
-                fileContent = File.ReadAllText(filename);
-
-                JsonTextReader reader = new JsonTextReader(new StringReader(fileContent));
-                Dictionary<Guid, ObjectContext> keyValuePairs = new Dictionary<Guid, ObjectContext>();
-
-                var _guid = Guid.NewGuid();
-                try
-                {
-
-                    var jObject = await Process.ProcessJsonData(reader, keyValuePairs);
-                    JsonMap.files.Add(new JsonFile(_guid, keyValuePairs, jObject.Id, filename));
-
-                    return _guid;
-
-                }
-                catch(Exception e)
-                {
-                    throw;
-                }
+                fileContent = File.ReadAllText(FileName);
+                return fileContent;
+                
             }
             else
             {
-                return Guid.Empty;
+                return string.Empty;
             }
 
         }

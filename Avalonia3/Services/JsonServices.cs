@@ -18,6 +18,9 @@ using Avalonia3.Views;
 using Avalonia3.References;
 using Avalonia3.Interface;
 using System.Threading.Tasks.Dataflow;
+using Newtonsoft.Json;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace Avalonia3.Services
 {
@@ -36,7 +39,7 @@ namespace Avalonia3.Services
             
             return;
         }
-        public void LoadDialogJson( ButtonResult result, Guid guid)
+        public void LoadDialogJson(Guid guid, ButtonResult result = ButtonResult.Yes)
         {
            
             
@@ -108,6 +111,27 @@ namespace Avalonia3.Services
 
                 }
             }
+        }
+
+        public async Task<ItreeToken> LoadFromTextJson(string fileContent, Dictionary<Guid, ObjectContext> keyValuePairs, Guid guid)
+        {
+
+            JsonTextReader reader = new JsonTextReader(new StringReader(fileContent));
+            var jObject = await Process.ProcessJsonData(reader, keyValuePairs);
+            return jObject;
+
+        }
+        public async Task SetProcess(string Content, string Name)
+        {
+         
+            Dictionary<Guid, ObjectContext> keyValuePairs = new Dictionary<Guid, ObjectContext>();
+            Guid guid = Guid.NewGuid();
+            ItreeToken Data = await this.LoadFromTextJson(Content, keyValuePairs, guid);
+            JsonMap.files.Add(new JsonFile(guid, keyValuePairs, Data.Id, Name));
+            if (guid != Guid.Empty || guid != null)
+                this.LoadDialogJson(guid);
+
+            
         }
       
 

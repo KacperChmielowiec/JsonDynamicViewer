@@ -189,8 +189,8 @@ namespace Avalonia3.Services
 
             }
             return State == nameof(JObjectTree) ? 
-                (typeEnd != JsonToken.EndObject ? throw new ApplicationException("Niepoprawne budowa obiektu") : newObject) : 
-                    (typeEnd != JsonToken.EndArray ? throw new ApplicationException("Niepoprawne budowa tablicy") : newArray);
+                (typeEnd != JsonToken.EndObject ? throw new ApplicationException("Niepoprawna budowa obiektu") : newObject) : 
+                    (typeEnd != JsonToken.EndArray ? throw new ApplicationException("Niepoprawna budowa tablicy") : newArray);
 
         }
 

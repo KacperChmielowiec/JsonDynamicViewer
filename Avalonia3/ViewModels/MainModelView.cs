@@ -26,6 +26,9 @@ using Avalonia3.Interface;
 using AvaloniaEdit;
 using AvaloniaEdit.Search;
 using Avalonia3.Models;
+using System.Reflection.Metadata;
+using static SkiaSharp.HarfBuzz.SKShaper;
+using Newtonsoft.Json.Linq;
 
 namespace Avalonia3.ViewModels
 {
@@ -66,7 +69,7 @@ namespace Avalonia3.ViewModels
        
         public MainModelView()
         {
-
+            MainModelView.instance = this;
             DialogCommand = new RelayCommand(LoadDialog);
             LostCommand = new RelayCommand(LostFocus);
             RemoveLeftButton = new RelayCommand(removeLeftButton);
@@ -74,7 +77,7 @@ namespace Avalonia3.ViewModels
             OpenTextDialog = new RelayCommand(OpenText);
             _enable = false;
             Dialog = new DialogFileServieces("JsonDOM", ".json", "Text documents (.json)|*.json");
-            MainModelView.instance = this;
+            
             this.Selected = 0;
             Parent = ((IClassicDesktopStyleApplicationLifetime)Avalonia.Application.Current.ApplicationLifetime).MainWindow;
             _jsonServices = new JsonServices();
@@ -120,10 +123,11 @@ namespace Avalonia3.ViewModels
             {
                 try
                 {
-                    Guid guid = await Dialog.Show();
-
-                    if (guid != Guid.Empty || guid != null)
-                        _jsonServices.LoadDialogJson(result, guid);
+                    string Content = await Dialog.ShowFileDialog(Parent);
+                    if (!string.IsNullOrEmpty(Content))
+                    {
+                        _jsonServices.SetProcess(Content, Dialog.FileName);
+                    }
 
                 }
                 catch (Exception ex)
@@ -136,13 +140,24 @@ namespace Avalonia3.ViewModels
         {
             Enable = false;
         }
-        public void OpenText()
+        public async void OpenText()
         {
+            try
+            {
+                var ServiceDialog = new TextDialogService();
+                var Model = new TextModelView();
+                await ServiceDialog.OpenDialog<ResultDialog>(Model, this.Parent);
+                if (Model.DialogResult.Type == ResultType.Success)
+                {
+                    _jsonServices.SetProcess(Model.JsonData,"Z Pliku");
 
-            var ServiceDialog = new TextDialogService();
-            var Model = new TextModelView();
-            ServiceDialog.OpenDialog<ResultDialog>(Model, this.Parent);
+                }
 
+            }
+            catch (Exception ex)
+            {
+                MessageService.ExceptionLoadDialog(ex.Message).Show();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

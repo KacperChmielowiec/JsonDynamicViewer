@@ -1,5 +1,8 @@
 using Avalonia.Controls;
 using Avalonia3.Interface;
+using Avalonia3.Models;
+using Avalonia3.ViewModels;
+using Avalonia3.References;
 namespace Avalonia3.Views
 {
     public partial class TextWindow : Window, IDialogWindow
@@ -9,6 +12,7 @@ namespace Avalonia3.Views
         {
             InitializeComponent();
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            WindowReferences.TextWin = this;
         }
     }
 }
