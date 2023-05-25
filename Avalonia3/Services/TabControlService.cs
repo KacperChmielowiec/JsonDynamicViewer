@@ -34,9 +34,11 @@ namespace Avalonia3.Services
         {
             var tab = Main.FindControl<TabControl>("tabControl");
             var selectedIndex = tab.SelectedIndex;
+            MainModelView.SelectedItem = null;
             var temp = tab.Items as AvaloniaList<ITabItem> ?? new AvaloniaList<ITabItem>();
             temp.RemoveAt(selectedIndex);
             this.Schemes.RemoveAt(selectedIndex);
+            
             MainModelView.Selected -= 1;
             if(MainModelView.Selected == -1)
             {
@@ -49,7 +51,7 @@ namespace Avalonia3.Services
             MainModelView.Selected = Schemes.Count;
             if (item.Header == null)
             {
-                string header = String.Format("{0} {1}", "New", MainModelView.Selected + 1);
+                string header = String.Format("{0} {1}", "Nowa karta", MainModelView.Selected + 1);
                 item.Header = header;
             }
             if(item.Text == string.Empty) { item.IsVisible = false; }

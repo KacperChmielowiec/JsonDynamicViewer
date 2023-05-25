@@ -126,7 +126,7 @@ namespace Avalonia3.ViewModels
                     string Content = await Dialog.ShowFileDialog(Parent);
                     if (!string.IsNullOrEmpty(Content))
                     {
-                        _jsonServices.SetProcess(Content, Dialog.FileName);
+                        _jsonServices.SetProcess(Content, Dialog.FileName,result);
                     }
 
                 }
@@ -149,7 +149,7 @@ namespace Avalonia3.ViewModels
                 await ServiceDialog.OpenDialog<ResultDialog>(Model, this.Parent);
                 if (Model.DialogResult.Type == ResultType.Success)
                 {
-                    _jsonServices.SetProcess(Model.JsonData,"Z Pliku");
+                    _jsonServices.SetProcess(Model.JsonData,"Z Pliku",ButtonResult.Yes);
 
                 }
 

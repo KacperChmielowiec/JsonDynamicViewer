@@ -15,7 +15,7 @@
 				<RowDefinition  Height="50"></RowDefinition>
 			</Grid.RowDefinitions>
 			<StackPanel  Background="#d7ecff" Grid.Row="0">
-				<TextBox TextWrapping="Wrap" Name="JsonBox" Height="300" Margin="30 30 30 50"></TextBox>
+				<TextBox GotFocus="ChangeFont" TextWrapping="Wrap" Name="JsonBox" Height="300" Margin="30 30 30 50"></TextBox>
 			</StackPanel>
 			<StackPanel Background="#bcbde5"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" >
 				<Grid>

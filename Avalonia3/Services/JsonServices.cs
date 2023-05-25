@@ -121,7 +121,7 @@ namespace Avalonia3.Services
             return jObject;
 
         }
-        public async Task SetProcess(string Content, string Name)
+        public async Task SetProcess(string Content, string Name, ButtonResult result)
         {
          
             Dictionary<Guid, ObjectContext> keyValuePairs = new Dictionary<Guid, ObjectContext>();
@@ -129,7 +129,7 @@ namespace Avalonia3.Services
             ItreeToken Data = await this.LoadFromTextJson(Content, keyValuePairs, guid);
             JsonMap.files.Add(new JsonFile(guid, keyValuePairs, Data.Id, Name));
             if (guid != Guid.Empty || guid != null)
-                this.LoadDialogJson(guid);
+                this.LoadDialogJson(guid,result);
 
             
         }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.OpenGL.Surfaces;
 using Avalonia3.Models;
@@ -42,6 +43,7 @@ namespace Avalonia3.ViewModels
                     this.DialogResult = new ResultDialog() { Type = ResultType.Success};
                     JsonData = textBox.Text;
                     this.CloseDialog(window as TextWindow, DialogResult);
+
                 }
                 catch (Newtonsoft.Json.JsonException ex)
                 {
@@ -74,6 +76,7 @@ namespace Avalonia3.ViewModels
             this.DialogResult = new ResultDialog() { Type = ResultType.Cancell };
             this.CloseDialog(window as TextWindow, DialogResult);
         }
+       
     }
     
 }
