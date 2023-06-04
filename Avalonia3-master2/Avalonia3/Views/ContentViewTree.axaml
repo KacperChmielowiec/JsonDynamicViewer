@@ -1,0 +1,173 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:vm="using:Avalonia3.ViewModels"
+			 xmlns:v="using:Avalonia3.Views"
+			 xmlns:services="using:Avalonia3.Services"
+			 xmlns:e="using:Avalonia.Styling"
+			 xmlns:models="using:Avalonia3.Models"
+			 xmlns:svg="using:Avalonia.Svg.Skia"
+			 xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+			 xmlns:search="clr-namespace:AvaloniaEdit.Search;assembly=AvaloniaEdit"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Avalonia3.Views.ContentViewTree">
+	<UserControl.Resources>
+		<services:JarrayLengthConverter x:Key="JArrayLengthConverter"/>
+		<services:TypeConverter x:Key="TypeConverter"/>
+		<services:TypePropToColorConverter x:Key="TypePropToColorConverter"/>
+		<services:JvalueConverter x:Key="ValueConverter"/>
+	</UserControl.Resources>
+	<UserControl.Styles>
+
+		<StyleInclude Source="avares://AvaloniaEdit/AvaloniaEdit.xaml" />
+		<Style Selector="TabControl WrapPanel">
+			<Setter Property="Background" Value="#bcbde5"/>
+			<Setter Property="Height" Value="35"/>
+		</Style>
+		<Style Selector="TabItem">
+			<Setter Property="FontSize" Value="15"/>
+			
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
+
+		<Style Selector="TabItem:selected">
+			<Setter Property="Foreground" Value="#2B579A"/>
+			<Setter Property="Margin" Value="0 0 0 0"/>
+			<Setter Property="Padding" Value="0 0 0 0"/>
+			<Setter Property="Height" Value="1"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="BorderBrush" Value="Red"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Template">
+				<ControlTemplate>
+					<DockPanel>
+						<Button>
+							<DockPanel>
+								<TextBlock Text="{Binding Header}"></TextBlock>
+								<Image PointerPressed="Remove_LeftButtondDown" Tag="{Binding}" Height="15" Width="15" Margin="5 0 0 0" Cursor="Hand"  Source="C:\Users\kacper\source\repos\Avalonia3\Avalonia3\images\cross.png"></Image>
+							</DockPanel>
+						</Button>
+
+					</DockPanel>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+
+	</UserControl.Styles>
+	 <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+		</Grid.RowDefinitions>
+
+		<DockPanel Grid.Row="0" Background="#d7ecff">
+			<DockPanel.Styles>
+				<Style Selector="Button">
+					<Setter Property="Background" Value="#e9e9fc"/>
+					<Setter Property="FontWeight" Value="SemiBold"/>
+					<Setter Property="Foreground" Value="#5e5e5e"/>
+					<Setter Property="Margin" Value="0 0 2 0"/>
+
+				</Style>
+			</DockPanel.Styles>
+			<Button Command="{Binding LoadDialog}">
+				<DockPanel>
+					<Image Source="{SvgImage /Assets/file-add-svgrepo-com.svg}"/>
+					<TextBlock Text=" Nowy Plik"></TextBlock>
+				</DockPanel>
+			</Button>
+			<Button Command="{Binding OpenTextDialog}">
+				<DockPanel>
+					<Image Source="{SvgImage /Assets/clipboard-copy-memory-editor-copy-paste-svgrepo-com.svg}"/>
+					<TextBlock Text=" Dodaj ze schowka"></TextBlock>
+
+				</DockPanel>
+			</Button>
+			<Button Command="{Binding RemoveCommand}">
+				<DockPanel>
+					<Image Source="{SvgImage /Assets/delete-svgrepo-com.svg}"/>
+					<TextBlock Text=" Usuń element"></TextBlock>
+
+				</DockPanel>
+			</Button>
+			<Button Command="{Binding SwapContent}">
+				<DockPanel>
+					<Image Source="{SvgImage /Assets/setting-svgrepo-com.svg}"/>
+					<TextBlock Text=" Zaawansowane"></TextBlock>
+
+				</DockPanel>
+			</Button>
+		</DockPanel>
+		<DockPanel ZIndex="100" Grid.Row="1" Height="400" Width="300"  Opacity=".1" IsVisible="{Binding	VisibleIconEmpty}">
+			<Image Source="{SvgImage /Assets/document-error-svgrepo-com.svg}"/>
+		</DockPanel>
+		<TabControl SelectionChanged="SetTabItem" Background="AliceBlue" Grid.Row="1" Grid.Column="0"  Name="tabControl">
+			<TabControl.ItemTemplate>
+				<DataTemplate>
+					<DockPanel>
+						
+						<TextBlock Text="{Binding Header}"></TextBlock>
+					</DockPanel>
+				</DataTemplate>
+			</TabControl.ItemTemplate>
+			<TabControl.ContentTemplate>
+
+				<DataTemplate  x:DataType="models:TabItemContent">
+
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition  Width="*"></ColumnDefinition>
+							<ColumnDefinition  Width="*"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" ></RowDefinition>
+						</Grid.RowDefinitions>
+
+						<ScrollViewer>
+							<DockPanel Name="EditorPanel" Grid.Column="0" Grid.Row="0"  >
+								<v:EditorControl Name="Editor" DataContext="{Binding}"/>
+
+							</DockPanel>
+						</ScrollViewer>
+						<DockPanel ZIndex="100" Grid.Row="1" Height="400" Width="300"  Opacity=".1" Margin="0 0 0 37" IsVisible="{Binding !IsVisible}" Grid.ColumnSpan="2">
+							<Image Source="{SvgImage /Assets/document-error-svgrepo-com.svg}"/>
+						</DockPanel>
+						<DockPanel  IsVisible="{Binding IsVisible}" Grid.Column="1" Grid.Row="0" DockPanel.Dock="Top" LastChildFill="True">
+							<TreeView  Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1"  Items="{Binding Json}" Padding="20" Margin="0 20 0 20"  Name="JsonTreeView" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
+								<TreeView.DataTemplates>
+									<TreeDataTemplate  DataType="models:JObjectTree" ItemsSource="{Binding ChildrenCollection}" >
+										<StackPanel PointerPressed="Load_Text_Event"  Orientation="Horizontal" Margin="1" Tag="{Binding}">
+											<TextBlock Text=" "/>
+											<TextBlock  Text="{Binding Path='Type', StringFormat={}{0 } {{ }} }" Foreground="#729fcf"/>
+										</StackPanel>
+									</TreeDataTemplate>
+									<TreeDataTemplate DataType="models:JPropertyTree" ItemsSource="{Binding Value.ChildrenCollection}" >
+										<StackPanel PointerPressed="Load_Text_Event"  Orientation="Horizontal" Margin="1" Tag="{Binding}">
+											<TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+											<TextBlock Text=" : "/>
+											<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0" IsVisible="{Binding Value.Type, Converter={StaticResource	TypeConverter},ConverterParameter=Array}"/>
+											<TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+											<TextBlock Text="{}{ }" Foreground="#729fcf" IsVisible="{Binding Value.Type, Converter={StaticResource	TypeConverter},ConverterParameter=Object}"/>
+											<TextBlock Text=" " IsVisible="{Binding Value.Type, Converter={StaticResource TypeConverter},ConverterParameter=Value}" />
+											<TextBlock TextWrapping="Wrap" Text="{Binding Value, Converter={StaticResource ValueConverter}}" Foreground="{Binding Converter={StaticResource TypePropToColorConverter}}" />
+										</StackPanel>
+									</TreeDataTemplate>
+									<TreeDataTemplate DataType="models:JArrayTree" ItemsSource="{Binding ChildrenCollection}">
+										<StackPanel PointerPressed="Load_Text_Event"  Orientation="Horizontal" Margin="1" Tag="{Binding}">
+											<TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+											<TextBlock Text=" : "/>
+											<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+											<TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+										</StackPanel>
+									</TreeDataTemplate>
+								</TreeView.DataTemplates>
+							</TreeView>
+						</DockPanel>
+					</Grid>
+				</DataTemplate>
+			</TabControl.ContentTemplate>
+		</TabControl>
+	</Grid>
+</UserControl>

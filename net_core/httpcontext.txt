@@ -1,0 +1,40 @@
+HttpContext to klasa w ASP.NET Core, która reprezentuje kontekst żądania HTTP. Oto lista najważniejszych właściwości i metod dostępnych w klasie HttpContext:
+
+Właściwości:
+
+Request: reprezentuje żądanie HTTP.
+Response: reprezentuje odpowiedź HTTP.
+Connection: reprezentuje połączenie sieciowe, które obsługuje żądanie.
+Items: słownik zawierający dane specyficzne dla żądania, które są przechowywane przez middleware i komponenty aplikacji.
+User: reprezentuje zalogowanego użytkownika lub tożsamość klienta.
+WebSockets: umożliwia komunikację w czasie rzeczywistym z użyciem protokołu WebSocket.
+Session: reprezentuje dane sesji dla bieżącego żądania.
+TraceIdentifier: unikalny identyfikator dla żądania.
+RequestAborted: informuje o tym, czy żądanie zostało przerwane.
+Metody:
+
+Abort: anuluje żądanie HTTP.
+RequestServices: zwraca dostawcę usług, który jest używany przez aplikację.
+GetEndpoint: zwraca endpoint, który obsługuje bieżące żądanie HTTP.
+HasEndpoint: informuje, czy bieżące żądanie HTTP ma przypisany endpoint.
+Features: umożliwia dostęp do cech kontekstu, takich jak uwierzytelnianie, kompresja, obsługa protokołów itp.
+GetFeature: zwraca określoną cechę kontekstu, na przykład uwierzytelnianie lub obsługę protokołu.z
+
+
+
+public async Task<IActionResult> OnGetAsync()
+{
+    if (HttpContext.Request.Query.TryGetValue("id", out var idValue) &&
+        int.TryParse(idValue, out var id))
+    {
+        // ... obsługa wartości "id"
+    }
+
+    if (HttpContext.Request.Query.TryGetValue("name", out var nameValue))
+    {
+        var name = nameValue.ToString();
+        // ... obsługa wartości "name"
+    }
+
+    // ...
+}

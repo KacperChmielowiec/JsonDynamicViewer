@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrxiLibary", "MatrxiLibary\MatrxiLibary.csproj", "{8348FB33-283C-4C9E-96C7-87EAE235F1C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testdll", "testdll\testdll.csproj", "{D3A9401F-4449-42B4-BBC2-8455B0F12952}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8348FB33-283C-4C9E-96C7-87EAE235F1C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8348FB33-283C-4C9E-96C7-87EAE235F1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8348FB33-283C-4C9E-96C7-87EAE235F1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8348FB33-283C-4C9E-96C7-87EAE235F1C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3A9401F-4449-42B4-BBC2-8455B0F12952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A9401F-4449-42B4-BBC2-8455B0F12952}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A9401F-4449-42B4-BBC2-8455B0F12952}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A9401F-4449-42B4-BBC2-8455B0F12952}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E70A102F-E084-48A3-908D-F4D141E430B6}
+	EndGlobalSection
+EndGlobal

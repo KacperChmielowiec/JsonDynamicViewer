@@ -1,0 +1,259 @@
+<!--
+TreeViewer - Cross-platform software to draw phylogenetic trees
+Copyright (C) 2021  Giorgio Bianchini
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<local:ChildWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeViewer;assembly=TreeViewer"
+        xmlns:mdc="clr-namespace:VectSharp.MarkdownCanvas;assembly=VectSharp.MarkdownCanvas"
+        mc:Ignorable="d" Width="830" Height="625"
+        x:Class="TreeViewer.ModuleCreatorWindow"
+        Title="Module creator" FontFamily="resm:TreeViewer.Fonts.?assembly=TreeViewer#Open Sans" FontSize="13"
+        Icon="resm:TreeViewer.Assets.WindowIcon.png?assembly=TreeViewer">
+  <Window.Styles>
+    <Style Selector=".WindowsStyle Canvas.RibbonSeparator">
+      <Setter Property="Background" Value="#B1B1B1" />
+      <Setter Property="Margin" Value="0,0,0,0" />
+    </Style>
+
+    <Style Selector=".MacOSStyle Canvas.RibbonSeparator">
+      <Setter Property="Background" Value="#CECECE" />
+    </Style>
+
+    <Style Selector="TabControl">
+      <Setter Property="Background" Value="#F5F5F5"/>
+    </Style>
+    <Style Selector="TabControl WrapPanel">
+      <Setter Property="Background" Value="#2B579A"/>
+    </Style>
+
+    <Style Selector="Grid.TabItem">
+      <Setter Property="Transitions">
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <Style Selector="mdc|MarkdownCanvasControl.TabItem">
+      <Setter Property="Transitions">
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <Style Selector="Button.SideBarButtonNoForeground:pointerover TextBlock">
+      <Setter Property="Foreground" Value="#0072b2"/>
+    </Style>
+  </Window.Styles>
+  <Window.Resources>
+    <SolidColorBrush x:Key="TabItemHeaderSelectedPipeFill"></SolidColorBrush>
+  </Window.Resources>
+  <local:ChildWindow.Content>
+    <Grid>
+      <Grid Margin="10">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Name="HeaderGrid" Margin="0,0,0,10" Grid.ColumnSpan="3">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+          </Grid.ColumnDefinitions>
+
+          <TextBlock Grid.Column="1" FontSize="16" Foreground="#0072b2" Text="Module creator" Margin="10, 0, 0, 0" VerticalAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="1">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+          </Grid.RowDefinitions>
+
+          <TextBlock Margin="0,10,0,0" FontSize="14" FontWeight="Bold">Templates</TextBlock>
+
+          <ScrollViewer VerticalScrollBarVisibility="Auto" Name="TemplateScrollViewer" Grid.Row="1" AllowAutoHide="False" Margin="0,5,0,0" Padding="0,0,16,0">
+            <StackPanel Margin="0,0,10,0">
+
+
+
+              <Button Name="FileTypeModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">File type</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="LoadFileModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Load file</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="TransformerModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Transformer</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="FurtherTransformationModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Further transformation</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="CoordinatesModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Coordinates</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="PlotActionModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Plot action</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="SelectionActionModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Selection action</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="ActionModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Action</TextBlock>
+                </Grid>
+              </Button>
+
+              <Button Name="MenuActionModuleButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Classes="SideBarButtonNoForeground" Padding="5,7" Background="Transparent" Margin="0,0,0,5">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+
+                  <TextBlock Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1">Menu action</TextBlock>
+                </Grid>
+              </Button>
+            </StackPanel>
+          </ScrollViewer>
+
+        </Grid>
+
+        <Canvas Grid.Column="1" Grid.Row="1" Width="1" Margin="5, 15, 5, 5" Background="#BFBFBF" />
+
+        <Grid Grid.Column="2" Grid.Row="1" Margin="10, 0, 0, 0">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+          </Grid.RowDefinitions>
+
+          <TextBlock Margin="0,10,0,0" FontSize="14" FontWeight="Bold">Recent files</TextBlock>
+
+          <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" AllowAutoHide="False" Margin="0,5,0,0" Padding="0,0,16,0">
+            <WrapPanel Margin="0,10,0,0" Name="RecentFilesGrid" />
+          </ScrollViewer>
+
+        </Grid>
+      </Grid>
+
+      <Grid IsVisible="False" Name="EditorContainerGrid" Background="#f3f3f3" Margin="0,0,0,10" ClipToBounds="True">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="1*" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="1*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="1*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.ColumnSpan="5" Name="RibbonBarContainer" />
+
+        <Grid Name="EditorContainer" Grid.ColumnSpan="5" Classes="TabItem" Grid.Row="1">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+          </Grid.RowDefinitions>
+          <Grid Name="RibbonTabContainer" Height="100" ClipToBounds="True" ZIndex="1">
+            <local:RibbonTabContent HorizontalAlignment="Stretch" Height="100"></local:RibbonTabContent>
+          </Grid>
+          <Canvas Grid.Row="1" Height="1" Classes="RibbonSeparator" ZIndex="1"></Canvas>
+        </Grid>
+
+
+        <mdc:MarkdownCanvasControl Name="ManualCanvas" FontSize="14" MaxRenderWidth="1000" Grid.ColumnSpan="5" Grid.Row="1" Classes="TabItem" Margin="10,5,10,0" Opacity="0" IsHitTestVisible="False" RenderTransform="translate(-16px, 0)" />
+
+        <Button Width="100" HorizontalContentAlignment="Center" Grid.Column="1" Grid.Row="2" Name="OKButton" Margin="0,5,0,0" FontSize="13" Classes="PlainButton" ZIndex="2">OK</Button>
+        <Button Width="100" HorizontalContentAlignment="Center" Grid.Column="3" Grid.Row="2" Name="CancelButton" Margin="0,5,0,0" FontSize="13" Classes="PlainButton" ZIndex="2">Cancel</Button>
+      </Grid>
+    </Grid>
+  </local:ChildWindow.Content>
+</local:ChildWindow>

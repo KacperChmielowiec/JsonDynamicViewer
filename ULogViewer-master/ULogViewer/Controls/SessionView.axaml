@@ -1,0 +1,1977 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sys="using:System"
+             xmlns:ia="using:Avalonia.Xaml.Interactivity"
+             xmlns:iaCore="using:Avalonia.Xaml.Interactions.Core"
+			 xmlns:aConverters="using:Avalonia.Data.Converters"
+			 xmlns:abControls="using:CarinaStudio.Controls"
+			 xmlns:abConverters="using:CarinaStudio.Data.Converters"
+			 xmlns:as="using:CarinaStudio.AppSuite"
+			 xmlns:asControls="using:CarinaStudio.AppSuite.Controls"
+			 xmlns:asConverters="using:CarinaStudio.AppSuite.Converters"
+			 xmlns:asInput="using:CarinaStudio.AppSuite.Input"
+			 xmlns:asMedia="using:CarinaStudio.AppSuite.Media"
+			 xmlns:app="using:CarinaStudio.ULogViewer"
+			 xmlns:appAnalysis="using:CarinaStudio.ULogViewer.ViewModels.Analysis"
+			 xmlns:appAnalysisScripting="using:CarinaStudio.ULogViewer.ViewModels.Analysis.Scripting"
+             xmlns:appControls="using:CarinaStudio.ULogViewer.Controls"
+             xmlns:appConverters="using:CarinaStudio.ULogViewer.Converters"
+			 xmlns:appCtxlBased="using:CarinaStudio.ULogViewer.ViewModels.Analysis.ContextualBased"
+			 xmlns:appInput="using:CarinaStudio.ULogViewer.Input"
+             xmlns:appLogs="using:CarinaStudio.ULogViewer.Logs"
+			 xmlns:appNet="using:CarinaStudio.ULogViewer.Net"
+             xmlns:appViewModels="using:CarinaStudio.ULogViewer.ViewModels"
+			 xmlns:cs="using:CarinaStudio"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CarinaStudio.ULogViewer.Controls.SessionView"
+			 Name="root">
+
+	<!-- Resources -->
+	<UserControl.Resources>
+
+		<!-- Create log analysis rule set menu -->
+		<ContextMenu x:Key="createLogAnalysisRuleSetMenu" PlacementMode="Bottom">
+			<MenuItem Command="{Binding $parent[UserControl].CreateKeyLogAnalysisRuleSet}" Header="{DynamicResource String/SessionView.LogAnalysisRuleSets.KeyLogAnalysisRuleSet}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{DynamicResource Image/Icon.Flag.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].CreateOperationDurationAnalysisRuleSet}" Header="{DynamicResource String/SessionView.LogAnalysisRuleSets.OperationDurationAnalysisRuleSet}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Timer.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].CreateOperationCountingAnalysisRuleSet}" Header="{DynamicResource String/SessionView.LogAnalysisRuleSets.OperationCountingAnalysisRuleSet}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Layers.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].CreateLogAnalysisScriptSet}" Header="{DynamicResource String/SessionView.LogAnalysisRuleSets.LogAnalysisScriptSet}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Code}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+
+		<!-- Log actions menu -->
+		<ContextMenu x:Key="logActionMenu">
+			<MenuItem Name="showLogPropertyMenuItem" Command="{Binding $parent[UserControl].ShowLogStringPropertyCommand}" Header="{DynamicResource String/SessionView.ShowLogProperty.Disabled}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Details.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Header="{DynamicResource String/SessionView.MarkLogs}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Mark.Outline}"/>
+				</MenuItem.Icon>
+				<MenuItem.Styles>
+					<Style Selector="Border.MarkIcon">
+						<Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutItemForeground}"/>
+						<Setter Property="BorderThickness" Value="{StaticResource Thickness/SessionView.Menu.MarkColorIcon.Border}"/>
+						<Setter Property="CornerRadius" Value="{StaticResource CornerRadius/SessionView.Menu.MarkColorIcon}"/>
+						<Setter Property="Height" Value="{StaticResource Double/MenuItem.Icon.Size}"/>
+						<Setter Property="Width" Value="{StaticResource Double/MenuItem.Icon.Size}"/>
+					</Style>
+				</MenuItem.Styles>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Default}" Header="{DynamicResource String/MarkColor.Default}" InputGesture="{x:Static appInput:KeyGestures.MarkLogs}"/>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Red}" Header="{DynamicResource String/MarkColor.Red}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithRed}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Red}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Orange}" Header="{DynamicResource String/MarkColor.Orange}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithOrange}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Orange}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Yellow}" Header="{DynamicResource String/MarkColor.Yellow}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithYellow}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Yellow}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Green}" Header="{DynamicResource String/MarkColor.Green}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithGreen}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Green}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Blue}" Header="{DynamicResource String/MarkColor.Blue}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithBlue}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Blue}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Indigo}" Header="{DynamicResource String/MarkColor.Indigo}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithIndigo}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Indigo}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Purple}" Header="{DynamicResource String/MarkColor.Purple}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithPurple}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Purple}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Magenta}" Header="{DynamicResource String/MarkColor.Magenta}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithMagenta}">
+					<MenuItem.Icon>
+						<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Magenta}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].UnmarkSelectedLogsCommand}" Header="{DynamicResource String/SessionView.UnmarkLogs}" InputGesture="{x:Static appInput:KeyGestures.UnmarkLogs}">
+				<MenuItem.Icon>
+					<Image Classes="Icon" Source="{StaticResource Image/Unmark.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding LogSelection.SelectMarkedLogsCommand}" Header="{DynamicResource String/SessionView.SelectMarkedLogs}" InputGesture="{x:Static appInput:KeyGestures.SelectMarkLogs}"/>
+			<Separator/>
+			<MenuItem Name="copyLogPropertyMenuItem" Command="{Binding $parent[UserControl].CopyLogPropertyCommand}" Header="{DynamicResource String/SessionView.CopyLogProperty.Disabled}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Copy.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding LogSelection.CopySelectedLogsCommand}" Header="{DynamicResource String/SessionView.CopyLogs}" InputGesture="{x:Static asInput:KeyGestures.Copy}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Copy.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding LogSelection.CopySelectedLogsWithFileNamesCommand}" Header="{DynamicResource String/SessionView.CopyLogsWithFileNames}" InputGesture="{x:Static appInput:KeyGestures.CopyLogsWithFileNames}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Copy.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].CopyLogTextCommand}" Header="{DynamicResource String/SessionView.CopyLogText}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Debug.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Name="filterByLogPropertyMenuItem" Header="{DynamicResource String/SessionView.FilterByLogProperty.Disabled}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Filter.Outline}"/>
+				</MenuItem.Icon>
+				<MenuItem Command="{Binding LogFiltering.FilterBySelectedPropertyCommand}" CommandParameter="{x:Static app:Accuracy.Normal}" Header="{DynamicResource String/SessionView.FilterByLogProperty.NormalAccuracy}"/>
+				<Separator/>
+				<MenuItem Command="{Binding LogFiltering.FilterBySelectedPropertyCommand}" CommandParameter="{x:Static app:Accuracy.High}" Header="{DynamicResource String/SessionView.FilterByLogProperty.HighAccuracy}"/>
+				<MenuItem Command="{Binding LogFiltering.FilterBySelectedPropertyCommand}" CommandParameter="{x:Static app:Accuracy.Low}" Header="{DynamicResource String/SessionView.FilterByLogProperty.LowAccuracy}"/>
+			</MenuItem>
+			<MenuItem Command="{Binding LogFiltering.FilterBySelectedProcessIdCommand}" Header="{DynamicResource String/SessionView.FilterLogsBySelectedProcessId}">
+				<MenuItem.CommandParameter>
+					<sys:Boolean>False</sys:Boolean>
+				</MenuItem.CommandParameter>
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Filter.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding LogFiltering.FilterBySelectedProcessIdCommand}" Header="{DynamicResource String/SessionView.FilterLogsBySelectedProcessIdOnly}">
+				<MenuItem.CommandParameter>
+					<sys:Boolean>True</sys:Boolean>
+				</MenuItem.CommandParameter>
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Filter.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding LogFiltering.FilterBySelectedThreadIdCommand}" Header="{DynamicResource String/SessionView.FilterLogsBySelectedThreadId}">
+				<MenuItem.CommandParameter>
+					<sys:Boolean>False</sys:Boolean>
+				</MenuItem.CommandParameter>
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Filter.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding LogFiltering.FilterBySelectedThreadIdCommand}" Header="{DynamicResource String/SessionView.FilterLogsBySelectedThreadIdOnly}">
+				<MenuItem.CommandParameter>
+					<sys:Boolean>True</sys:Boolean>
+				</MenuItem.CommandParameter>
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Filter.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Name="searchLogPropertyOnInternetMenuItem">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Search}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].ShowFileInExplorerCommand}" Header="{DynamicResource String/SessionView.ShowFileInExplorer}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.FileManager.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+
+		<!-- Log file action menu -->
+		<ContextMenu x:Key="logFileActionMenu" PlacementMode="Bottom">
+			<MenuItem Command="{Binding $parent[UserControl].CopyLogFileNameCommand}" CommandParameter="{Binding FileName}" Header="{DynamicResource String/SessionView.CopyLogFileName}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Copy.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].CopyLogFilePathCommand}" CommandParameter="{Binding FileName}" Header="{DynamicResource String/SessionView.CopyLogFilePath}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Copy.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Command="{Binding $parent[UserControl].ReloadLogFileCommand}" CommandParameter="{Binding FileName}" Header="{DynamicResource String/SessionView.ReloadLogFile}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Refresh}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].ReloadLogFileWithoutLogReadingPreconditionCommand}" CommandParameter="{Binding FileName}" Header="{DynamicResource String/SessionView.ReloadLogFile.WithoutLogReadingPrecondition}" IsEnabled="{Binding !LogReadingPrecondition.IsEmpty}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Refresh}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].DataContext.RemoveLogFileCommand}" CommandParameter="{Binding FileName}" Header="{DynamicResource String/SessionView.RemoveLogFile}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Delete.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Command="{Binding $parent[UserControl].ShowLogFileInExplorerCommand}" CommandParameter="{Binding FileName}" Header="{DynamicResource String/SessionView.ShowFileInExplorer}" IsEnabled="{x:Static cs:Platform.IsOpeningFileManagerSupported}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.FileManager.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+
+		<!-- Log filter combination mode menu -->
+		<ContextMenu x:Key="logFilterCombinationModeMenu" PlacementMode="Bottom">
+			<MenuItem Command="{Binding LogFiltering.SetFilterCombinationModeCommand}" CommandParameter="{x:Static appViewModels:FilterCombinationMode.Auto}" Header="{DynamicResource String/FilterCombinationMode.Auto}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/FilterCombinationMode.Auto.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Command="{Binding LogFiltering.SetFilterCombinationModeCommand}" CommandParameter="{x:Static appViewModels:FilterCombinationMode.Intersection}" Header="{DynamicResource String/FilterCombinationMode.Intersection}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Intersection}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding LogFiltering.SetFilterCombinationModeCommand}" CommandParameter="{x:Static appViewModels:FilterCombinationMode.Union}" Header="{DynamicResource String/FilterCombinationMode.Union}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Union}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+
+		<!-- Log header template-->
+		<DataTemplate x:Key="logHeaderTemplate">
+			<Border Background="{x:Static Brushes.Transparent}" BorderBrush="{DynamicResource Brush/SessionView.LogHeader.Separator}" BorderThickness="1,0,0,0" HorizontalAlignment="Stretch" Margin="{StaticResource Thickness/SessionView.LogHeader.Margin}" Padding="{StaticResource Thickness/SessionView.LogHeader.Padding}">
+				<ToolTip.Tip>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{DynamicResource String/SessionView.LogPropertyName}" VerticalAlignment="Center"/>
+						<TextBlock Text="{Binding NameForLogProperty}" VerticalAlignment="Center"/>
+					</StackPanel>
+				</ToolTip.Tip>
+				<TextBlock Text="{Binding DisplayName}" HorizontalAlignment="Stretch" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+			</Border>
+		</DataTemplate>
+
+		<!-- Log marking menu -->
+		<ContextMenu x:Key="logMarkingMenu">
+			<ContextMenu.Styles>
+				<Style Selector="Border.MarkIcon">
+					<Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutItemForeground}"/>
+					<Setter Property="BorderThickness" Value="{StaticResource Thickness/SessionView.Menu.MarkColorIcon.Border}"/>
+					<Setter Property="CornerRadius" Value="{StaticResource CornerRadius/SessionView.Menu.MarkColorIcon}"/>
+					<Setter Property="Height" Value="{StaticResource Double/MenuItem.Icon.Size}"/>
+					<Setter Property="Width" Value="{StaticResource Double/MenuItem.Icon.Size}"/>
+				</Style>
+			</ContextMenu.Styles>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Default}" Header="{DynamicResource String/MarkColor.Default}" InputGesture="{x:Static appInput:KeyGestures.MarkLogs}"/>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Red}" Header="{DynamicResource String/MarkColor.Red}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithRed}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Red}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Orange}" Header="{DynamicResource String/MarkColor.Orange}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithOrange}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Orange}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Yellow}" Header="{DynamicResource String/MarkColor.Yellow}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithYellow}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Yellow}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Green}" Header="{DynamicResource String/MarkColor.Green}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithGreen}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Green}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Blue}" Header="{DynamicResource String/MarkColor.Blue}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithBlue}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Blue}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Indigo}" Header="{DynamicResource String/MarkColor.Indigo}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithIndigo}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Indigo}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Purple}" Header="{DynamicResource String/MarkColor.Purple}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithPurple}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Purple}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].MarkSelectedLogsCommand}" CommandParameter="{x:Static appViewModels:MarkColor.Magenta}" Header="{DynamicResource String/MarkColor.Magenta}" InputGesture="{x:Static appInput:KeyGestures.MarkLogsWithMagenta}">
+				<MenuItem.Icon>
+					<Border Classes="MarkIcon" Background="{DynamicResource Brush/SessionView.LogListBox.MarkIndicator.Magenta}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Command="{Binding $parent[UserControl].UnmarkSelectedLogsCommand}" Header="{DynamicResource String/SessionView.UnmarkLogs}" InputGesture="{x:Static appInput:KeyGestures.UnmarkLogs}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Unmark.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+
+		<!-- Log profile selection menu -->
+		<appControls:LogProfileSelectionContextMenu x:Key="logProfileSelectionMenu" PlacementMode="Bottom"/>
+
+		<!-- Log property tool tip template -->
+		<DataTemplate x:Key="logPropertyToolTipTemplate">
+			<TextBlock FontFamily="{Binding LogFontFamily, Source={x:Static appControls:ControlFonts.Default}}" MaxLines="8" Text="{Binding}" TextWrapping="Wrap"/>
+		</DataTemplate>
+
+		<!-- Logs saving menu -->
+		<ContextMenu x:Key="logsSavingMenu" PlacementMode="Bottom">
+			<MenuItem Command="{Binding $parent[UserControl].SaveLogsCommand}" Header="{DynamicResource String/SessionView.SaveLogs}" InputGesture="{x:Static appInput:KeyGestures.SaveLogs}"/>
+			<MenuItem Command="{Binding $parent[UserControl].SaveAllLogsCommand}" Header="{DynamicResource String/SessionView.SaveAllLogs}" InputGesture="{x:Static appInput:KeyGestures.SaveAllLogs}"/>
+		</ContextMenu>
+
+		<!-- Other actions menu -->
+		<ContextMenu x:Key="otherActionsMenu" PlacementMode="Bottom">
+			<MenuItem Command="{Binding $parent[UserControl].Application.ShowApplicationOptionsDialog}" Header="{DynamicResource String/SessionView.AppOptions}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Settings.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].Application.CheckForApplicationUpdate}" Header="{DynamicResource String/SessionView.CheckForAppUpdate}">
+				<MenuItem.Icon>
+					<Panel>
+						<Image Classes="MenuItem_Icon" IsVisible="{Binding $parent[Window].Application.UpdateInfo, Converter={x:Static aConverters:ObjectConverters.IsNull}}" Source="{StaticResource Image/Icon.Update.Outline}"/>
+						<Image Classes="MenuItem_Icon" IsVisible="{Binding $parent[Window].Application.UpdateInfo, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}" Source="{StaticResource Image/Icon.Update.Colored}"/>
+					</Panel>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[UserControl].RestartAsAdministratorCommand}" Header="{DynamicResource String/SessionView.RestartAsAdministrator}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Administrator}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Command="{Binding $parent[Window].CreateMainWindow}" Header="{DynamicResource String/Common.CreateWindow}" InputGesture="{x:Static appInput:KeyGestures.NewWindow}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.AddWindow}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Command="{Binding $parent[Window].LayoutMainWindowsCommand}" CommandParameter="{x:Static asControls:MultiWindowLayout.Horizontal}" Header="{DynamicResource String/MainWindow.LayoutMainWindows.Horizontal}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Layout.Horizontal}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[Window].LayoutMainWindowsCommand}" CommandParameter="{x:Static asControls:MultiWindowLayout.Vertical}" Header="{DynamicResource String/MainWindow.LayoutMainWindows.Vertical}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Layout.Vertical}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem Command="{Binding $parent[Window].LayoutMainWindowsCommand}" CommandParameter="{x:Static asControls:MultiWindowLayout.Tile}" Header="{DynamicResource String/MainWindow.LayoutMainWindows.Tile}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Layout.Tile}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Name="toolsMenuItem" Header="{DynamicResource String/SessionView.Tools}" IsVisible="{Binding $parent[UserControl].IsToolsMenuItemVisible}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Tool.Outline}"/>
+				</MenuItem.Icon>
+				<MenuItem Command="{Binding $parent[UserControl].EditPathEnvVar}" Header="{DynamicResource String/SessionView.EditPathEnvVar}" IsVisible="{x:Static asControls:PathEnvVarEditorDialog.IsSupported}">
+					<MenuItem.Icon>
+						<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Edit}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<Separator IsVisible="{x:Static asControls:PathEnvVarEditorDialog.IsSupported}"/>
+				<MenuItem Command="{Binding $parent[Window].EditConfiguration}" Header="{DynamicResource String/SessionView.EditConfiguration}" IsVisible="{Binding $parent[UserControl].Application.IsDebugMode}">
+					<MenuItem.Icon>
+						<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Tool.Outline}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[Window].EditPersistentState}" Header="{DynamicResource String/SessionView.EditPersistentState}" IsVisible="{Binding $parent[UserControl].Application.IsDebugMode}">
+					<MenuItem.Icon>
+						<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Tool.Outline}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Command="{Binding $parent[Window].Application.ShowSelfTestingWindow}" Header="{DynamicResource String/Common.SelfTesting}" IsVisible="{Binding $parent[UserControl].Application.IsTestingMode}">
+					<MenuItem.Icon>
+						<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Lab}"/>
+					</MenuItem.Icon>
+				</MenuItem>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Command="{Binding $parent[UserControl].Application.ShowApplicationInfoDialog}" Header="{DynamicResource String/SessionView.AppInfo}">
+				<MenuItem.Icon>
+					<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Information.Outline}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+
+		<!-- Test menu -->
+		<ContextMenu x:Key="testMenu" PlacementMode="Left">
+			<MenuItem Command="{Binding $parent[UserControl].TestCommand}" CommandParameter="RestartApp" Header="Restart application"/>
+			<MenuItem Command="{Binding $parent[UserControl].TestCommand}" CommandParameter="RestartRootWindows" Header="Restart root windows"/>
+		</ContextMenu>
+
+		<!-- Working directory menu -->
+		<ContextMenu x:Key="workingDirectoryActionsMenu" PlacementMode="Top">
+			<MenuItem Command="{Binding $parent[UserControl].ShowWorkingDirectoryInExplorerCommand}" Header="{DynamicResource String/SessionView.ShowWorkingDirectoryInExplorer}">
+				<MenuItem.Icon>
+					<Border Classes="MenuItem_Icon">
+						<Image Classes="Icon" Source="{StaticResource Image/Icon.FileManager.Outline}"/>
+					</Border>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+		
+	</UserControl.Resources>
+
+	<!-- Styles -->
+	<UserControl.Styles>
+		<Style Selector="ListBox.Log">
+			<Setter Property="CornerRadius" Value="0"/>
+			<Setter Property="Padding" Value="{StaticResource Thickness/SessionView.LogListBox.Padding}"/>
+		</Style>
+		<Style Selector="ListBox.Log > ListBoxItem">
+			<Setter Property="CornerRadius" Value="0"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="Padding" Value="0"/>
+		</Style>
+		<Style Selector="ListBox.Log > ListBoxItem:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource Brush/SessionView.LogListBox.Item.Background.Pressed}"/>
+		</Style>
+		<Style Selector="ListBox.Log > ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource Brush/SessionView.LogListBox.Item.Background.Selected}"/>
+		</Style>
+		<Style Selector="ListBox.Log > ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource Brush/SessionView.LogListBox.Item.Background.Selected.PointerOver}"/>
+		</Style>
+		<Style Selector="ListBox.Log > ListBoxItem:selected:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource Brush/SessionView.LogListBox.Item.Background.Pressed}"/>
+		</Style>
+	</UserControl.Styles>
+	
+	<!-- Content -->
+	<Grid Background="{DynamicResource Brush/Window.Background}" Name="RootGrid" RowDefinitions="Auto,*,Auto">
+
+		<!-- Columns -->
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition MaxWidth="{x:Static appViewModels:Session.MaxSidePanelSize}" MinWidth="{x:Static appViewModels:Session.MinSidePanelSize}" Width="0"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+
+		<!-- Toolbar -->
+		<Panel Grid.ColumnSpan="4">
+
+			<!-- Toolbar -->
+			<Border Name="toolBarContainer" Classes="ToolBar">
+				<WrapPanel>
+
+					<!-- Log actions -->
+					<StackPanel Name="toolBarLogActionItemsPanel" Orientation="Horizontal">
+
+						<!-- Select log profiles -->
+						<Button Name="selectAndSetLogProfileButton" Classes="ToolBar_Button_WithDropDownButton" Command="{Binding $parent[UserControl].SelectAndSetLogProfileCommand}" ToolTip.Tip="{DynamicResource String/SessionView.SetLogProfile}">
+							<Image Classes="Icon" Source="{StaticResource Image/LogProfile}"/>
+						</Button>
+						<ToggleButton Name="selectAndSetLogProfileDropDownButton" Classes="ToolBar_DropDownButton" Command="{Binding $parent[UserControl].ShowLogProfileSelectionMenu}" IsEnabled="{Binding #selectAndSetLogProfileButton.IsEnabled}" ToolTip.Tip="{DynamicResource String/SessionView.SetLogProfile}">
+							<Panel>
+								<Image Classes="ToolBar_DropDownButtonIcon" IsVisible="{Binding !$parent[ToggleButton].IsChecked}" Source="{StaticResource Image/Icon.MoveDown}"/>
+								<Image Classes="ToolBar_DropDownButtonIcon" IsVisible="{Binding $parent[ToggleButton].IsChecked}" Source="{StaticResource Image/Icon.MoveDown.Light}"/>
+							</Panel>
+						</ToggleButton>
+
+						<!-- Set working directory -->
+						<Button Classes="ToolBar_Button" Command="{Binding $parent[UserControl].SelectAndSetWorkingDirectoryCommand}" IsVisible="{Binding IsWorkingDirectoryNeeded}" ToolTip.Tip="{DynamicResource String/SessionView.SetWorkingDirectory}">
+							<Image Classes="Icon" Source="{StaticResource Image/Icon.Folder}"/>
+						</Button>
+
+						<!-- Add files -->
+						<Button Classes="ToolBar_Button" Command="{Binding $parent[UserControl].AddLogFilesCommand}" IsVisible="{Binding AreFileBasedLogs}" ToolTip.Tip="{DynamicResource String/SessionView.AddLogFiles.WithShortcut}">
+							<Image Classes="Icon" Source="{StaticResource Image/Icon.AddFile}"/>
+						</Button>
+
+						<!-- Set URI -->
+						<Button Classes="ToolBar_Button" Command="{Binding $parent[UserControl].SelectAndSetUriCommand}" IsVisible="{Binding IsUriNeeded}" ToolTip.Tip="{DynamicResource String/SessionView.SetUri}">
+							<Image Classes="Icon">
+								<DrawingImage>
+									<GeometryDrawing Brush="{DynamicResource Brush/Icon}" Geometry="{StaticResource Geometry/LogProfile.Network}"/>
+								</DrawingImage>
+							</Image>
+						</Button>
+
+						<!-- Set IP endpoint -->
+						<Button Classes="ToolBar_Button" Command="{Binding $parent[UserControl].SelectAndSetIPEndPointCommand}" IsVisible="{Binding IsIPEndPointNeeded}" ToolTip.Tip="{DynamicResource String/SessionView.SetIPEndPoint}">
+							<Image Classes="Icon">
+								<DrawingImage>
+									<GeometryDrawing Brush="{DynamicResource Brush/Icon}" Geometry="{StaticResource Geometry/LogProfile.Network}"/>
+								</DrawingImage>
+							</Image>
+						</Button>
+
+						<!-- Save logs -->
+						<ToggleButton Name="logsSavingButton" Classes="ToolBar_ToggleButton" Command="{Binding $parent[UserControl].ShowLogsSavingMenu}" IsVisible="{Binding HasLogProfile}" ToolTip.Tip="{DynamicResource String/SessionView.SaveLogs}">
+							<ia:Interaction.Behaviors>
+								<iaCore:DataTriggerBehavior Binding="{Binding $self.IsChecked}" Value="True">
+									<iaCore:ChangePropertyAction PropertyName="ToolTip.Tip" Value="{x:Null}"/>
+								</iaCore:DataTriggerBehavior>
+							</ia:Interaction.Behaviors>
+							<Panel>
+								<Image Classes="Icon" Source="{StaticResource Image/Icon.Save.Light}" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+								<Image Classes="Icon" Source="{StaticResource Image/Icon.Save}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+							</Panel>
+						</ToggleButton>
+
+						<!-- Clear files -->
+						<Button Classes="ToolBar_Button" Command="{Binding ClearLogFilesCommand}" IsVisible="{Binding AreFileBasedLogs}" ToolTip.Tip="{DynamicResource String/SessionView.ClearLogFiles}">
+							<Image Classes="Icon" Source="{StaticResource Image/Icon.Delete}"/>
+						</Button>
+
+						<!-- Reload logs -->
+						<Button Classes="ToolBar_Button" Command="{Binding $parent[UserControl].ReloadLogsCommand}" ToolTip.Tip="{DynamicResource String/SessionView.ReloadLogs}">
+							<Image Classes="Icon" Source="{StaticResource Image/Icon.Refresh}"/>
+						</Button>
+
+						<!-- Pause/resume -->
+						<Button Classes="ToolBar_Button" Command="{Binding PauseResumeLogsReadingCommand}" IsVisible="{Binding IsReadingLogsContinuously}" ToolTip.Tip="{DynamicResource String/SessionView.PauseResumeLogsReading}">
+							<Image Classes="Icon">
+								<ia:Interaction.Behaviors>
+									<iaCore:DataTriggerBehavior Binding="{Binding IsLogsReadingPaused}" Value="True">
+										<iaCore:ChangePropertyAction PropertyName="Source" Value="{StaticResource Image/Icon.PlayMedia}"/>
+									</iaCore:DataTriggerBehavior>
+									<iaCore:DataTriggerBehavior Binding="{Binding IsLogsReadingPaused}" Value="False">
+										<iaCore:ChangePropertyAction PropertyName="Source" Value="{StaticResource Image/Icon.PauseMedia}"/>
+									</iaCore:DataTriggerBehavior>
+								</ia:Interaction.Behaviors>
+							</Image>
+						</Button>
+
+					</StackPanel>
+
+					<!-- Other log filters -->
+					<StackPanel Name="toolBarOtherLogFilterItemsPanel" Orientation="Horizontal">
+
+						<!-- Level filter -->
+						<ComboBox Name="logLevelFilterComboBox" Classes="ToolBar_ComboBox" IsEnabled="{Binding $parent[UserControl].HasLogProfile}" IsVisible="false" Items="{Binding $parent[UserControl].ValidLogLevels}" SelectedItem="{Binding LogFiltering.LevelFilter, Mode=TwoWay}" ToolTip.Tip="{DynamicResource String/SessionView.LogLevelFilter.Description}" VerticalAlignment="Center" Width="{StaticResource Double/SessionView.ToolBar.LogLevelFilter.Width}">
+							<ia:Interaction.Behaviors>
+								<iaCore:DataTriggerBehavior Binding="{Binding $parent[UserControl].ValidLogLevels.Count}" ComparisonCondition="GreaterThan" Value="1">
+									<iaCore:ChangePropertyAction PropertyName="IsVisible" Value="True"/>
+								</iaCore:DataTriggerBehavior>
+								<iaCore:DataTriggerBehavior Binding="{Binding $parent[UserControl].ValidLogLevels.Count}" ComparisonCondition="LessThanOrEqual" Value="1">
+									<iaCore:ChangePropertyAction PropertyName="IsVisible" Value="False"/>
+								</iaCore:DataTriggerBehavior>
+							</ia:Interaction.Behaviors>
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<Border Classes="ComboBoxItem_Icon" Background="{Binding Converter={x:Static appConverters:LogLevelBrushConverter.Background}}" BorderBrush="{DynamicResource ComboBoxItemForeground}" BorderThickness="1"/>
+										<TextBlock Classes="ComboBoxItem_TextBlock" Text="{Binding Converter={x:Static appControls:SessionView.LogLevelNameConverter}}" VerticalAlignment="Center"/>
+									</StackPanel>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+
+						<!-- PID filter -->
+						<Panel Name="logProcessIdFilterTextBoxPanel" Grid.Column="1" IsVisible="{Binding LogFiltering.IsProcessIdFilterEnabled}" Width="{StaticResource Double/SessionView.ToolBar.LogProcessIdFilter.Width}">
+							<abControls:IntegerTextBox Name="logProcessIdFilterTextBox" Classes="ToolBar_TextBox_WithInPlaceAction" IsEnabled="{Binding $parent[UserControl].HasLogProfile}" Maximum="2147483647" Minimum="0" ToolTip.Tip="{DynamicResource String/SessionView.LogProcessIdFilter.Description}" Value="{Binding LogFiltering.ProcessIdFilter, Mode=TwoWay}" VerticalAlignment="Center" Watermark="{DynamicResource String/LogProperty.ProcessId}"/>
+							<Panel Classes="TextBox_InPlaceActions">
+								<Button Classes="TextBox_InPlaceAction" Command="{Binding #logProcessIdFilterTextBox.Clear}" IsVisible="{Binding #logProcessIdFilterTextBox.Text, Converter={x:Static aConverters:StringConverters.IsNotNullOrEmpty}}" ToolTip.Tip="{DynamicResource String/Common.Clear}">
+									<Image Classes="Icon" Source="{StaticResource Image/Icon.Close}"/>
+								</Button>
+							</Panel>
+						</Panel>
+
+						<!-- TID filter -->
+						<Panel Name="logThreadIdFilterTextBoxPanel" Grid.Column="1" IsVisible="{Binding LogFiltering.IsThreadIdFilterEnabled}" Width="{StaticResource Double/SessionView.ToolBar.LogProcessIdFilter.Width}">
+							<abControls:IntegerTextBox Name="logThreadIdFilterTextBox" Classes="ToolBar_TextBox_WithInPlaceAction" IsEnabled="{Binding $parent[UserControl].HasLogProfile}" Maximum="2147483647" Minimum="0" ToolTip.Tip="{DynamicResource String/SessionView.LogThreadIdFilter.Description}" Value="{Binding LogFiltering.ThreadIdFilter, Mode=TwoWay}" VerticalAlignment="Center" Watermark="{DynamicResource String/LogProperty.ThreadId}"/>
+							<Panel Classes="TextBox_InPlaceActions">
+								<Button Classes="TextBox_InPlaceAction" Command="{Binding #logThreadIdFilterTextBox.Clear}" IsVisible="{Binding #logThreadIdFilterTextBox.Text, Converter={x:Static aConverters:StringConverters.IsNotNullOrEmpty}}" ToolTip.Tip="{DynamicResource String/Common.Clear}">
+									<Image Classes="Icon" Source="{StaticResource Image/Icon.Close}"/>
+								</Button>
+							</Panel>
+						</Panel>
+
+						<!-- Filters combinatin mode -->
+						<ToggleButton Name="logFilterCombinationModeButton" Classes="ToolBar_ToggleButton" Command="{Binding $parent[UserControl].ShowLogFiltersCombinationModeMenu}" Grid.Column="3" IsVisible="{Binding $parent[UserControl].CanFilterLogsByNonTextFilters}" ToolTip.Tip="{DynamicResource String/SessionView.LogFiltersCombinationMode}">
+							<Panel>
+								<Image Classes="Icon" IsVisible="{Binding !$parent[ToggleButton].IsChecked}">
+									<DrawingImage>
+										<GeometryDrawing Brush="{DynamicResource Brush/Icon}" Geometry="{Binding LogFiltering.FiltersCombinationMode, Converter={x:Static appControls:SessionView.LogFilterCombinationModeIconConverter}}"/>
+									</DrawingImage>
+								</Image>
+								<Image Classes="Icon" IsVisible="{Binding $parent[ToggleButton].IsChecked}">
+									<DrawingImage>
+										<GeometryDrawing Brush="{DynamicResource Brush/Icon.Light}" Geometry="{Binding LogFiltering.FiltersCombinationMode, Converter={x:Static appControls:SessionView.LogFilterCombinationModeIconConverter}}"/>
+									</DrawingImage>
+								</Image>
+							</Panel>
+						</ToggleButton>
+						
+					</StackPanel>
+
+					<!-- Log text filters -->
+					<Grid Name="toolBarLogTextFilterItemsPanel" ColumnDefinitions="*,Auto">
+
+						<!-- Text filter -->
+						<Panel Name="logTextFilterTextBoxPanel" HorizontalAlignment="Stretch" Margin="{StaticResource Thickness/ToolBar.Item.Margin}" VerticalAlignment="Center">
+							<asControls:RegexTextBox Name="logTextFilterTextBox" Classes="RegexTextBox_InvalidText" FontFamily="{Binding PatternFontFamily, Source={x:Static appControls:ControlFonts.Default}}" IgnoreCase="{Binding LogFiltering.IgnoreTextFilterCase}" IsEnabled="{Binding $parent[UserControl].HasLogProfile}" Object="{Binding LogFiltering.TextFilter, Mode=TwoWay}" ToolTip.Tip="{DynamicResource String/SessionView.LogTextFilter.ToolTip}" Watermark="{DynamicResource String/SessionView.LogTextFilter.Watermark}"/>
+							<StackPanel Classes="TextBox_InPlaceActions">
+								<Button Name="clearLogTextFilterButton" Classes="TextBox_InPlaceAction" Command="{Binding #logTextFilterTextBox.Clear}" IsVisible="{Binding #logTextFilterTextBox.Text, Converter={x:Static aConverters:StringConverters.IsNotNullOrEmpty}}" ToolTip.Tip="{DynamicResource String/Common.Clear}">
+									<Image Classes="Icon" Source="{StaticResource Image/Icon.Close}"/>
+								</Button>
+								<ToggleButton Name="ignoreLogTextFilterCaseButton" Classes="TextBox_InPlaceAction" IsChecked="{Binding LogFiltering.IgnoreTextFilterCase, Mode=TwoWay}" IsVisible="{Binding $parent[UserControl].HasLogProfile}" ToolTip.Tip="{DynamicResource String/SessionView.IgnoreLogTextFilterCase}">
+									<Panel>
+										<Image Classes="Icon" IsVisible="{Binding !$parent[ToggleButton].IsChecked}" Source="{StaticResource Image/IgnoreCase}"/>
+										<Image Classes="Icon" IsVisible="{Binding $parent[ToggleButton].IsChecked}" Source="{StaticResource Image/IgnoreCase.Light}"/>
+									</Panel>
+								</ToggleButton>
+								<Button Name="logFilteringHelpButton" Classes="TextBox_InPlaceAction" Command="{Binding $parent[UserControl].OpenLogFilteringDocumentation}" IsVisible="{Binding $parent[UserControl].ShowHelpButtonOnLogTextFilter}" ToolTip.Tip="{DynamicResource String/Common.Help}">
+									<Image Classes="Icon" Source="{StaticResource Image/Icon.Question}"/>
+								</Button>
+							</StackPanel>
+						</Panel>
+
+						<!-- Predefined text filters -->
+						<ToggleButton Name="predefinedLogTextFiltersButton" Classes="ToolBar_ToggleButton" Grid.Column="1" IsEnabled="{Binding $parent[UserControl].HasLogProfile}" ToolTip.Tip="{DynamicResource String/SessionView.PredefinedLogTextFilters}">
+							<Panel>
+								<Panel>
+									<Image Classes="Icon" Source="{StaticResource Image/Filters}" IsVisible="{Binding ElementName=predefinedLogTextFilterListBox, Path=!SelectedItems.Count}"/>
+									<Image Classes="Icon" Source="{StaticResource Image/Filters.Active}" IsVisible="{Binding ElementName=predefinedLogTextFilterListBox, Path=SelectedItems.Count}"/>
+									<Image Classes="Icon" Source="{StaticResource Image/Filters.Light}" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+								</Panel>
+								<Popup Name="predefinedLogTextFiltersPopup" IsLightDismissEnabled="True" IsOpen="{Binding $parent[ToggleButton].IsChecked, Mode=TwoWay}" PlacementTarget="{Binding $parent[ToggleButton]}" Width="{StaticResource Double/SessionView.PredefinedLogTextFiltersPopup.Width}" WindowManagerAddShadowHint="True">
+									<Border Background="{DynamicResource ComboBoxDropDownBackground}" BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}" BorderThickness="{DynamicResource Thickness/SessionView.PredefinedLogTextFiltersPopup.Border}" CornerRadius="{DynamicResource OverlayCornerRadius}" Padding="{StaticResource Thickness/SessionView.PredefinedLogTextFiltersPopup.Padding}">
+										<StackPanel>
+											<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/SessionView.PredefinedLogTextFiltersPopup.Header}"/>
+											<Grid ColumnDefinitions="*,Auto">
+												<ListBox Name="predefinedLogTextFilterListBox" Background="{DynamicResource Brush/SessionView.PredefinedLogTextFilterListBox.Background}" Items="{Binding $parent[UserControl].PredefinedLogTextFilters}" MaxHeight="{StaticResource Double/SessionView.PredefinedLogTextFilterListBox.MaxHeight}" MinHeight="{StaticResource Double/SessionView.PredefinedLogTextFilterListBox.MinHeight}" SelectionChanged="OnPredefinedLogTextFilterListBoxSelectionChanged" SelectionMode="Multiple">
+													<ListBox.ItemTemplate>
+														<DataTemplate DataType="{x:Type appViewModels:PredefinedLogTextFilter}">
+															<Border Background="{x:Static Brushes.Transparent}" Padding="{StaticResource Thickness/SessionView.PredefinedLogTextFilterListBox.Item.Padding}">
+																<ToolTip.Tip>
+																	<asControls:SyntaxHighlightingTextBlock DefinitionSet="{Binding $parent[UserControl].RegexSyntaxHighlightingDefinitionSet}" FontFamily="{Binding PatternFontFamily, Source={x:Static appControls:ControlFonts.Default}}" Text="{Binding Regex}"/>
+																</ToolTip.Tip>
+																<Grid ColumnDefinitions="*,Auto">
+																	<TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+																	<Border Classes="InPlaceAction_Reserved"/>
+																	<StackPanel Grid.Column="1" IsVisible="{Binding $parent[ListBoxItem].IsPointerOver}" Orientation="Horizontal" VerticalAlignment="Center">
+																		<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].RemovePredefinedLogTextFilterCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Delete}">
+																			<asControls:Image Classes="InPlaceAction_Icon">
+																				<DrawingImage>
+																					<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Delete}"/>
+																				</DrawingImage>
+																			</asControls:Image>
+																		</Button>
+																		<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].CopyPredefinedLogTextFilterCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Copy}">
+																			<asControls:Image Classes="InPlaceAction_Icon">
+																				<DrawingImage>
+																					<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Copy}"/>
+																				</DrawingImage>
+																			</asControls:Image>
+																		</Button>
+																		<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].EditPredefinedLogTextFilterCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Edit}">
+																			<asControls:Image Classes="InPlaceAction_Icon">
+																				<DrawingImage>
+																					<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Edit}"/>
+																				</DrawingImage>
+																			</asControls:Image>
+																		</Button>
+																	</StackPanel>
+																</Grid>
+															</Border>
+														</DataTemplate>
+													</ListBox.ItemTemplate>
+													<ListBox.Styles>
+														<Style Selector="ListBoxItem">
+															<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+															<Setter Property="Padding" Value="0"/>
+														</Style>
+													</ListBox.Styles>
+												</ListBox>
+												<TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" HorizontalAlignment="Center" IsVisible="{Binding !$parent[UserControl].PredefinedLogTextFilters.Count}" Margin="{StaticResource Thickness/SessionView.NoPredefinedLogTextFilterHint.Margin}" Text="{DynamicResource String/Common.Empty}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+												<StackPanel Grid.Column="1" VerticalAlignment="Top">
+													<Button Classes="BrowseButton" Command="{Binding $parent[UserControl].CreatePredefinedLogTextFilter}" ToolTip.Tip="{DynamicResource String/Common.Create}">
+														<Image Classes="BrowseButtonIcon" Source="{StaticResource Image/Icon.Add}"/>
+													</Button>
+													<Separator Classes="Dialog_Separator_Small"/>
+													<Button Classes="BrowseButton" Command="{Binding $parent[UserControl].ClearPredefinedLogTextFilterSelection}" IsEnabled="{Binding ElementName=predefinedLogTextFilterListBox, Path=SelectedItems.Count}" ToolTip.Tip="{DynamicResource String/SessionView.ClearPredefinedLogTextFiltersSelection}">
+														<Image Classes="BrowseButtonIcon" Source="{StaticResource Image/ClearSelection}"/>
+													</Button>
+													<Separator Classes="Dialog_Separator"/>
+													<Button Classes="BrowseButton" Command="{Binding $parent[UserControl].OpenPredefinedTextFiltersDocumentation}" ToolTip.Tip="{DynamicResource String/Common.Help}">
+														<Image Classes="BrowseButtonIcon" Source="{StaticResource Image/Icon.Question}"/>
+													</Button>
+												</StackPanel>
+											</Grid>
+										</StackPanel>
+									</Border>
+								</Popup>
+							</Panel>
+						</ToggleButton>
+					
+					</Grid>
+
+					<!-- Other items -->
+					<StackPanel Name="toolBarOtherItemsPanel" Orientation="Horizontal">
+
+						<!-- Reset log filters -->
+						<Button Classes="ToolBar_Button" Command="{Binding LogFiltering.ResetFiltersCommand}" ToolTip.Tip="{DynamicResource String/SessionView.ResetLogFilters}">
+							<Image Classes="Icon" Source="{StaticResource Image/ClearFilters}"/>
+						</Button>
+
+						<!-- Show marked logs only -->
+						<ToggleButton Name="showMarkedLogsOnlyButton" Classes="ToolBar_ToggleButton" Command="{Binding ToggleShowingMarkedLogsTemporarilyCommand}" IsChecked="{Binding IsShowingMarkedLogsTemporarily}" ToolTip.Tip="{DynamicResource String/SessionView.ShowMarkedLogsTemporarily}">
+							<Panel>
+								<Image Classes="Icon" Source="{StaticResource Image/MarkedOnly}" IsVisible="{Binding !IsShowingMarkedLogsTemporarily}"/>
+								<Image Classes="Icon" Source="{StaticResource Image/MarkedOnly.Light}" IsVisible="{Binding IsShowingMarkedLogsTemporarily}"/>
+							</Panel>
+						</ToggleButton>
+
+						<!-- Show all logs temporarily -->
+						<ToggleButton Name="showAllLogsTemporarilyButton" Classes="ToolBar_ToggleButton" Command="{Binding ToggleShowingAllLogsTemporarilyCommand}" IsChecked="{Binding IsShowingAllLogsTemporarily}" ToolTip.Tip="{DynamicResource String/SessionView.ShowAllLogsTemporarily}">
+							<Panel>
+								<Image Classes="Icon" Source="{StaticResource Image/Visibility}" IsVisible="{Binding !IsShowingAllLogsTemporarily}"/>
+								<Image Classes="Icon" Source="{StaticResource Image/Visibility.Light}" IsVisible="{Binding IsShowingAllLogsTemporarily}"/>
+							</Panel>
+						</ToggleButton>
+
+						<!-- Separator -->
+						<Separator Classes="ToolBar_Separator" IsVisible="{Binding #otherActionsButton.IsVisible}"/>
+
+						<!-- Other actions -->
+						<ToggleButton Name="otherActionsButton" Classes="ToolBar_ToggleButton" Command="{Binding $parent[UserControl].ShowOtherActions}" IsVisible="{x:Static cs:Platform.IsNotMacOS}" ToolTip.Tip="{DynamicResource String/SessionView.OtherActions}">
+							<Panel>
+								<Image Classes="Icon" Source="{StaticResource Image/Icon.More}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+								<Image Classes="Icon" Source="{StaticResource Image/Icon.More.Light}" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+								<Border Classes="ToolBar_NotificationIndicator" IsVisible="{Binding $parent[Window].Application.UpdateInfo, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}">
+									<Image Classes="ToolBar_NotificationIndicator" Source="{StaticResource Image/Icon.NotificationIndicator.Information}"/>
+								</Border>
+							</Panel>
+						</ToggleButton>
+
+					</StackPanel>
+
+				</WrapPanel>
+			</Border>
+
+			<!-- Progress bar -->
+			<ProgressBar Background="{x:Null}" CornerRadius="0" Grid.ColumnSpan="3" Grid.Row="1" IsIndeterminate="{Binding IsProcessingLogs}" IsVisible="{Binding IsProcessingLogs}" MaxHeight="{StaticResource Double/SessionView.LogsProgessingBar.Height}" MinHeight="{StaticResource Double/SessionView.LogsProgessingBar.Height}" VerticalAlignment="Bottom"/>
+			
+		</Panel>
+
+		<!-- Logs -->
+		<Grid Name="logListBoxContainer" Background="{x:Static Brushes.Transparent}" DragDrop.AllowDrop="True" Grid.Row="1" RowDefinitions="Auto,*,Auto">
+
+			<!-- Header -->
+			<Panel Background="{DynamicResource Brush/SessionView.LogHeader.Background}">
+
+				<Panel.Styles>
+					<Style Selector="Button.ToolBar_Button">
+						<Setter Property="Height" Value="{StaticResource Double/SessionView.SidePanel.Header.Button.Size}"/>
+						<Setter Property="Margin" Value="1,0,0,0"/>
+						<Setter Property="Padding" Value="{StaticResource Thickness/SessionView.SidePanel.Header.Button.Padding}"/>
+						<Setter Property="Width" Value="{StaticResource Double/SessionView.SidePanel.Header.Button.Size}"/>
+					</Style>
+					<Style Selector="ToggleButton.ToolBar_ToggleButton">
+						<Setter Property="Height" Value="{StaticResource Double/SessionView.SidePanel.Header.Button.Size}"/>
+						<Setter Property="Margin" Value="1,0,0,0"/>
+						<Setter Property="Padding" Value="{StaticResource Thickness/SessionView.SidePanel.Header.Button.Padding}"/>
+						<Setter Property="Width" Value="{StaticResource Double/SessionView.SidePanel.Header.Button.Size}"/>
+					</Style>
+				</Panel.Styles>
+
+				<!-- Columns -->
+				<Grid Name="logHeaderContainer">
+					<Grid.Styles>
+						<Style Selector="GridSplitter">
+							<Setter Property="Background" Value="{x:Static Brushes.Transparent}"/>
+							<Setter Property="HorizontalAlignment" Value="Stretch"/>
+							<Setter Property="VerticalAlignment" Value="Stretch"/>
+						</Style>
+						<Style Selector="GridSplitter /template/ Border#PART_Root">
+							<Setter Property="Transitions" Value="{x:Null}"/>
+						</Style>
+						<Style Selector="GridSplitter:pointerover /template/ Border#PART_Root">
+							<Setter Property="Background" Value="{x:Static Brushes.Transparent}"/>
+							<Setter Property="Transitions" Value="{x:Null}"/>
+						</Style>
+						<Style Selector="GridSplitter:pressed /template/ Border#PART_Root">
+							<Setter Property="Background" Value="{x:Static Brushes.Transparent}"/>
+							<Setter Property="Transitions" Value="{x:Null}"/>
+						</Style>
+					</Grid.Styles>
+					<TextBlock Margin="{StaticResource Thickness/SessionView.LogHeader.Margin}" Padding="{StaticResource Thickness/SessionView.LogHeader.Padding}" Text=" "/>
+					<Grid Name="logHeaderGrid"/>
+				</Grid>
+
+				<!-- Actions -->
+				<Border Background="{DynamicResource Brush/SessionView.LogHeader.Background}" HorizontalAlignment="Right" VerticalAlignment="Center">
+					<StackPanel Margin="{StaticResource Thickness/SessionView.SidePanel.Header.Padding}" Orientation="Horizontal">
+
+						<!-- Select log by timestamp -->
+						<Button Classes="ToolBar_Button" Command="{Binding $parent[UserControl].SelectNearestLogByTimestamp}" IsEnabled="{Binding HasLogs}" IsVisible="{Binding AreLogsSortedByTimestamp}" ToolTip.Tip="{DynamicResource String/SessionView.SelectNearestLogByTimestamp}">
+							<Image Classes="Icon" Source="{StaticResource Image/FindDate}"/>
+						</Button>
+
+						<!-- Scroll to latest log -->
+						<ToggleButton Classes="ToolBar_ToggleButton" IsChecked="{Binding $parent[UserControl].IsScrollingToLatestLogNeeded, Mode=TwoWay}" IsEnabled="{Binding $parent[UserControl].HasLogProfile}" ToolTip.Tip="{DynamicResource String/SessionView.ScrollToLatestLog}">
+							<Panel>
+								<Panel Name="scrollToBottomLogIconPanel" IsVisible="{Binding LogProfile.SortDirection, Converter={x:Static abConverters:ObjectConverters.IsEquivalentTo}, ConverterParameter={x:Static app:SortDirection.Ascending}}">
+									<Image Classes="Icon" Source="{StaticResource Image/ToBottom}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+									<Image Classes="Icon" Source="{StaticResource Image/ToBottom.Light}" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+								</Panel>
+								<Panel IsVisible="{Binding !#scrollToBottomLogIconPanel.IsVisible}">
+									<Image Classes="Icon" Source="{StaticResource Image/ToTop}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+									<Image Classes="Icon" Source="{StaticResource Image/ToTop.Light}" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+								</Panel>
+							</Panel>
+						</ToggleButton>
+
+					</StackPanel>
+				</Border>
+			</Panel>
+
+			<!-- ListBox -->
+			<asControls:ListBox Classes="Log" Name="logListBox" AutoScrollToSelectedItem="False" Background="{DynamicResource Brush/WorkingArea.Background}" BorderThickness="0" ContextMenu="{StaticResource logActionMenu}" CornerRadius="0" DoubleClickOnItem="OnLogListBoxDoubleClickOnItem" Grid.Row="1" HorizontalAlignment="Stretch" IsEnabled="{Binding $parent[UserControl].HasLogProfile}" Items="{Binding Logs}" ScrollViewer.HorizontalScrollBarVisibility="Visible" SelectedItems="{Binding LogSelection.SelectedLogs}" SelectionChanged="OnLogListBoxSelectionChanged" SelectionMode="Multiple" VirtualizationMode="Simple">
+				<asControls:ListBox.Resources>
+					<sys:Double x:Key="ToolTipContentMaxWidth">400</sys:Double>
+				</asControls:ListBox.Resources>
+				<asControls:ListBox.Styles>
+					<Style Selector="ListBoxItem">
+						<Setter Property="Margin" Value="0,0,20,0"/>
+					</Style>
+				</asControls:ListBox.Styles>
+			</asControls:ListBox>
+
+			<!-- Hints -->
+			<Viewbox Grid.Row="1" Margin="{StaticResource Thickness/SessionView.Hint.Margin}" Stretch="Uniform" StretchDirection="DownOnly">
+				<Panel>
+
+					<!-- Hint: no log to show -->
+					<Border IsVisible="{Binding !HasLogs}">
+						<TextBlock FontSize="{StaticResource Double/SessionView.Hint.NoLogToShow.FontSize}" HorizontalAlignment="Center" IsVisible="{Binding $parent[UserControl].HasLogProfile}" Text="{DynamicResource String/SessionView.Hint.NoLogToShow}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+					</Border>
+
+					<!-- Hint: select log profile -->
+					<StackPanel HorizontalAlignment="Center" IsVisible="{Binding !$parent[UserControl].HasLogProfile}" Orientation="Horizontal">
+						<TextBlock FontSize="{StaticResource Double/SessionView.Hint.SelectLogProfile.FontSize}" Text="{DynamicResource String/SessionView.Hint.SelectLogProfile.Section1}" TextWrapping="NoWrap" VerticalAlignment="Center"/>
+						<Border Height="{StaticResource Double/SessionView.Hint.SelectLogProfile.FontSize}" Margin="{StaticResource Thickness/SessionView.Hint.SelectLogProfile.Icon.Margin}" VerticalAlignment="Center" Width="{StaticResource Double/SessionView.Hint.SelectLogProfile.FontSize}">
+							<Image Classes="Icon" Source="{StaticResource Image/LogProfile}"/>
+						</Border>
+						<TextBlock FontSize="{StaticResource Double/SessionView.Hint.SelectLogProfile.FontSize}" Text="{DynamicResource String/SessionView.Hint.SelectLogProfile.Section2}" TextWrapping="NoWrap" VerticalAlignment="Center"/>
+					</StackPanel>
+
+				</Panel>
+			</Viewbox>
+
+			<!-- Logs time information -->
+			<Border Background="{DynamicResource Brush/SessionView.LogHeader.Background}" Classes="StatusBar" Grid.Row="2" IsVisible="{Binding HasLogsDuration}">
+				<Grid ColumnDefinitions="*,Auto">
+
+					<Grid.Styles>
+						<Style Selector="Button.StatusBar_Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="TextBlock.Foreground" Value="{DynamicResource TextControlForeground}"/>
+						</Style>
+						<Style Selector="Button.StatusBar_Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="TextBlock.Foreground" Value="{DynamicResource TextControlForeground}"/>
+						</Style>
+					</Grid.Styles>
+
+					<!-- Logs -->
+					<StackPanel ClipToBounds="True" Orientation="Horizontal">
+
+						<!-- Icon -->
+						<Image Classes="StatusBar_IconWithText" Source="{StaticResource Image/Calendar}"/>
+
+						<!-- Starting point -->
+						<Button Classes="StatusBar_Button" Command="{Binding LogSelection.SelectLogDurationStartingLogCommand}" Content="{Binding LogsDurationStartingString}" Foreground="{DynamicResource TextControlForeground}" ToolTip.Placement="Right" ToolTip.Tip="{DynamicResource String/SessionView.LogsDurationStartingPoint}"/>
+
+						<!-- Duration -->
+						<Image Classes="StatusBar_Icon" Margin="{StaticResource Thickness/SessionView.LogsTimeInfoPanel.Arrow.Margin}" Source="{StaticResource Image/Icon.Forward}"/>
+						<TextBlock Classes="StatusBar_TextBlock" Foreground="{DynamicResource TextControlForeground}" Text="{Binding LogsDuration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.LogsDuration}"/>
+						<Image Classes="StatusBar_Icon" Margin="{StaticResource Thickness/SessionView.LogsTimeInfoPanel.Arrow.Margin}" Source="{StaticResource Image/Icon.Forward}"/>
+
+						<!-- Ending point -->
+						<Button Classes="StatusBar_Button" Command="{Binding LogSelection.SelectLogDurationEndingLogCommand}" Content="{Binding LogsDurationEndingString}" Foreground="{DynamicResource TextControlForeground}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.LogsDurationEndingPoint}"/>
+
+					</StackPanel>
+
+					<!-- Selected logs -->
+					<StackPanel Grid.Column="1" IsVisible="{Binding LogSelection.SelectedLogsDuration, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="{Binding LogSelection.SelectedLogsDuration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" Foreground="{DynamicResource TextControlForeground}" Format="{DynamicResource String/SessionView.SelectedLogsDuration}"/>
+					</StackPanel>
+					
+				</Grid>
+			</Border>
+
+			<!-- Drag-and-drop receiver -->
+			<Border Name="dragDropReceiverBorder" Background="{x:Static Brushes.Transparent}" Grid.RowSpan="3" IsVisible="False"/>
+
+		</Grid>
+
+		<!-- Status bar -->
+		<Border Background="{StaticResource Brush/SessionView.StatusBar.Background.Inactive}" Classes="StatusBar" Grid.ColumnSpan="4" Grid.Row="2">
+			<ia:Interaction.Behaviors>
+				<iaCore:DataTriggerBehavior Binding="{Binding $parent[UserControl].StatusBarState}" Value="None">
+					<iaCore:ChangePropertyAction PropertyName="Background" Value="{StaticResource Brush/SessionView.StatusBar.Background.Inactive}"/>
+				</iaCore:DataTriggerBehavior>
+				<iaCore:DataTriggerBehavior Binding="{Binding $parent[UserControl].StatusBarState}" Value="Active">
+					<iaCore:ChangePropertyAction PropertyName="Background" Value="{StaticResource Brush/StatusBar.Background}"/>
+				</iaCore:DataTriggerBehavior>
+				<iaCore:DataTriggerBehavior Binding="{Binding $parent[UserControl].StatusBarState}" Value="Error">
+					<iaCore:ChangePropertyAction PropertyName="Background" Value="{StaticResource Brush/SessionView.StatusBar.Background.Error}"/>
+				</iaCore:DataTriggerBehavior>
+				<iaCore:DataTriggerBehavior Binding="{Binding $parent[UserControl].StatusBarState}" Value="Paused">
+					<iaCore:ChangePropertyAction PropertyName="Background" Value="{StaticResource Brush/SessionView.StatusBar.Background.Paused}"/>
+				</iaCore:DataTriggerBehavior>
+				<iaCore:DataTriggerBehavior Binding="{Binding $parent[UserControl].StatusBarState}" Value="Warning">
+					<iaCore:ChangePropertyAction PropertyName="Background" Value="{StaticResource Brush/SessionView.StatusBar.Background.Warning}"/>
+				</iaCore:DataTriggerBehavior>
+			</ia:Interaction.Behaviors>
+			
+			<DockPanel>
+
+				<!-- Right part -->
+				<Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" DockPanel.Dock="Right">
+
+					<!-- Filtering progress -->
+					<StackPanel Name="filterProgressStatusBarItem" Grid.Column="0" IsVisible="{Binding LogFiltering.IsFiltering}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<Image Classes="StatusBar_IconWithText" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.LogsFilteringProgress}">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Filter.Outline}"/>
+							</DrawingImage>
+						</Image>
+						<Panel ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.LogsFilteringProgress}" VerticalAlignment="Center">
+							<TextBlock Classes="StatusBar_TextBlock" Text="00.0%" Opacity="0"/>
+							<TextBlock Classes="StatusBar_TextBlock" HorizontalAlignment="Left" Text="{Binding LogFiltering.FilteringProgress, Converter={x:Static appViewModels:Session.LogsOperationProgressConverter}}"/>
+						</Panel>
+					</StackPanel>
+
+					<!-- Analyzing progress -->
+					<StackPanel Grid.Column="0" Orientation="Horizontal">
+						<StackPanel.IsVisible>
+							<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+								<Binding Path="LogAnalysis.IsAnalyzing"/>
+								<Binding Path="!IsVisible" ElementName="filterProgressStatusBarItem"/>
+							</MultiBinding>
+						</StackPanel.IsVisible>
+						<Separator Classes="StatusBar_Separator"/>
+						<Image Classes="StatusBar_IconWithText" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.LogAnalysisProgress}">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Analysis.Outline}"/>
+							</DrawingImage>
+						</Image>
+						<Panel ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.LogAnalysisProgress}" VerticalAlignment="Center">
+							<TextBlock Classes="StatusBar_TextBlock" Text="00.0%" Opacity="0"/>
+							<TextBlock Classes="StatusBar_TextBlock" HorizontalAlignment="Left" Text="{Binding LogAnalysis.AnalysisProgress, Converter={x:Static appViewModels:Session.LogsOperationProgressConverter}}"/>
+						</Panel>
+					</StackPanel>
+
+					<!-- Saving logs -->
+					<StackPanel Grid.Column="1" IsVisible="{Binding IsSavingLogs}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<Image Classes="StatusBar_IconWithText">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Save.Outline}"/>
+							</DrawingImage>
+						</Image>
+						<TextBlock Classes="StatusBar_TextBlock" Text="{DynamicResource String/SessionView.SavingLogs}"/>
+					</StackPanel>
+
+					<!-- Waiting for data sources -->
+					<StackPanel Grid.Column="2" IsVisible="{Binding IsWaitingForDataSources}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<Image Classes="StatusBar_IconWithText">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Waiting.Outline}"/>
+							</DrawingImage>
+						</Image>
+						<TextBlock Classes="StatusBar_TextBlock" Text="{DynamicResource String/SessionView.WaitingForDataSources}"/>
+					</StackPanel>
+
+					<!-- URI -->
+					<StackPanel Grid.Column="3" IsVisible="{Binding HasUri}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<Image Classes="StatusBar_IconWithText">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/LogProfile.Network}"/>
+							</DrawingImage>
+						</Image>
+						<TextBlock Classes="StatusBar_TextBlock" ToolTip.Placement="Left" ToolTip.Tip="{Binding Uri}">
+							<TextBlock.Text>
+								<MultiBinding StringFormat="{}{0}://{1}:{2}">
+									<Binding Path="Uri.Scheme"/>
+									<Binding Path="Uri.Host"/>
+									<Binding Path="Uri.Port"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</StackPanel>
+
+					<!-- IP endpoint -->
+					<StackPanel Grid.Column="3" IsVisible="{Binding HasIPEndPoint}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<Image Classes="StatusBar_IconWithText">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/LogProfile.Network}"/>
+							</DrawingImage>
+						</Image>
+						<TextBlock Classes="StatusBar_TextBlock" Text="{Binding IPEndPoint}"/>
+					</StackPanel>
+
+					<!-- Working directory -->
+					<StackPanel Grid.Column="4" IsVisible="{Binding HasWorkingDirectory}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<ToggleButton Name="workingDirectoryActionsButton" Classes="StatusBar_ToggleButton" Command="{Binding $parent[UserControl].ShowWorkingDirectoryActions}" ToolTip.Placement="Left" ToolTip.Tip="{Binding WorkingDirectoryPath}">
+							<StackPanel Orientation="Horizontal">
+								<Image Classes="StatusBar_IconWithText">
+									<DrawingImage>
+										<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Folder.Outline}"/>
+									</DrawingImage>
+								</Image>
+								<TextBlock Classes="StatusBar_TextBlock" Text="{Binding WorkingDirectoryName}"/>
+								<Image Classes="StatusBar_DropDownIcon">
+									<DrawingImage>
+										<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.MoveUp}"/>
+									</DrawingImage>
+								</Image>
+							</StackPanel>
+						</ToggleButton>
+					</StackPanel>
+
+					<!-- Error message -->
+					<StackPanel Grid.Column="5" IsVisible="{Binding HasAllDataSourceErrors}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<Image Classes="StatusBar_IconWithText">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Error.Outline}"/>
+							</DrawingImage>
+						</Image>
+						<TextBlock Classes="StatusBar_TextBlock" Text="{DynamicResource String/SessionView.HasAllDataSourceErrors}"/>
+					</StackPanel>
+					<StackPanel Grid.Column="5" IsVisible="{Binding HasPartialDataSourceErrors}" Orientation="Horizontal">
+						<Image Classes="StatusBar_IconWithText">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Warning.Outline}"/>
+							</DrawingImage>
+						</Image>
+						<TextBlock Classes="StatusBar_TextBlock" Text="{DynamicResource String/SessionView.HasPartialDataSourceErrors}"/>
+					</StackPanel>
+
+					<!-- Process info -->
+					<StackPanel Grid.Column="6" IsVisible="{Binding $parent[UserControl].IsProcessInfoVisible}" Orientation="Horizontal">
+						<Separator Classes="StatusBar_Separator"/>
+						<StackPanel IsVisible="{Binding $parent[UserControl].Application.IsDebugMode, Mode=OneTime}" Orientation="Horizontal">
+							<Image Classes="StatusBar_IconWithText" ToolTip.Tip="{DynamicResource String/SessionView.CpuUsage}">
+								<DrawingImage>
+									<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Speed.Outline}"/>
+								</DrawingImage>
+							</Image>
+							<Panel VerticalAlignment="Center">
+								<TextBlock Classes="StatusBar_TextBlock" Text="000 ms   " Opacity="0" VerticalAlignment="Center"/>
+								<TextBlock Classes="StatusBar_TextBlock" Background="{x:Static Brushes.Transparent}" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding $parent[UserControl].Application.ProcessInfo.UIResponseDuration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.UIResponseDuration}"/>
+							</Panel>
+						</StackPanel>
+						<Image Classes="StatusBar_IconWithText" ToolTip.Tip="{DynamicResource String/SessionView.CpuUsage}">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Cpu.Outline}"/>
+							</DrawingImage>
+						</Image>
+						<Panel VerticalAlignment="Center">
+							<TextBlock Classes="StatusBar_TextBlock" Text="00.0 % " Opacity="0"/>
+							<TextBlock Classes="StatusBar_TextBlock" Background="{x:Static Brushes.Transparent}" HorizontalAlignment="Left" Text="{Binding $parent[UserControl].Application.ProcessInfo.CpuUsagePercentage, StringFormat={}{0:F1} %}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.CpuUsage}"/>
+						</Panel>
+						<StackPanel Orientation="Horizontal">
+							<Image Classes="StatusBar_IconWithText" ToolTip.Tip="{DynamicResource String/SessionView.MemoryUsage}">
+								<DrawingImage>
+									<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Memory.Outline}"/>
+								</DrawingImage>
+							</Image>
+							<TextBlock Classes="StatusBar_TextBlock" Background="{x:Static Brushes.Transparent}" Text="{Binding LogsMemoryUsage, Converter={x:Static asConverters:FileSizeConverter.Default}}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.LogsMemoryUsage}" VerticalAlignment="Center"/>
+							<TextBlock Classes="StatusBar_TextBlock" Text="/" VerticalAlignment="Center"/>
+							<TextBlock Classes="StatusBar_TextBlock" Background="{x:Static Brushes.Transparent}" Text="{Binding TotalLogsMemoryUsage, Converter={x:Static asConverters:FileSizeConverter.Default}}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.TotalLogsMemoryUsage}" VerticalAlignment="Center"/>
+							<TextBlock Classes="StatusBar_TextBlock" Text="/" VerticalAlignment="Center"/>
+							<TextBlock Classes="StatusBar_TextBlock" Background="{x:Static Brushes.Transparent}" Text="{Binding $parent[UserControl].Application.ProcessInfo.PrivateMemoryUsage, Converter={x:Static asConverters:FileSizeConverter.Default}}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.MemoryUsage}" VerticalAlignment="Center"/>
+						</StackPanel>
+						<Button Classes="StatusBar_Button" Command="{Binding $parent[UserControl].PerformGC}" IsVisible="{Binding $parent[UserControl].Application.IsDebugMode}" ToolTip.Placement="Left" ToolTip.Tip="{DynamicResource String/SessionView.PerformGC}">
+							<Image>
+								<DrawingImage>
+									<GeometryDrawing Brush="{DynamicResource Brush/StatusBar.Foreground}" Geometry="{StaticResource Geometry/Icon.Broom}"/>
+								</DrawingImage>
+							</Image>
+						</Button>
+					</StackPanel>
+
+				</Grid>
+
+				<!-- Left part -->
+				<Grid ClipToBounds="True" ColumnDefinitions="Auto,Auto,Auto,Auto">
+
+					<!-- Empty view to reserve space -->
+					<TextBlock Classes="StatusBar_TextBlock" Grid.ColumnSpan="5" Text="{DynamicResource String/SessionView.AllLogCount}" Opacity="0"/>
+
+					<!-- Number of logs -->
+					<StackPanel IsVisible="{Binding AllLogCount}" Opacity="0" Orientation="Horizontal">
+						<!-- Empty view to reserve space -->
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="0000000" Format="{DynamicResource String/SessionView.AllLogCount}" VerticalAlignment="Center"/>
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="0000000" Format="{DynamicResource String/SessionView.FilteredLogCount}" IsVisible="{Binding IsFilteringLogsNeeded}" VerticalAlignment="Center"/>
+						<Separator Classes="StatusBar_Separator"/>
+					</StackPanel>
+					<StackPanel IsVisible="{Binding AllLogCount}" Orientation="Horizontal">
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="{Binding AllLogCount}" Format="{DynamicResource String/SessionView.AllLogCount}" VerticalAlignment="Center"/>
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="{Binding LogFiltering.FilteredLogs.Count}" Format="{DynamicResource String/SessionView.FilteredLogCount}" IsVisible="{Binding LogFiltering.IsFilteringNeeded}" VerticalAlignment="Center"/>
+						<Separator Classes="StatusBar_Separator"/>
+					</StackPanel>
+
+					<!-- Last logs reading duration -->
+					<StackPanel Grid.Column="1" IsVisible="{Binding HasLastLogsReadingDuration}" Orientation="Horizontal">
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="{Binding LastLogsReadingDuration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" Format="{DynamicResource String/SessionView.LastLogsReadingDuration}" VerticalAlignment="Center"/>
+						<Separator Classes="StatusBar_Separator"/>
+					</StackPanel>
+
+					<!-- Last logs filtering duration -->
+					<StackPanel Grid.Column="2" Orientation="Horizontal">
+						<StackPanel.IsVisible>
+							<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+								<Binding Path="LogFiltering.IsFilteringNeeded"/>
+								<Binding Path="LogFiltering.LastFilteringDuration" Converter="{x:Static aConverters:ObjectConverters.IsNotNull}"/>
+							</MultiBinding>
+						</StackPanel.IsVisible>
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="{Binding LogFiltering.LastFilteringDuration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" Format="{DynamicResource String/SessionView.LastLogsFilteringDuration}" VerticalAlignment="Center"/>
+						<Separator Classes="StatusBar_Separator"/>
+					</StackPanel>
+
+					<!-- Selected logs -->
+					<StackPanel Grid.Column="3" IsVisible="{Binding #logListBox.SelectedItems.Count}" Orientation="Horizontal">
+						<abControls:FormattedTextBlock Classes="StatusBar_TextBlock" Arg1="{Binding LogSelection.SelectedLogs.Count}" Format="{DynamicResource String/SessionView.SelectedLogCount}" VerticalAlignment="Center"/>
+						<Separator Classes="StatusBar_Separator"/>
+					</StackPanel>
+
+				</Grid>
+				
+			</DockPanel>
+		</Border>
+
+		<!-- Side panel tool bar -->
+		<Border Classes="ToolBar" Background="{DynamicResource Brush/WorkingArea.Panel.Background}" Grid.Column="3" Grid.Row="1">
+			<StackPanel Name="sidePanelBoolBarItemsPanel" VerticalAlignment="Top">
+
+				<!-- Test -->
+				<ToggleButton Name="testButton" Classes="ToolBar_ToggleButton" Command="{Binding $parent[UserControl].ShowTestMenu}" ToolTip.Tip="Test">
+					<Panel>
+						<Image Classes="Icon" Source="{StaticResource Image/Icon.Lab}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+						<Image Classes="Icon" IsVisible="{Binding $parent[ToggleButton].IsChecked}">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/Icon.Light}" Geometry="{StaticResource Geometry/Icon.Lab}"/>
+							</DrawingImage>
+						</Image>
+					</Panel>
+				</ToggleButton>
+
+				<!-- Marked logs -->
+				<ToggleButton Name="markedLogsPanelButton" Classes="ToolBar_ToggleButton" IsChecked="{Binding IsMarkedLogsPanelVisible, Mode=TwoWay}" ToolTip.Tip="{DynamicResource String/SessionView.MarkedLogsPanel}">
+					<Panel>
+						<Image Classes="Icon" Source="{StaticResource Image/Marks}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+						<Image Classes="Icon" Source="{StaticResource Image/Marks.Light}" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+					</Panel>
+				</ToggleButton>
+
+				<!-- Timestamp categories -->
+				<ToggleButton Name="timestampCategoriesPanelButton" Classes="ToolBar_ToggleButton" IsChecked="{Binding LogCategorizing.IsTimestampCategoriesPanelVisible, Mode=TwoWay}" ToolTip.Tip="{DynamicResource String/SessionView.TimestampCategoriesPanel}">
+					<Panel>
+						<Image Classes="Icon" Source="{StaticResource Image/Calendar}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+						<Image Classes="Icon" IsVisible="{Binding $parent[ToggleButton].IsChecked}">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/Icon.Light}" Geometry="{StaticResource Geometry/Calendar}"/>
+							</DrawingImage>
+						</Image>
+					</Panel>
+				</ToggleButton>
+
+				<!-- Log analysis -->
+				<ToggleButton Name="logAnalysisPanelButton" Classes="ToolBar_ToggleButton" IsChecked="{Binding LogAnalysis.IsPanelVisible, Mode=TwoWay}" IsVisible="False" ToolTip.Tip="{DynamicResource String/SessionView.LogAnalysisPanel}">
+					<Panel>
+						<Image Classes="Icon" Source="{StaticResource Image/Icon.Analysis}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+						<Image Classes="Icon" IsVisible="{Binding $parent[ToggleButton].IsChecked}">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/Icon.Light}" Geometry="{StaticResource Geometry/Icon.Analysis}"/>
+							</DrawingImage>
+						</Image>
+						<Border Classes="ToolBar_NotificationIndicator" IsVisible="{Binding LogAnalysis.HasNewAnalysisResultsInBackground}">
+							<Image Classes="ToolBar_NotificationIndicator" Source="{StaticResource Image/Icon.NotificationIndicator.Information}"/>
+						</Border>
+					</Panel>
+				</ToggleButton>
+
+				<!-- Log files -->
+				<ToggleButton Name="logFilesPanelButton" Classes="ToolBar_ToggleButton" IsChecked="{Binding IsLogFilesPanelVisible, Mode=TwoWay}" IsVisible="False" ToolTip.Tip="{DynamicResource String/SessionView.LogFilesPanel}">
+					<Panel>
+						<Image Classes="Icon" Source="{StaticResource Image/Icon.File.Text}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+						<Image Classes="Icon" IsVisible="{Binding $parent[ToggleButton].IsChecked}">
+							<DrawingImage>
+								<GeometryDrawing Brush="{DynamicResource Brush/Icon.Light}" Geometry="{StaticResource Geometry/Icon.File.Text}"/>
+							</DrawingImage>
+						</Image>
+					</Panel>
+				</ToggleButton>
+
+			</StackPanel>
+		</Border>
+
+		<!-- Side panel -->
+		<Border Name="sidePanelContainer" Background="{DynamicResource Brush/WorkingArea.Panel.Background}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" IsEnabled="{Binding $parent[UserControl].HasProfile}">
+			<Border.IsVisible>
+				<MultiBinding Converter="{x:Static aConverters:BoolConverters.Or}">
+					<Binding Path="LogAnalysis.IsPanelVisible"/>
+					<Binding Path="IsLogFilesPanelVisible"/>
+					<Binding Path="IsMarkedLogsPanelVisible"/>
+					<Binding Path="LogCategorizing.IsTimestampCategoriesPanelVisible"/>
+				</MultiBinding>
+			</Border.IsVisible>
+
+			<Panel>
+
+				<!-- Marked logs -->
+				<Grid HorizontalAlignment="Stretch" IsVisible="{Binding IsMarkedLogsPanelVisible}" RowDefinitions="Auto,*" VerticalAlignment="Stretch">
+					<Border Classes="SessionView_SidePanel_Header">
+						<Grid ColumnDefinitions="Auto,*">
+							<TextBlock Classes="SessionView_SidePanel_Header_Left" Text="{DynamicResource String/SessionView.MarkedLogsPanel}"/>
+							<TextBlock Classes="SessionView_SidePanel_Header_Right" Grid.Column="1" Text="{Binding MarkedLogs.Count, StringFormat={} ({0})}"/>
+						</Grid>
+					</Border>
+					<ListBox Classes="Log" Name="markedLogListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" Focusable="False" Grid.Row="1" IsVisible="{Binding HasMarkedLogs}" Items="{Binding MarkedLogs}" SelectionChanged="OnMarkedLogListBoxSelectionChanged" SelectionMode="Single"/>
+				</Grid>
+
+				<!-- Timestamp categories -->
+				<Grid HorizontalAlignment="Stretch" IsVisible="{Binding LogCategorizing.IsTimestampCategoriesPanelVisible}" RowDefinitions="Auto,*" VerticalAlignment="Stretch">
+					<Border Classes="SessionView_SidePanel_Header">
+						<Grid ColumnDefinitions="Auto,*">
+							<TextBlock Classes="SessionView_SidePanel_Header_Left" Text="{DynamicResource String/SessionView.TimestampCategoriesPanel}"/>
+							<TextBlock Classes="SessionView_SidePanel_Header_Right" Grid.Column="1" Text="{Binding TimestampCategories.Count, StringFormat={} ({0})}"/>
+						</Grid>
+					</Border>
+					<asControls:ListBox Classes="Log" Name="timestampCategoryListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" Focusable="False" Grid.Row="1" Items="{Binding LogCategorizing.TimestampCategories}">
+						<asControls:ListBox.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="Auto,*">
+									<Border Background="{Binding Log.ColorIndicatorBrush}" BorderBrush="{DynamicResource Brush/WorkingArea.Panel.Background}" BorderThickness="{StaticResource Thickness/SessionView.LogListBox.ColorIndicator.Border}" IsVisible="{Binding $parent[UserControl].DataContext.HasLogColorIndicator}" ToolTip.Tip="{Binding Log.ColorIndicatorTip}" Width="{StaticResource Double/SessionView.LogListBox.ColorIndicator.Width}"/>
+									<TextBlock FontFamily="{Binding LogFontFamily, Source={x:Static appControls:ControlFonts.Default}}" FontSize="{Binding LogFontSize, Source={x:Static appControls:ControlFonts.Default}}" Grid.Column="1" Margin="{StaticResource Thickness/SessionView.MarkedLogListBox.Item.Padding}" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+								</Grid>
+							</DataTemplate>
+						</asControls:ListBox.ItemTemplate>
+					</asControls:ListBox>
+				</Grid>
+
+				<!-- Log analysis -->
+				<Grid HorizontalAlignment="Stretch" IsVisible="{Binding LogAnalysis.IsPanelVisible}" RowDefinitions="Auto,*,Auto" VerticalAlignment="Stretch">
+					<Border Classes="SessionView_SidePanel_Header">
+						<Border.Styles>
+							<Style Selector="ToggleButton.ToolBar_ToggleButton">
+								<Setter Property="Height" Value="{StaticResource Double/SessionView.SidePanel.Header.Button.Size}"/>
+								<Setter Property="Margin" Value="1,0,0,0"/>
+								<Setter Property="Padding" Value="{StaticResource Thickness/SessionView.SidePanel.Header.Button.Padding}"/>
+								<Setter Property="Width" Value="{StaticResource Double/SessionView.SidePanel.Header.Button.Size}"/>
+							</Style>
+						</Border.Styles>
+						<Grid ColumnDefinitions="Auto,*,Auto,Auto">
+							<TextBlock Classes="SessionView_SidePanel_Header_Left" Text="{DynamicResource String/SessionView.LogAnalysisPanel}"/>
+							<TextBlock Classes="SessionView_SidePanel_Header_Right" Grid.Column="1" Text="{Binding LogAnalysis.AnalysisResults.Count, StringFormat={} ({0})}"/>
+							<ToggleButton Classes="ToolBar_ToggleButton" Grid.Column="2" IsChecked="{Binding $parent[UserControl].IsScrollingToLatestLogAnalysisResultNeeded, Mode=TwoWay}" ToolTip.Tip="{DynamicResource String/SessionView.ScrollToLatestLogAnalysisResult}">
+								<Panel>
+									<Image Classes="Icon" Source="{StaticResource Image/ToBottom}" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
+									<Image Classes="Icon" Source="{StaticResource Image/ToBottom.Light}" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+								</Panel>
+							</ToggleButton>
+							<ToggleButton Name="logAnalysisRuleSetsButton" Classes="ToolBar_ToggleButton" Grid.Column="3" IsChecked="{Binding #logAnalysisRuleSetsPopup.IsOpen, Mode=TwoWay}" IsEnabled="{Binding !IsRemovingLogFiles}" ToolTip.Tip="{DynamicResource String/SessionView.LogAnalysisRuleSets}">
+								<Panel>
+									<Panel IsVisible="{Binding !$parent[ToggleButton].IsChecked}">
+										<Image Classes="Icon" IsVisible="{Binding !#logAnalysisRuleSetsActiveIcon.IsVisible}" Source="{StaticResource Image/Checklist}"/>
+										<Image Name="logAnalysisRuleSetsActiveIcon" Classes="Icon">
+											<Image.IsVisible>
+												<MultiBinding Converter="{x:Static BoolConverters.Or}">
+													<Binding Path="LogAnalysis.KeyLogAnalysisRuleSets.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}"/>
+													<Binding Path="LogAnalysis.OperationDurationAnalysisRuleSets.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}"/>
+													<Binding Path="LogAnalysis.OperationCountingAnalysisRuleSets.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}"/>
+													<Binding Path="LogAnalysis.LogAnalysisScriptSets.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}"/>
+													<MultiBinding Converter="{x:Static BoolConverters.And}">
+														<Binding Path="LogAnalysis.HasCooperativeLogAnalysisScriptSet"/>
+														<Binding Path="LogAnalysis.IsCooperativeLogAnalysisScriptSetEnabled"/>
+														<Binding Path="EnableRunningScript" ElementName="root"/>
+														<Binding Path="IsProVersionActivated"/>
+													</MultiBinding>
+												</MultiBinding>
+											</Image.IsVisible>
+											<DrawingImage>
+												<GeometryDrawing Brush="{DynamicResource Brush/Accent}" Geometry="{StaticResource Geometry/Checklist}"/>
+											</DrawingImage>
+										</Image>
+									</Panel>
+									<Image Classes="Icon" IsVisible="{Binding $parent[ToggleButton].IsChecked}" Source="{StaticResource Image/Checklist.Light}"/>
+								</Panel>
+							</ToggleButton>
+							<Popup Name="logAnalysisRuleSetsPopup" IsLightDismissEnabled="True" PlacementMode="Bottom" PlacementTarget="{Binding #logAnalysisRuleSetsButton}" Width="{StaticResource Double/SessionView.LogAnalysisRuleSetsPopup.Width}" WindowManagerAddShadowHint="True">
+								<Border Background="{DynamicResource ComboBoxDropDownBackground}" BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}" BorderThickness="{DynamicResource Thickness/SessionView.LogAnalysisRuleSetsPopup.Border}" CornerRadius="{DynamicResource OverlayCornerRadius}" Padding="{StaticResource Thickness/SessionView.LogAnalysisRuleSetsPopup.Padding}">
+									<StackPanel>
+
+										<!-- Cooperative log analysis script set -->
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/SessionView.LogAnalysisRuleSets.CooperativeLogAnalysisScriptSet}"/>
+											<Separator Classes="Dialog_Separator_Small"/>
+											<abControls:FormattedTextBlock Classes="Dialog_TextBlock" Arg1="{DynamicResource String/SessionView.LogAnalysisRuleSets.Disabled}" Format="({0})" IsVisible="{Binding !$parent[UserControl].EnableRunningScript}" TextTrimming="CharacterEllipsis"/>
+											<abControls:FormattedTextBlock Classes="Dialog_TextBlock" Arg1="{DynamicResource String/SessionView.LogAnalysisRuleSets.ProVersionOnly}" Format="({0})" TextTrimming="CharacterEllipsis">
+												<abControls:FormattedTextBlock.IsVisible>
+													<MultiBinding Converter="{x:Static BoolConverters.And}">
+														<Binding Path="!IsProVersionActivated"/>
+														<Binding Path="EnableRunningScript" ElementName="root"/>
+													</MultiBinding>
+												</abControls:FormattedTextBlock.IsVisible>
+											</abControls:FormattedTextBlock>
+										</StackPanel>
+										<ToggleSwitch Classes="Dialog_ToggleSwitch" IsChecked="{Binding LogAnalysis.IsCooperativeLogAnalysisScriptSetEnabled}">
+											<ToggleSwitch.IsEnabled>
+												<MultiBinding Converter="{x:Static BoolConverters.And}">
+													<Binding Path="LogAnalysis.HasCooperativeLogAnalysisScriptSet"/>
+													<Binding Path="EnableRunningScript" ElementName="root"/>
+													<Binding Path="IsProVersionActivated"/>
+												</MultiBinding>
+											</ToggleSwitch.IsEnabled>
+										</ToggleSwitch>
+										<StackPanel>
+											<StackPanel.IsVisible>
+												<MultiBinding Converter="{x:Static BoolConverters.And}">
+													<Binding Path="HasLogProfile"/>
+													<Binding Path="!IsBuiltInLogProfile"/>
+													<Binding Path="IsProVersionActivated"/>
+												</MultiBinding>
+											</StackPanel.IsVisible>
+											<Separator Classes="Dialog_Separator_Small"/>
+											<StackPanel IsVisible="{Binding !LogAnalysis.HasCooperativeLogAnalysisScriptSet}" Orientation="Horizontal">
+												<Image Classes="Dialog_Icon" Source="{StaticResource Image/Icon.Add}"/>
+												<abControls:LinkTextBlock Classes="Dialog_Icon_LinkTextBlock" Command="{Binding #root.CreateCooperativeLogAnalysisScriptSet}" Text="{DynamicResource String/LogProfileEditorDialog.CooperativeLogAnalysisScriptSet.Create}"/>
+											</StackPanel>
+											<StackPanel IsVisible="{Binding LogAnalysis.HasCooperativeLogAnalysisScriptSet}" Orientation="Horizontal">
+												<Image Classes="Dialog_Icon" Source="{StaticResource Image/Icon.Edit.Outline}"/>
+												<abControls:LinkTextBlock Classes="Dialog_Icon_LinkTextBlock" Command="{Binding #root.EditCooperativeLogAnalysisScriptSet}" Text="{DynamicResource String/LogProfileEditorDialog.CooperativeLogAnalysisScriptSet.Edit}"/>
+											</StackPanel>
+										</StackPanel>
+										<Separator Classes="Dialog_Separator"/>
+										
+										<!-- Rule sets and script sets -->
+										<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/SessionView.LogAnalysisRuleSetsPopup.Header}"/>
+										<Grid ColumnDefinitions="*,Auto">
+											<Border Background="{DynamicResource Brush/SessionView.LogAnalysisRuleSetListBox.Background}" BorderBrush="{DynamicResource Brush/Control.Border}" BorderThickness="{DynamicResource Thickness/Control.Border}" CornerRadius="{DynamicResource ControlCornerRadius}">
+												<Panel MaxHeight="{StaticResource Double/SessionView.LogAnalysisRuleSetsPopup.MaxHeight}">
+													<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+														<StackPanel>
+
+															<StackPanel.Styles>
+																<Style Selector="ListBoxItem">
+																	<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+																	<Setter Property="Padding" Value="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Item.Padding}"/>
+																</Style>
+															</StackPanel.Styles>
+
+															<!-- Key log analysis -->
+															<Border Background="{DynamicResource Brush/Dialog.TextBlock.Background.Header1}" CornerRadius="{StaticResource CornerRadius/ListBoxItem}" IsVisible="{Binding #keyLogAnalysisRuleSetListBox.IsVisible}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Margin}" Padding="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Padding}">
+																<TextBlock FontWeight="Bold" Text="{DynamicResource String/SessionView.LogAnalysisRuleSets.KeyLogAnalysisRuleSet}" TextTrimming="CharacterEllipsis"/>
+															</Border>
+															<ListBox Name="keyLogAnalysisRuleSetListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" IsVisible="{Binding RuleSets.Count, Source={x:Static appAnalysis:KeyLogAnalysisRuleSetManager.Default}}" Items="{Binding RuleSets, Source={x:Static appAnalysis:KeyLogAnalysisRuleSetManager.Default}}" SelectionMode="Multiple" VirtualizationMode="None">
+																<ListBox.ItemTemplate>
+																	<DataTemplate>
+																		<Grid ColumnDefinitions="Auto,*,Auto">
+																			<Panel Height="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Icon.Margin}" VerticalAlignment="Center" Width="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}">
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}, ConverterParameter=Light}" IsVisible="{Binding $parent[ListBoxItem].IsSelected}"/>
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}}" IsVisible="{Binding !$parent[ListBoxItem].IsSelected}"/>
+																			</Panel>
+																			<TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"/>
+																			<Border Grid.Column="1" Classes="InPlaceAction_Reserved"/>
+																			<StackPanel Grid.Column="2" IsVisible="{Binding $parent[ListBoxItem].IsPointerOver}" Orientation="Horizontal" VerticalAlignment="Center">
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].ExportKeyLogAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Export}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Export}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].RemoveKeyLogAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Delete}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Delete}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].CopyKeyLogAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Copy}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Copy}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].EditKeyLogAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Edit}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Edit}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																			</StackPanel>
+																		</Grid>
+																	</DataTemplate>
+																</ListBox.ItemTemplate>
+															</ListBox>
+
+															<!-- Operation duration analysis -->
+															<Separator Classes="Dialog_Separator_Small">
+																<Separator.IsVisible>
+																	<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+																		<Binding Path="IsVisible" ElementName="keyLogAnalysisRuleSetListBox"/>
+																		<Binding Path="IsVisible" ElementName="operationDurationAnalysisRuleSetListBox"/>
+																	</MultiBinding>
+																</Separator.IsVisible>
+															</Separator>
+															<Border Background="{DynamicResource Brush/Dialog.TextBlock.Background.Header1}" CornerRadius="{StaticResource CornerRadius/ListBoxItem}" IsVisible="{Binding #operationDurationAnalysisRuleSetListBox.IsVisible}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Margin}" Padding="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Padding}">
+																<TextBlock FontWeight="Bold" Text="{DynamicResource String/SessionView.LogAnalysisRuleSets.OperationDurationAnalysisRuleSet}" TextTrimming="CharacterEllipsis"/>
+															</Border>
+															<ListBox Name="operationDurationAnalysisRuleSetListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" IsVisible="{Binding RuleSets.Count, Source={x:Static appCtxlBased:OperationDurationAnalysisRuleSetManager.Default}}" Items="{Binding RuleSets, Source={x:Static appCtxlBased:OperationDurationAnalysisRuleSetManager.Default}}" SelectionMode="Multiple" VirtualizationMode="None">
+																<ListBox.ItemTemplate>
+																	<DataTemplate>
+																		<Grid ColumnDefinitions="Auto,*,Auto">
+																			<Panel Height="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Icon.Margin}" VerticalAlignment="Center" Width="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}">
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}, ConverterParameter=Light}" IsVisible="{Binding $parent[ListBoxItem].IsSelected}"/>
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}}" IsVisible="{Binding !$parent[ListBoxItem].IsSelected}"/>
+																			</Panel>
+																			<TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"/>
+																			<Border Grid.Column="1" Classes="InPlaceAction_Reserved"/>
+																			<StackPanel Grid.Column="2" IsVisible="{Binding $parent[ListBoxItem].IsPointerOver}" Orientation="Horizontal" VerticalAlignment="Center">
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].ExportOperationDurationAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Export}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Export}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].RemoveOperationDurationAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Delete}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Delete}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].CopyOperationDurationAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Copy}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Copy}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].EditOperationDurationAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Edit}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Edit}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																			</StackPanel>
+																		</Grid>
+																	</DataTemplate>
+																</ListBox.ItemTemplate>
+															</ListBox>
+
+															<!-- Operation counting analysis -->
+															<Separator Classes="Dialog_Separator_Small">
+																<Separator.IsVisible>
+																	<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+																		<Binding Path="IsVisible" ElementName="operationCountingAnalysisRuleSetListBox"/>
+																		<MultiBinding Converter="{x:Static aConverters:BoolConverters.Or}">
+																			<Binding Path="IsVisible" ElementName="keyLogAnalysisRuleSetListBox"/>
+																			<Binding Path="IsVisible" ElementName="operationDurationAnalysisRuleSetListBox"/>
+																		</MultiBinding>
+																	</MultiBinding>
+																</Separator.IsVisible>
+															</Separator>
+															<Border Background="{DynamicResource Brush/Dialog.TextBlock.Background.Header1}" CornerRadius="{StaticResource CornerRadius/ListBoxItem}" IsVisible="{Binding #operationCountingAnalysisRuleSetListBox.IsVisible}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Margin}" Padding="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Padding}">
+																<TextBlock FontWeight="Bold" Text="{DynamicResource String/SessionView.LogAnalysisRuleSets.OperationCountingAnalysisRuleSet}" TextTrimming="CharacterEllipsis"/>
+															</Border>
+															<ListBox Name="operationCountingAnalysisRuleSetListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" IsVisible="{Binding RuleSets.Count, Source={x:Static appAnalysis:OperationCountingAnalysisRuleSetManager.Default}}" Items="{Binding RuleSets, Source={x:Static appAnalysis:OperationCountingAnalysisRuleSetManager.Default}}" SelectionMode="Multiple" VirtualizationMode="None">
+																<ListBox.ItemTemplate>
+																	<DataTemplate>
+																		<Grid ColumnDefinitions="Auto,*,Auto">
+																			<Panel Height="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Icon.Margin}" VerticalAlignment="Center" Width="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}">
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}, ConverterParameter=Light}" IsVisible="{Binding $parent[ListBoxItem].IsSelected}"/>
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}}" IsVisible="{Binding !$parent[ListBoxItem].IsSelected}"/>
+																			</Panel>
+																			<TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"/>
+																			<Border Grid.Column="1" Classes="InPlaceAction_Reserved"/>
+																			<StackPanel Grid.Column="2" IsVisible="{Binding $parent[ListBoxItem].IsPointerOver}" Orientation="Horizontal" VerticalAlignment="Center">
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].ExportOperationCountingAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Export}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Export}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].RemoveOperationCountingAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Delete}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Delete}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].CopyOperationCountingAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Copy}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Copy}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].EditOperationCountingAnalysisRuleSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Edit}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Edit}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																			</StackPanel>
+																		</Grid>
+																	</DataTemplate>
+																</ListBox.ItemTemplate>
+															</ListBox>
+
+															<!-- Log analysis script -->
+															<Separator Classes="Dialog_Separator_Small">
+																<Separator.IsVisible>
+																	<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+																		<Binding Path="IsVisible" ElementName="logAnalysisScriptSetListBox"/>
+																		<MultiBinding Converter="{x:Static aConverters:BoolConverters.Or}">
+																			<Binding Path="IsVisible" ElementName="keyLogAnalysisRuleSetListBox"/>
+																			<Binding Path="IsVisible" ElementName="operationDurationAnalysisRuleSetListBox"/>
+																			<Binding Path="IsVisible" ElementName="operationCountingAnalysisRuleSetListBox"/>
+																		</MultiBinding>
+																	</MultiBinding>
+																</Separator.IsVisible>
+															</Separator>
+															<Border Background="{DynamicResource Brush/Dialog.TextBlock.Background.Header1}" CornerRadius="{StaticResource CornerRadius/ListBoxItem}" IsVisible="{Binding #logAnalysisScriptSetListBox.IsVisible}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Margin}" Padding="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Padding}">
+																<StackPanel Orientation="Horizontal">
+																	<TextBlock FontWeight="Bold" Text="{DynamicResource String/SessionView.LogAnalysisRuleSets.LogAnalysisScriptSet}" TextTrimming="CharacterEllipsis"/>
+																	<Separator Classes="Dialog_Separator_Small" IsVisible="{Binding !$parent[UserControl].EnableRunningScript}"/>
+																	<abControls:FormattedTextBlock Arg1="{DynamicResource String/SessionView.LogAnalysisRuleSets.Disabled}" Format="({0})" IsVisible="{Binding !$parent[UserControl].EnableRunningScript}" TextTrimming="CharacterEllipsis"/>
+																</StackPanel>
+															</Border>
+															<ListBox Name="logAnalysisScriptSetListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" IsEnabled="{Binding $parent[UserControl].EnableRunningScript}" IsVisible="{Binding ScriptSets.Count, Source={x:Static appAnalysisScripting:LogAnalysisScriptSetManager.Default}}" Items="{Binding ScriptSets, Source={x:Static appAnalysisScripting:LogAnalysisScriptSetManager.Default}}" SelectionMode="Multiple" VirtualizationMode="None">
+																<ListBox.ItemTemplate>
+																	<DataTemplate>
+																		<Grid ColumnDefinitions="Auto,*,Auto">
+																			<Panel Height="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}" Margin="{StaticResource Thickness/SessionView.LogAnalysisRuleSetListBox.Icon.Margin}" VerticalAlignment="Center" Width="{StaticResource Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size}">
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}, ConverterParameter=Light}" IsVisible="{Binding $parent[ListBoxItem].IsSelected}"/>
+																				<Image Classes="Icon" Source="{Binding Converter={x:Static appConverters:LogProfileIconConverter.Default}}" IsVisible="{Binding !$parent[ListBoxItem].IsSelected}"/>
+																			</Panel>
+																			<TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"/>
+																			<Border Grid.Column="1" Classes="InPlaceAction_Reserved"/>
+																			<StackPanel Grid.Column="2" IsVisible="{Binding $parent[ListBoxItem].IsPointerOver}" Orientation="Horizontal" VerticalAlignment="Center">
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].ExportLogAnalysisScriptSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Export}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Export}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].RemoveLogAnalysisScriptSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Delete}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Delete}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].CopyLogAnalysisScriptSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Copy}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Copy}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																				<Button Classes="InPlaceAction_Button" Command="{Binding $parent[UserControl].EditLogAnalysisScriptSetCommand}" CommandParameter="{Binding $parent[ListBoxItem].DataContext}" ToolTip.Tip="{DynamicResource String/Common.Edit}">
+																					<asControls:Image Classes="InPlaceAction_Icon">
+																						<DrawingImage>
+																							<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Edit}"/>
+																						</DrawingImage>
+																					</asControls:Image>
+																				</Button>
+																			</StackPanel>
+																		</Grid>
+																	</DataTemplate>
+																</ListBox.ItemTemplate>
+															</ListBox>
+															
+														</StackPanel>
+													</ScrollViewer>
+													<TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" HorizontalAlignment="Center" Margin="{StaticResource Thickness/SessionView.NoLogAnalysisRuleSetHint.Margin}" Text="{DynamicResource String/Common.Empty}" TextWrapping="Wrap" VerticalAlignment="Center">
+														<TextBlock.IsVisible>
+															<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+																<Binding Path="RuleSets.Count" Source="{x:Static appAnalysis:KeyLogAnalysisRuleSetManager.Default}" Converter="{x:Static abConverters:NumberConverters.IsZero}"/>
+																<Binding Path="RuleSets.Count" Source="{x:Static appCtxlBased:OperationDurationAnalysisRuleSetManager.Default}" Converter="{x:Static abConverters:NumberConverters.IsZero}"/>
+																<Binding Path="ScriptSets.Count" Source="{x:Static appAnalysisScripting:LogAnalysisScriptSetManager.Default}" Converter="{x:Static abConverters:NumberConverters.IsZero}"/>
+															</MultiBinding>
+														</TextBlock.IsVisible>
+													</TextBlock>
+												</Panel>
+											</Border>
+											<StackPanel Grid.Column="1" VerticalAlignment="Top">
+												<ToggleButton Name="createLogAnalysisRuleSetButton" Classes="BrowseButton" Command="{Binding $parent[UserControl].CreateLogAnalysisRuleSet}" ToolTip.Tip="{DynamicResource String/Common.Create}">
+													<Panel>
+														<Image Classes="BrowseButtonIcon" IsVisible="{Binding $parent[ToggleButton].IsChecked}" Source="{StaticResource Image/Icon.Add.Light}"/>
+														<Image Classes="BrowseButtonIcon" IsVisible="{Binding !$parent[ToggleButton].IsChecked}" Source="{StaticResource Image/Icon.Add}"/>
+													</Panel>
+												</ToggleButton>
+												<Separator Classes="Dialog_Separator_Small"/>
+												<Button Classes="BrowseButton" Command="{Binding $parent[UserControl].ImportLogAnalysisRuleSet}" ToolTip.Tip="{DynamicResource String/Common.Import}">
+													<Image Classes="BrowseButtonIcon" Source="{StaticResource Image/Icon.Import}"/>
+												</Button>
+												<Separator Classes="Dialog_Separator_Small"/>
+												<Button Classes="BrowseButton" Command="{Binding $parent[UserControl].ClearLogAnalysisRuleSetSelection}" ToolTip.Tip="{DynamicResource String/SessionView.ClearLogAnalysisRuleSetsSelection}">
+													<Button.IsEnabled>
+														<MultiBinding Converter="{x:Static aConverters:BoolConverters.Or}">
+															<Binding Path="SelectedItems.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}" ElementName="keyLogAnalysisRuleSetListBox"/>
+															<Binding Path="SelectedItems.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}" ElementName="operationDurationAnalysisRuleSetListBox"/>
+															<Binding Path="SelectedItems.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}" ElementName="operationCountingAnalysisRuleSetListBox"/>
+															<Binding Path="SelectedItems.Count" Converter="{x:Static abConverters:NumberConverters.IsNonZero}" ElementName="logAnalysisScriptSetListBox"/>
+														</MultiBinding>
+													</Button.IsEnabled>
+													<Image Classes="BrowseButtonIcon" Source="{StaticResource Image/ClearSelection}"/>
+												</Button>
+												<Separator Classes="Dialog_Separator"/>
+												<Button Classes="BrowseButton" Command="{Binding $parent[UserControl].OpenLogAnalysisDocumentation}" ToolTip.Tip="{DynamicResource String/Common.Help}">
+													<Image Classes="BrowseButtonIcon" Source="{StaticResource Image/Icon.Question}"/>
+												</Button>
+											</StackPanel>
+										</Grid>
+									</StackPanel>
+								</Border>
+							</Popup>
+						</Grid>
+					</Border>
+					<asControls:ListBox Classes="Log" Name="logAnalysisResultListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" Focusable="False" Grid.Row="1" SelectionMode="Multiple" SelectedItems="{Binding LogAnalysis.SelectedAnalysisResults}">
+						<asControls:ListBox.ContextMenu>
+							<ContextMenu>
+								<MenuItem Command="{Binding LogAnalysis.CopySelectedAnalysisResultsCommand}" Header="{DynamicResource String/Common.Copy}">
+									<MenuItem.Icon>
+										<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Copy.Outline}"/>
+									</MenuItem.Icon>
+								</MenuItem>
+							</ContextMenu>
+						</asControls:ListBox.ContextMenu>
+						<asControls:ListBox.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="Auto,Auto,*" RowDefinitions="Auto,*">
+									<Border Background="{Binding ColorIndicatorBrush}" BorderBrush="{DynamicResource Brush/WorkingArea.Panel.Background}" BorderThickness="{StaticResource Thickness/SessionView.LogListBox.ColorIndicator.Border}" Grid.RowSpan="2" IsVisible="{Binding $parent[UserControl].DataContext.HasLogColorIndicator}" ToolTip.Tip="{Binding Log.ColorIndicatorTip}" Width="{StaticResource Double/SessionView.LogListBox.ColorIndicator.Width}"/>
+									<Image Classes="Icon" Grid.Column="1" Height="{StaticResource Double/SessionView.LogAnalysisResult.Icon.Size}" Margin="{StaticResource Thickness/SessionView.LogAnalysisResult.Icon.Margin}" Source="{Binding Type, Converter={x:Static appConverters:DisplayableLogAnalysisResultIconConverter.Default}}" Width="{StaticResource Double/SessionView.LogAnalysisResult.Icon.Size}">
+										<ia:Interaction.Behaviors>
+											<iaCore:DataTriggerBehavior Binding="{Binding #messageTextBlock.IsMultiLineText}" Value="True">
+												<iaCore:ChangePropertyAction PropertyName="VerticalAlignment" Value="Top"/>
+											</iaCore:DataTriggerBehavior>
+											<iaCore:DataTriggerBehavior Binding="{Binding #messageTextBlock.IsMultiLineText}" Value="False">
+												<iaCore:ChangePropertyAction PropertyName="VerticalAlignment" Value="Center"/>
+											</iaCore:DataTriggerBehavior>
+										</ia:Interaction.Behaviors>
+									</Image>
+									<abControls:TextBlock Name="messageTextBlock" FontFamily="{Binding LogFontFamily, Source={x:Static appControls:ControlFonts.Default}}" FontSize="{Binding LogFontSize, Source={x:Static appControls:ControlFonts.Default}}" Grid.Column="2" Margin="{StaticResource Thickness/SessionView.MarkedLogListBox.Item.Padding}" Text="{Binding Message}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+									<Grid ColumnDefinitions="Auto,*" Grid.Column="2" Grid.Row="1" Margin="{StaticResource Thickness/SessionView.LogAnalysisResult.SubInfoPanel.Padding}" RowDefinitions="Auto,Auto,Auto" VerticalAlignment="Center">
+										<Grid.IsVisible>
+											<MultiBinding Converter="{x:Static aConverters:BoolConverters.Or}">
+												<Binding Path="HasByteSize"/>
+												<Binding Path="HasDuration"/>
+												<Binding Path="HasQuantity"/>
+											</MultiBinding>
+										</Grid.IsVisible>
+										
+										<!-- Duration -->
+										<asControls:Image 
+											Classes="Icon" 
+											Grid.Row="0" 
+											Height="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.Icon.Size}" 
+											IsVisible="{Binding HasDuration}" 
+											Margin="{StaticResource Thickness/SessionView.LogAnalysisResult.SubInfo.Icon.Margin}"
+											VerticalAlignment="Center" 
+											Width="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.Icon.Size}">
+											<DrawingImage>
+												<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Timer.Outline}"/>
+											</DrawingImage>
+										</asControls:Image>
+										<TextBlock 
+											FontSize="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.FontSize}" 
+											Grid.Column="1" 
+											Grid.Row="0" 
+											IsVisible="{Binding HasDuration}" 
+											Text="{Binding Duration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" 
+											TextTrimming="CharacterEllipsis" 
+											ToolTip.Tip="{DynamicResource String/SessionView.LogAnalysisResult.Duration}"
+											VerticalAlignment="Center"/>
+										
+										<!-- ByteSize -->
+										<asControls:Image 
+											Classes="Icon" 
+											Grid.Row="1" 
+											Height="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.Icon.Size}" 
+											IsVisible="{Binding HasByteSize}" 
+											Margin="{StaticResource Thickness/SessionView.LogAnalysisResult.SubInfo.Icon.Margin}"
+											VerticalAlignment="Center" 
+											Width="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.Icon.Size}">
+											<DrawingImage>
+												<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{DynamicResource Geometry/Icon.Memory.Outline}"/>
+											</DrawingImage>
+										</asControls:Image>
+										<Grid 
+											ColumnDefinitions="Auto,Auto,*"
+											Grid.Column="1" 
+											Grid.Row="1"
+											IsVisible="{Binding HasByteSize}"
+											VerticalAlignment="Center">
+
+												<TextBlock 
+													FontSize="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.FontSize}" 
+													Text="{Binding ByteSize, StringFormat={}{0:n0}}" 
+													TextTrimming="CharacterEllipsis" 
+													ToolTip.Tip="{DynamicResource String/SessionView.LogAnalysisResult.ByteSize}"
+													VerticalAlignment="Center"/>
+												<Separator 
+													Classes="Dialog_Separator_Small" 
+													Grid.Column="1"/>
+												<TextBlock 
+													FontSize="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.FontSize}" 
+													Grid.Column="2"
+													Text="{Binding ByteSize, Converter={x:Static asConverters:FileSizeConverter.Default} StringFormat={}({0})}" 
+													TextTrimming="CharacterEllipsis" 
+													VerticalAlignment="Center"/>
+													
+										</Grid>
+										
+										<!-- Quantity -->
+										<asControls:Image 
+											Classes="Icon" 
+											Grid.Row="2" 
+											Height="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.Icon.Size}" 
+											IsVisible="{Binding HasQuantity}" 
+											Margin="{StaticResource Thickness/SessionView.LogAnalysisResult.SubInfo.Icon.Margin}"
+											VerticalAlignment="Center" 
+											Width="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.Icon.Size}">
+											<DrawingImage>
+												<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Layers.Outline}"/>
+											</DrawingImage>
+										</asControls:Image>
+										<TextBlock 
+											FontSize="{StaticResource Double/SessionView.LogAnalysisResult.SubInfo.FontSize}" 
+											Grid.Column="1" 
+											Grid.Row="2" 
+											IsVisible="{Binding HasQuantity}" 
+											Text="{Binding Quantity}" 
+											TextTrimming="CharacterEllipsis" 
+											ToolTip.Tip="{DynamicResource String/SessionView.LogAnalysisResult.Quantity}"
+											VerticalAlignment="Center"/>
+										
+									</Grid>
+								</Grid>
+							</DataTemplate>
+						</asControls:ListBox.ItemTemplate>
+					</asControls:ListBox>
+					<Border Background="{x:Static Brushes.Transparent}" Grid.Row="1">
+						<Border.IsVisible>
+							<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+								<Binding Path="!IsRemovingLogFiles"/>
+								<Binding Path="LogAnalysis.AnalysisResults.Count" Converter="{x:Static abConverters:NumberConverters.IsZero}"/>
+								<Binding Path="SelectedItems.Count" Converter="{x:Static abConverters:NumberConverters.IsZero}" ElementName="keyLogAnalysisRuleSetListBox"/>
+								<Binding Path="SelectedItems.Count" Converter="{x:Static abConverters:NumberConverters.IsZero}" ElementName="operationDurationAnalysisRuleSetListBox"/>
+								<Binding Path="SelectedItems.Count" Converter="{x:Static abConverters:NumberConverters.IsZero}" ElementName="logAnalysisScriptSetListBox"/>
+							</MultiBinding>
+						</Border.IsVisible>
+						<TextBlock Classes="SessionView_SidePanel_FullPanelHint" Text="{DynamicResource String/SessionView.LogAnalysisPanel.Hint}"/>
+					</Border>
+					<Border Background="{x:Static Brushes.Transparent}" Grid.Row="1" IsVisible="{Binding IsRemovingLogFiles}">
+						<TextBlock Classes="SessionView_SidePanel_FullPanelHint" Text="{DynamicResource String/SessionView.LogAnalysisPanel.DisabledWhenRemovingLogFiles}"/>
+					</Border>
+					<Border Background="{DynamicResource Brush/SessionView.LogHeader.Background}" Classes="StatusBar" Grid.Row="2" Padding="{StaticResource Thickness/StatusBar.Item.Margin}">
+						<Border.IsVisible>
+							<MultiBinding Converter="{x:Static aConverters:BoolConverters.Or}">
+								<Binding Path="IsVisible" ElementName="selectedLogAnalysisResultsDurationPanel"/>
+								<Binding Path="IsVisible" ElementName="selectedLogAnalysisResultsByteSizePanel"/>
+								<Binding Path="IsVisible" ElementName="selectedLogAnalysisResultsQuantityPanel"/>
+							</MultiBinding>
+						</Border.IsVisible>
+						<StackPanel TextBlock.Foreground="{DynamicResource TextControlForeground}" VerticalAlignment="Center">
+
+							<!-- Duration -->
+							<Grid Name="selectedLogAnalysisResultsDurationPanel" ColumnDefinitions="Auto,Auto,Auto,*" IsVisible="{Binding LogAnalysis.SelectedAnalysisResultsTotalDuration, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}">
+								<Image 
+									Classes="StatusBar_IconWithText" 
+									Source="{StaticResource Image/Timer.Outline}"/>
+								<TextBlock 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="1" 
+									Margin="0" 
+									Text="{Binding LogAnalysis.SelectedAnalysisResultsTotalDuration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" 
+									ToolTip.Placement="Left"
+									ToolTip.Tip="{DynamicResource String/SessionView.SelectedLogAnalysisResultsTotalDuration}"/>
+								<TextBlock 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="2" 
+									IsVisible="{Binding #selectedLogAnalysisResultsAvgDuration.IsVisible}" 
+									Margin="0" 
+									Text=" / "/>
+								<TextBlock Name="selectedLogAnalysisResultsAvgDuration" 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="3" 
+									IsVisible="{Binding LogAnalysis.SelectedAnalysisResultsAverageDuration, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}" 
+									Margin="0" 
+									Text="{Binding LogAnalysis.SelectedAnalysisResultsAverageDuration, Converter={x:Static asConverters:TimeSpanConverter.Default}}" 
+									ToolTip.Placement="Left"
+									ToolTip.Tip="{DynamicResource String/SessionView.SelectedLogAnalysisResultsAverageDuration}"/>
+							</Grid>
+
+							<!-- ByteSize -->
+							<Grid Name="selectedLogAnalysisResultsByteSizePanel" ColumnDefinitions="Auto,Auto,Auto,*" IsVisible="{Binding LogAnalysis.SelectedAnalysisResultsTotalByteSize, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}">
+								<Image 
+									Classes="StatusBar_IconWithText" 
+									Source="{StaticResource Image/Icon.Memory.Outline}"/>
+								<TextBlock 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="1" 
+									Margin="0" 
+									Text="{Binding LogAnalysis.SelectedAnalysisResultsTotalByteSize, Converter={x:Static asConverters:FileSizeConverter.Default}}" 
+									ToolTip.Placement="Left"
+									ToolTip.Tip="{DynamicResource String/SessionView.SelectedLogAnalysisResultsTotalByteSize}"/>
+								<TextBlock 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="2" 
+									IsVisible="{Binding #selectedLogAnalysisResultsAvgByteSize.IsVisible}" 
+									Margin="0" 
+									Text=" / "/>
+								<TextBlock Name="selectedLogAnalysisResultsAvgByteSize" 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="3" 
+									IsVisible="{Binding LogAnalysis.SelectedAnalysisResultsAverageByteSize, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}" 
+									Margin="0" 
+									Text="{Binding LogAnalysis.SelectedAnalysisResultsAverageByteSize, Converter={x:Static asConverters:FileSizeConverter.Default}}" 
+									ToolTip.Placement="Left"
+									ToolTip.Tip="{DynamicResource String/SessionView.SelectedLogAnalysisResultsAverageByteSize}"/>
+							</Grid>
+
+							<!-- Quantity -->
+							<Grid Name="selectedLogAnalysisResultsQuantityPanel" ColumnDefinitions="Auto,Auto,Auto,*" IsVisible="{Binding LogAnalysis.SelectedAnalysisResultsTotalQuantity, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}">
+								<Image 
+									Classes="StatusBar_IconWithText" 
+									Source="{StaticResource Image/Layers.Outline}"/>
+								<TextBlock 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="1" 
+									Margin="0" 
+									Text="{Binding LogAnalysis.SelectedAnalysisResultsTotalQuantity}" 
+									ToolTip.Placement="Left"
+									ToolTip.Tip="{DynamicResource String/SessionView.SelectedLogAnalysisResultsTotalQuantity}"/>
+								<TextBlock 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="2" 
+									IsVisible="{Binding #selectedLogAnalysisResultsAvgQuantity.IsVisible}" 
+									Margin="0" 
+									Text=" / "/>
+								<TextBlock Name="selectedLogAnalysisResultsAvgQuantity" 
+									Classes="StatusBar_TextBlock" 
+									Grid.Column="3" 
+									IsVisible="{Binding LogAnalysis.SelectedAnalysisResultsAverageQuantity, Converter={x:Static aConverters:ObjectConverters.IsNotNull}}" 
+									Margin="0" 
+									Text="{Binding LogAnalysis.SelectedAnalysisResultsAverageQuantity, StringFormat={}{0:F2}}" 
+									ToolTip.Placement="Left"
+									ToolTip.Tip="{DynamicResource String/SessionView.SelectedLogAnalysisResultsAverageQuantity}"/>
+							</Grid>
+
+						</StackPanel>
+					</Border>
+				</Grid>
+
+				<!-- Log files -->
+				<Grid HorizontalAlignment="Stretch" IsVisible="{Binding IsLogFilesPanelVisible}" RowDefinitions="Auto,*" VerticalAlignment="Stretch">
+					<Border Classes="SessionView_SidePanel_Header">
+						<Grid ColumnDefinitions="Auto,*">
+							<TextBlock Classes="SessionView_SidePanel_Header_Left" Text="{DynamicResource String/SessionView.LogFilesPanel}"/>
+							<TextBlock Classes="SessionView_SidePanel_Header_Right" Grid.Column="1" Text="{Binding LogFiles.Count, StringFormat={} ({0})}"/>
+						</Grid>
+					</Border>
+					<asControls:ListBox Classes="Log" Name="logFileListBox" Background="{x:Static Brushes.Transparent}" BorderThickness="0" Focusable="False" Grid.Row="1" IsEnabled="{Binding IsProVersionActivated}" Items="{Binding LogFiles}">
+						<asControls:ListBox.ItemTemplate>
+							<DataTemplate>
+								<DockPanel>
+									<Border Background="{Binding ColorIndicatorBrush}" BorderBrush="{DynamicResource Brush/WorkingArea.Panel.Background}" BorderThickness="{StaticResource Thickness/SessionView.LogListBox.ColorIndicator.Border}" DockPanel.Dock="Left" IsVisible="{Binding $parent[UserControl].DataContext.HasLogColorIndicatorByFileName}" Width="{StaticResource Double/SessionView.LogListBox.ColorIndicator.Width}"/>
+									<Grid ColumnDefinitions="Auto,*,Auto" Margin="{StaticResource Thickness/SessionView.LogFileListBox.Item.Padding}">
+										<Panel Grid.Column="0" Height="{StaticResource Double/SessionView.LogFileInfo.Icon.Size}" Margin="{StaticResource Thickness/SessionView.LogFileInfo.Icon.Margin}" VerticalAlignment="Top" Width="{StaticResource Double/SessionView.LogFileInfo.Icon.Size}">
+											<Image Classes="Icon" IsVisible="{Binding IsLogsReadingCompleted}" Source="{StaticResource Image/Icon.File.Text.Outline}"/>
+											<Image Classes="Icon" IsVisible="{Binding IsReadingLogs}" Source="{StaticResource Image/Icon.Waiting.Outline}"/>
+											<Image Classes="Icon" IsVisible="{Binding IsRemoving}" Source="{StaticResource Image/Icon.Delete.Outline}"/>
+											<Image Classes="Icon" IsVisible="{Binding HasError}" Source="{StaticResource Image/Icon.Error.Outline}"/>
+										</Panel>
+										<StackPanel Grid.Column="1">
+											<TextBlock Background="{x:Static Brushes.Transparent}" FontSize="{StaticResource Double/SessionView.LogFileInfo.FileName.FontSize}" FontWeight="Bold" HorizontalAlignment="Left" Margin="{StaticResource Thickness/SessionView.LogFileInfo.FileName.Margin}" Text="{Binding FileName, Converter={x:Static abConverters:FilePathConverters.FileName}}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding FileName}"/>
+											<Grid ColumnDefinitions="Auto,Auto" HorizontalAlignment="Left" Margin="{StaticResource Thickness/SessionView.LogFileInfo.Summary.Margin}">
+												<TextBlock FontSize="{StaticResource Double/SessionView.LogFileInfo.Summary.FontSize}" Text="{DynamicResource String/SessionView.LogCountInLogFile}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+												<TextBlock Grid.Column="1" FontSize="{StaticResource Double/SessionView.LogFileInfo.Summary.FontSize}" Text="{Binding LogCount}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+											</Grid>
+											<TextBlock FontSize="{StaticResource Double/SessionView.LogFileInfo.Summary.FontSize}" IsVisible="{Binding !LogReadingPrecondition.IsEmpty}" Margin="{StaticResource Thickness/SessionView.LogFileInfo.Summary.Margin}" Text="{DynamicResource String/SessionView.HasLogReadingPrecondition.WithBrackets}" TextTrimming="CharacterEllipsis"/>
+										</StackPanel>
+										<ToggleButton Name="logFileActionButton" Classes="InPlaceAction_ToggleButton_Medium" Command="{Binding $parent[UserControl].ShowLogFileActionMenuCommand}" CommandParameter="{Binding $self}" Grid.Column="2" VerticalAlignment="Top">
+											<ToggleButton.IsVisible>
+												<MultiBinding Converter="{x:Static aConverters:BoolConverters.Or}">
+													<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+														<Binding Path="!IsPredefined"/>
+														<Binding Path="IsPointerOver" RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}"/>
+													</MultiBinding>
+													<Binding Path="IsChecked" RelativeSource="{RelativeSource Self}"/>
+												</MultiBinding>
+											</ToggleButton.IsVisible>
+											<Panel>
+												<Image Classes="InPlaceAction_Icon_Medium" IsVisible="{Binding !$parent[ToggleButton].IsChecked}" Source="{StaticResource Image/Icon.More}"/>
+												<Image Classes="InPlaceAction_Icon_Medium" IsVisible="{Binding $parent[ToggleButton].IsChecked}" Source="{StaticResource Image/Icon.More.Light}"/>
+											</Panel>
+										</ToggleButton>
+									</Grid>
+								</DockPanel>
+							</DataTemplate>
+						</asControls:ListBox.ItemTemplate>
+					</asControls:ListBox>
+					<Border Background="{x:Static Brushes.Transparent}" Grid.Row="1">
+						<Border.IsVisible>
+							<MultiBinding Converter="{x:Static aConverters:BoolConverters.And}">
+								<Binding Path="IsProVersionActivated"/>
+								<Binding Path="!IsLogFileSupported"/>
+							</MultiBinding>
+						</Border.IsVisible>
+						<TextBlock Classes="SessionView_SidePanel_FullPanelHint" Text="{DynamicResource String/SessionView.LogFileIsUnsupported}"/>
+					</Border>
+					<Border Background="{StaticResource Brush/SessionView.SidePanel.FullPanelHint.Background}" Grid.Row="1" IsVisible="{Binding !IsProVersionActivated}">
+						<TextBlock Classes="SessionView_SidePanel_FullPanelHint" Text="{DynamicResource String/SessionView.ProVersionNeeded}"/>
+					</Border>
+				</Grid>
+
+			</Panel>
+
+		</Border>
+		<GridSplitter Background="{DynamicResource Brush/WorkingArea.Panel.Background}" Classes="GridSplitter_Vertical" Grid.Column="1" Grid.Row="1" IsVisible="{Binding #sidePanelContainer.IsVisible}"/>
+
+	</Grid>
+
+
+</UserControl>

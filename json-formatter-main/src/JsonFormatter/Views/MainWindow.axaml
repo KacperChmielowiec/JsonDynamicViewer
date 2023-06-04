@@ -1,0 +1,113 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:JsonFormatter.ViewModels"
+        xmlns:local="using:JsonFormatter.UserControls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="JsonFormatter.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="JSON Formatter">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <Window.Styles>
+        <StyleInclude Source="/Styles/ArrayAndObjectNode.axaml" />
+        <StyleInclude Source="/Styles/ValueNode.axaml" />
+
+        <Style Selector="Border.container">
+            <Setter Property="Padding" Value="15" />
+        </Style>
+        
+        <Style Selector="TextBlock.property">
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColor}" />
+        </Style>
+        
+        <Style Selector="TextBox.input">
+            <Setter Property="Background" Value="#262626" />
+            <Setter Property="Foreground" Value="#eee" />
+            <Setter Property="MaxHeight" Value="Infinity" />
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="BorderBrush" Value="#242424" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="SelectionBrush" Value="{StaticResource SelectionBrush}" />
+        </Style>
+        <Style Selector="TextBox.input /template/ Border#PART_BorderElement">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="TextBox.input:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#262626" />
+        </Style>
+        <Style Selector="TextBox.input:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#262626" />
+        </Style>
+        <Style Selector="TextBox.input.invalid">
+            <Setter Property="Background" Value="{StaticResource InvalidColor}" />
+        </Style>
+        <Style Selector="TextBox.input.invalid:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{StaticResource InvalidColor}" />
+        </Style>
+        
+        <Style Selector="Border.row">
+            <Setter Property="Height" Value="22" />
+        </Style>
+        
+        <Style Selector="Border.formatButtonWrap">
+            <Setter Property="Padding" Value="0 30" />
+        </Style>
+        <Style Selector="Border.formatButtonWrap Button">
+            <Setter Property="Padding" Value="25 10" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        
+        <Style Selector="Border.presenter">
+            <Setter Property="Background" Value="#262626" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+        
+        <Style Selector="ScrollViewer.jsonWrap">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        
+        <Style Selector="FlyoutPresenter.alert">
+            <Setter Property="MaxWidth" Value="1000" />
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="Background" Value="{StaticResource InvalidColor}" />
+            <Setter Property="Foreground" Value="#eee" />
+            <Setter Property="Padding" Value="15 6" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="FontFamily" Value="{StaticResource MainFontFamily}" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+    </Window.Styles>
+
+    <Border Classes="container">
+        <Grid RowDefinitions="150 Auto *">
+            <Border Grid.Row="0" Name="InputWrap">
+                <TextBox Name="Input" Text="{Binding Input}" PastingFromClipboard="Input_OnPastingFromClipboard" Classes.invalid="{Binding InvalidInput}" Classes="input" />
+                
+                <FlyoutBase.AttachedFlyout>
+                    <Flyout FlyoutPresenterClasses="alert">
+                        <TextBlock Text="{Binding ErrorMessage}" />
+                    </Flyout>
+                </FlyoutBase.AttachedFlyout>
+            </Border>
+            
+            <Border Grid.Row="1" Classes="formatButtonWrap">
+                <Button Name="FormatButton" Content="{Binding FormatButtonLabel}" IsEnabled="{Binding !FormatButtonDisabled}" />
+            </Border>
+            
+            <Border Grid.Row="2" Classes="presenter">
+                <ScrollViewer IsVisible="{Binding !Empty}" Classes="jsonWrap">
+                    <local:ValueNode DataContext="{Binding Json}" />
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Border>
+
+</Window>

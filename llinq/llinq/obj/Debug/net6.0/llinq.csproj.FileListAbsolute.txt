@@ -1,0 +1,15 @@
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\bin\Debug\net6.0\llinq.exe
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\bin\Debug\net6.0\llinq.deps.json
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\bin\Debug\net6.0\llinq.runtimeconfig.json
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\bin\Debug\net6.0\llinq.dll
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\bin\Debug\net6.0\llinq.pdb
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.csproj.AssemblyReference.cache
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.AssemblyInfoInputs.cache
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.AssemblyInfo.cs
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.csproj.CoreCompileInputs.cache
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.dll
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\refint\llinq.dll
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.pdb
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\llinq.genruntimeconfig.cache
+C:\Users\kacper\Desktop\programowanie\llinq\llinq\obj\Debug\net6.0\ref\llinq.dll

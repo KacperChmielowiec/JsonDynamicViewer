@@ -1,0 +1,15 @@
+.idea
+.run
+.vs
+obj
+bin
+ULogViewer.csproj.user
+ULogViewer.sln.DotSettings.user
+/ULogViewer/Properties/PublishProfiles/*.user
+/ULogViewer/Properties/launchSettings.json
+/AutoUpdater/AutoUpdater.csproj.user
+/AutoUpdater/Properties/PublishProfiles/*.user
+/AutoUpdater/Properties/launchSettings.json
+/Packages
+Performance.xlsx
+~$Performance.xlsx

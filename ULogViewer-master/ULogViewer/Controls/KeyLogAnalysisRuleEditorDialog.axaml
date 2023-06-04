@@ -1,0 +1,128 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ia="using:Avalonia.Xaml.Interactivity"
+		xmlns:abControls="using:CarinaStudio.Controls"
+		xmlns:abConverters="using:CarinaStudio.Data.Converters"
+		xmlns:aConverters="using:Avalonia.Data.Converters"
+		xmlns:app="using:CarinaStudio.ULogViewer"
+		xmlns:appAnalysis="using:CarinaStudio.ULogViewer.ViewModels.Analysis"
+		xmlns:appControls="using:CarinaStudio.ULogViewer.Controls"
+		xmlns:appConverters="using:CarinaStudio.ULogViewer.Converters"
+		xmlns:appIO="using:CarinaStudio.ULogViewer.IO"
+		xmlns:appLogs="using:CarinaStudio.ULogViewer.Logs"
+		xmlns:asControls="using:CarinaStudio.AppSuite.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CarinaStudio.ULogViewer.Controls.KeyLogAnalysisRuleEditorDialog"
+        Classes="Dialog"
+        Title="{DynamicResource String/KeyLogAnalysisRuleEditorDialog.Title}"
+        Width="{DynamicResource Double/KeyLogAnalysisRuleEditorDialog.Width}">
+
+	<Panel>
+		<DockPanel>
+
+			<!-- Control buttons -->
+			<Border Classes="Dialog_ControlButtonsPanel">
+				<StackPanel Classes="Dialog_ControlButtonsPanel">
+					<Button Classes="Dialog_ControlButton" Command="{Binding $parent[Window].GenerateResultCommand}" Content="{DynamicResource String/Common.OK}"/>
+					<Button Classes="Dialog_ControlButton" Command="{Binding $parent[Window].Close}" Content="{DynamicResource String/Common.Cancel}"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Content -->
+			<ScrollViewer MaxHeight="{StaticResource Double/OperationDurationAnalysisRuleEditorDialog.Content.MaxHeight}">
+				<StackPanel Classes="Dialog_ContentPanel_WithHeader">
+
+					<!-- Common -->
+					<Border Classes="Dialog_TextBlock_Header1">
+						<TextBlock Classes="Dialog_TextBlock_Header1" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Common}"/>
+					</Border>
+
+					<!-- Pattern -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Pattern}"/>
+					<appControls:PatternEditor Name="patternEditor" IsCapturingGroupsEnabled="True" MinHeight="{DynamicResource Double/KeyLogAnalysisRuleEditorDialog.PatternInput.Height}"/>
+					<TextBlock Classes="Dialog_TextBlock_Description" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Pattern.Description}"/>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Level -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Level}"/>
+					<ComboBox Name="levelComboBox" Classes="Dialog_ComboBox" Items="{Binding Source={x:Type appLogs:LogLevel}, Converter={x:Static abConverters:EnumConverters.Values}}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="Auto,*">
+									<Border Classes="ComboBoxItem_Icon" Background="{Binding Converter={x:Static appConverters:LogLevelBrushConverter.Background}}" BorderBrush="{DynamicResource ComboBoxItemForeground}" BorderThickness="1"/>
+									<TextBlock Classes="ComboBoxItem_TextBlock" Grid.Column="1" Text="{Binding Converter={x:Static appControls:SessionView.LogLevelNameConverter}}"/>
+								</Grid>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<TextBlock Classes="Dialog_TextBlock_Description" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Level.Description}"/>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Conditions -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Conditions}"/>
+					<appControls:DisplayableLogAnalysisConditionsEditor Conditions="{Binding $parent[Window].Conditions}" VerticalScrollBarVisibility="Disabled"/>
+					<Separator Classes="Dialog_Separator_Large"/>
+
+					<!-- Result -->
+					<Border Classes="Dialog_TextBlock_Header1">
+						<TextBlock Classes="Dialog_TextBlock_Header1" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Result}"/>
+					</Border>
+
+					<!-- Result type -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.ResultType}"/>
+					<ComboBox Name="resultTypeComboBox" Classes="Dialog_ComboBox" Items="{Binding Source={x:Type appAnalysis:DisplayableLogAnalysisResultType}, Converter={x:Static abConverters:EnumConverters.Values}}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="Auto,*">
+									<Panel Classes="ComboBoxItem_Icon">
+										<Image Classes="Icon" IsVisible="{Binding $parent[ComboBoxItem].IsSelected}" Source="{Binding Converter={x:Static appConverters:DisplayableLogAnalysisResultIconConverter.Default}, ConverterParameter=Light}"/>
+										<Image Classes="Icon" IsVisible="{Binding !$parent[ComboBoxItem].IsSelected}" Source="{Binding Converter={x:Static appConverters:DisplayableLogAnalysisResultIconConverter.Default}}"/>
+									</Panel>
+									<TextBlock Classes="ComboBoxItem_TextBlock" Grid.Column="1" Text="{Binding Converter={x:Static appConverters:EnumConverters.DisplayableLogAnalysisResultType}}"/>
+								</Grid>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Message -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Message.Required}"/>
+					<asControls:StringInterpolationFormatTextBox Name="messageTextBox" Classes="Dialog_TextBox" Height="{StaticResource Double/KeyLogAnalysisRuleEditorDialog.MessageInput.Height}"/>
+					<TextBlock Classes="Dialog_TextBlock_Description" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.Message.Description}"/>
+					<abControls:LinkTextBlock Classes="Dialog_LinkTextBlock_Description" Text="{DynamicResource String/LogProfileEditorDialog.FormatDescription}" Uri="{x:Static app:Uris.StringInterpolationReference}"/>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Byte size variable -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.ByteSizeVariableName}"/>
+					<TextBox Name="byteSizeVarNameTextBox" Classes="Dialog_TextBox" MaxLength="256"/>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Byte size unit -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.ByteSizeUnit}"/>
+					<asControls:EnumComboBox Name="byteSizeUnitComboBox" Classes="Dialog_ComboBox" EnumType="{x:Type appIO:FileSizeUnit}"/>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Duration variable -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.DurationVariableName}"/>
+					<TextBox Name="durationVarNameTextBox" Classes="Dialog_TextBox" MaxLength="256"/>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Duration unit -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.DurationUnit}"/>
+					<asControls:EnumComboBox Name="durationUnitComboBox" Classes="Dialog_ComboBox" EnumType="{x:Type app:TimeSpanUnit}"/>
+					<Separator Classes="Dialog_Separator"/>
+
+					<!-- Quantity variable -->
+					<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/DisplayableLogAnalysisRuleEditorDialog.QuantityVariableName}"/>
+					<TextBox Name="quantityVarNameTextBox" Classes="Dialog_TextBox" MaxLength="256"/>
+					
+				</StackPanel>
+			</ScrollViewer>
+			
+		</DockPanel>
+		<asControls:FullWindowTutorialPresenter Name="tutorialPresenter"/>
+	</Panel>
+	
+</Window>

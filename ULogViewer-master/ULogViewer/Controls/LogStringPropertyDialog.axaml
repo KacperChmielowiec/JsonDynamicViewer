@@ -1,0 +1,95 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="using:System"
+        xmlns:ia="using:Avalonia.Xaml.Interactivity"
+        xmlns:iaCore="using:Avalonia.Xaml.Interactions.Core"
+        xmlns:ma="using:Markdown.Avalonia"
+		xmlns:abControls="using:CarinaStudio.Controls"
+		xmlns:asControls="using:CarinaStudio.AppSuite.Controls"
+		xmlns:asInput="using:CarinaStudio.AppSuite.Input"
+        xmlns:app="using:CarinaStudio.ULogViewer"
+        xmlns:appControls="using:CarinaStudio.ULogViewer.Controls"
+        xmlns:appConverters="using:CarinaStudio.ULogViewer.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CarinaStudio.ULogViewer.Controls.LogStringPropertyDialog"
+        CanResize="True"
+        Classes="Dialog"
+        Height="{DynamicResource Double/LogStringPropertyDialog.Height}"
+        MinHeight="{DynamicResource Double/LogStringPropertyDialog.MinHeight}"
+        MinWidth="{DynamicResource Double/LogStringPropertyDialog.MinWidth}"
+		SizeToContent="Manual"
+        Title="{DynamicResource String/LogStringPropertyDialog.Title}"
+        Width="{DynamicResource Double/LogStringPropertyDialog.Width}">
+
+	<DockPanel>
+
+		<!-- Control buttons -->
+		<Border Classes="Dialog_ControlButtonsPanel" DockPanel.Dock="Bottom">
+			<StackPanel Classes="Dialog_ControlButtonsPanel">
+				<Button Classes="Dialog_ControlButton" Command="{Binding $parent[Window].Close}" Content="{DynamicResource String/Common.OK}"/>
+			</StackPanel>
+		</Border>
+
+		<!-- Content -->
+		<Grid Classes="Dialog_ContentPanel" RowDefinitions="Auto,Auto,*,Auto,Auto">
+
+			<!-- Find text -->
+			<StackPanel Orientation="Vertical">
+				<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/LogStringPropertyDialog.FindText}"/>
+				<asControls:RegexTextBox Name="findTextTextBox" Classes="Dialog_TextBox" PropertyChanged="OnFindTextTextBoxPropertyChanged"/>
+				<abControls:LinkTextBlock Classes="Dialog_LinkTextBlock_Description" Text="{DynamicResource String/Common.RegularExpression.Reference}" Uri="{x:Static app:Uris.RegexReference}"/>
+				<Separator Classes="Dialog_Separator"/>
+			</StackPanel>
+
+			<!-- Property value -->
+			<TextBlock Classes="Dialog_TextBlock" Grid.Row="1" Text="{Binding $parent[Window].LogPropertyDisplayName}"/>
+			<asControls:SyntaxHighlightingTextBox Name="propertyValueTextBox" Grid.Row="2" HorizontalAlignment="Stretch" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" TextWrapping="Wrap" VerticalAlignment="Stretch">
+				<asControls:SyntaxHighlightingTextBox.ContextMenu>
+					<ContextMenu>
+						<MenuItem Command="{Binding $parent[TextBox].Copy}" Header="{DynamicResource String/Common.Copy}" IsEnabled="{Binding $parent[TextBox].CanCopy}" InputGesture="{x:Static asInput:KeyGestures.Copy}">
+							<MenuItem.Icon>
+								<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Copy.Outline}"/>
+							</MenuItem.Icon>
+						</MenuItem>
+						<MenuItem Command="{Binding $parent[TextBox].SelectAll}" Header="{DynamicResource String/Common.SelectAll}" IsEnabled="{Binding $parent[TextBox].Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" InputGesture="{x:Static asInput:KeyGestures.SelectAll}"/>
+						<Separator/>
+						<MenuItem Name="searchOnInternetMenuItem" Header="{DynamicResource String/LogStringPropertyDialog.SearchOnInternet}" IsEnabled="{Binding $parent[Window].CanSearchOnInternet}">
+							<MenuItem.Icon>
+								<Image Classes="MenuItem_Icon" Source="{StaticResource Image/Icon.Search}"/>
+							</MenuItem.Icon>
+						</MenuItem>
+					</ContextMenu>
+				</asControls:SyntaxHighlightingTextBox.ContextMenu>
+			</asControls:SyntaxHighlightingTextBox>
+			<Separator Classes="Dialog_Separator" Grid.Row="3"/>
+
+			<!-- Wrap text -->
+			<StackPanel Grid.Row="4" Orientation="Vertical">
+				<TextBlock Classes="Dialog_TextBlock" Text="{DynamicResource String/LogStringPropertyDialog.WrapText}"/>
+				<ToggleSwitch Name="wrapTextSwitch" Classes="Dialog_ToggleSwitch" IsChecked="True">
+					<ia:Interaction.Behaviors>
+						<iaCore:DataTriggerBehavior Binding="{Binding $self.IsChecked}" Value="True">
+							<iaCore:InvokeCommandAction Command="{Binding $parent[Window].SetTextWrappingCommand}">
+								<iaCore:InvokeCommandAction.CommandParameter>
+									<sys:Boolean>True</sys:Boolean>
+								</iaCore:InvokeCommandAction.CommandParameter>
+							</iaCore:InvokeCommandAction>
+						</iaCore:DataTriggerBehavior>
+						<iaCore:DataTriggerBehavior Binding="{Binding $self.IsChecked}" Value="False">
+							<iaCore:InvokeCommandAction Command="{Binding $parent[Window].SetTextWrappingCommand}">
+								<iaCore:InvokeCommandAction.CommandParameter>
+									<sys:Boolean>False</sys:Boolean>
+								</iaCore:InvokeCommandAction.CommandParameter>
+							</iaCore:InvokeCommandAction>
+						</iaCore:DataTriggerBehavior>
+					</ia:Interaction.Behaviors>
+				</ToggleSwitch>
+			</StackPanel>
+			
+		</Grid>
+		
+	</DockPanel>
+  
+</Window>

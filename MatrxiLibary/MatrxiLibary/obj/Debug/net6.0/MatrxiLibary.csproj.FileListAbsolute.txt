@@ -1,0 +1,12 @@
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\bin\Debug\net6.0\MatrxiLibary.deps.json
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\bin\Debug\net6.0\MatrxiLibary.dll
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\bin\Debug\net6.0\MatrxiLibary.pdb
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\MatrxiLibary.csproj.AssemblyReference.cache
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\MatrxiLibary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\MatrxiLibary.AssemblyInfoInputs.cache
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\MatrxiLibary.AssemblyInfo.cs
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\MatrxiLibary.csproj.CoreCompileInputs.cache
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\MatrxiLibary.dll
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\refint\MatrxiLibary.dll
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\MatrxiLibary.pdb
+C:\Users\kacper\Desktop\programowanie\MatrxiLibary\MatrxiLibary\obj\Debug\net6.0\ref\MatrxiLibary.dll

@@ -1,0 +1,99 @@
+Oto lista popularnych atrybutów, podzielonych na kategorie, które można przypisać do właściwości metody lub całej klasy w aplikacji .NET Core:
+
+Atrybuty kontrolera
+[ValidateAntiForgeryToken]
+[Authorize]: Ogranicza dostęp do kontrolera lub akcji tylko do uwierzytelnionych użytkowników lub użytkowników o określonych uprawnieniach.
+[AllowAnonymous]: Pozwala anonimowym użytkownikom uzyskać dostęp do kontrolera lub akcji bez uwierzytelnienia.
+[ApiController]: Wskazuje, że klasa kontrolera działa jako kontroler API i włącza zachowanie takie jak automatyczna walidacja modelu i formatowanie odpowiedzi JSON.
+[Route]: Określa szablon routingu dla kontrolera lub akcji.
+[ValidateAntiForgeryToken]: Zapobiega atakom CSRF (Cross-Site Request Forgery), sprawdzając, czy formularz zapytania zawiera poprawny token walidacji.
+Atrybuty akcji
+[HttpGet]: Określa, że akcja powinna obsługiwać zapytania HTTP GET.
+[HttpPost]: Określa, że akcja powinna obsługiwać zapytania HTTP POST.
+[HttpPut]: Określa, że akcja powinna obsługiwać zapytania HTTP PUT.
+[HttpDelete]: Określa, że akcja powinna obsługiwać zapytania HTTP DELETE.
+[ValidateAntiForgeryToken]: Zapobiega atakom CSRF (Cross-Site Request Forgery), sprawdzając, czy formularz zapytania zawiera poprawny token walidacji.
+[ActionName]: Pozwala na zmianę nazwy akcji, która jest używana w adresie URL.
+Atrybuty parametrów
+[FromQuery]: Binduje wartość parametru z query stringu (danych w adresie URL).
+[FromRoute]: Binduje wartość parametru z segmentu routingu w adresie URL.
+[FromBody]: Binduje wartość parametru z treści zapytania HTTP (np. JSON lub XML).
+[FromHeader]: Binduje wartość parametru z nagłówka HTTP.
+[FromForm]: Binduje wartość parametru z pola formularza HTML.
+[FromServices]: Wstrzykuje zależność z kontenera DI.
+Atrybuty modelu
+[Required]: Określa, że właściwość modelu jest wymagana.
+[StringLength]: Określa minimalną i maksymalną długość ciągu znaków dla właściwości modelu.
+[Range]: Określa minimalną i maksymalną wartość liczbową dla właściwości modelu.
+[RegularExpression]: Określa wzorzec wyrażenia regularnego dla właściwości modelu.
+[Bind]: Określa, które właściwości modelu mają być bindowane z zapytania HTTP.
+[Display]: Określa, jak właściwość modelu ma być wyświetlana w widoku
+
+
+
+W.L Arn0ld
+podaj wiecej atrybutów do kazdego z kategori oraz wszystkei atrybuty dla wlasciwosci 
+Oto kilka przykładów atrybutów dla każdej z kategorii:
+
+Atrybuty klas
+[Authorize] - Określa, że dostęp do klasy jest ograniczony do użytkowników, którzy spełniają określone wymagania autoryzacji.
+[ApiController] - Określa, że klasa jest kontrolerem API i wymaga zachowania specyficznych zachowań, takich jak automatyczne sprawdzanie poprawności modelu.
+[Route]
+
+
+
+W.L Arn0ld
+podajesz te same podaj tylko nowe
+Oto kilka dodatkowych atrybutów w każdej kategorii:
+
+Atrybuty dla metody
+
+[NonAction]: oznacza, że metoda nie jest akcją kontrolera i nie jest dostępna przez żądania HTTP
+[AllowAnonymous]: umożliwia anonimową autentykację dla określonej metody
+[Authorize(Roles = "RoleName")]: umożliwia dostęp do metody tylko dla użytkowników, którzy posiadają określoną rolę
+[ValidateAntiForgeryToken]: zapewnia, że żądanie HTTP pochodzi z zaufanego źródła, zabezpieczając przed atakami CSRF
+[ResponseCache(Duration = 60)]: umożliwia buforowanie odpowiedzi HTTP przez określony czas, aby zmniejszyć obciążenie serwera
+[ApiExplorerSettings(IgnoreApi = true)]: oznacza, że metoda nie powinna być uwzględniona w dokumentacji API
+Atrybuty dla kontrolera
+
+[Route("api/[controller]")]: umożliwia ustawienie domyślnego szablonu routingu dla wszystkich akcji kontrolera
+[Authorize]: umożliwia kontrolę dostępu do całego kontrolera, wymagając uwierzytelnienia
+[RoutePrefix("api/v1")]: umożliwia dodanie prefiksu do wszystkich szablonów routingu kontrolera
+[Produces("application/json")]: określa, że wszystkie akcje kontrolera powinny produkować dane w formacie JSON
+[ApiExplorerSettings(IgnoreApi = true)]: oznacza, że kontroler nie powinien być uwzględniony w dokumentacji API
+Atrybuty dla właściwości
+
+[Required]: oznacza, że pole jest wymagane i nie może być puste
+[Range(0, 100)]: określa zakres wartości dla właściwości
+[StringLength(50)]: określa maksymalną długość ciągu znaków dla właściwości
+[DataType(DataType.Date)]: określa, że właściwość powinna przechowywać datę
+[BindProperty(Name = "NewName")]: umożliwia ustawienie innej nazwy dla właściwości niż domyślna
+To tylko kilka przykładów atrybutów, a w dokumentacji można znaleźć ich znacznie więcej.
+
+
+
+
+W.L Arn0ld
+dla wlasciwosci wszystkie jakie znasz z naciskiem na typy danych oraz json 
+Oto niektóre popularne atrybuty dla właściwości wraz z ich opisami:
+
+[Required]: wymaga, aby wartość właściwości była niepusta.
+[StringLength]: ogranicza maksymalną długość ciągu znaków, która może zostać przypisana do właściwości.
+[RegularExpression]: wymaga, aby wartość właściwości pasowała do określonego wzorca wyrażenia regularnego.
+[Range]: określa przedział wartości numerycznych, które mogą być przypisane do właściwości.
+[DefaultValue]: ustawia domyślną wartość dla właściwości.
+[JsonProperty]: określa, że właściwość powinna być serializowana i deserializowana jako pole JSON o określonej nazwie.
+Oto kilka atrybutów dla klas:
+
+[Serializable]: umożliwia serializację i deserializację obiektu danej klasy.
+[DataContract]: umożliwia kontrolowanie procesu serializacji i deserializacji obiektu danej klasy.
+[KnownType]: informuje serializator o znanych typach, które mogą być używane podczas serializacji i deserializacji obiektu danej klasy.
+[Obsolete]: oznacza, że dana klasa lub metoda została oznaczona jako przestarzała i nie powinna być używana.
+Oto kilka atrybutów dla kontrolerów:
+
+[Authorize]: wymaga uwierzytelnienia użytkownika przed uzyskaniem dostępu do kontrolera lub jego akcji.
+[AllowAnonymous]: umożliwia dostęp do kontrolera lub jego akcji bez uwierzytelnienia.
+[Route]: określa adres URL, który odpowiada danemu kontrolerowi lub jego akcji.
+[ValidateAntiForgeryToken]: zapewnia, że formularz, który został przesłany do kontrolera, jest zabezpieczony przed atakami typu CSRF.
+
+

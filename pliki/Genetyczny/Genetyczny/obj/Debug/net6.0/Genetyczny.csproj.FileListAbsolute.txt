@@ -1,0 +1,17 @@
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\bin\Debug\net6.0\Genetyczny.exe
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\bin\Debug\net6.0\Genetyczny.deps.json
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\bin\Debug\net6.0\Genetyczny.runtimeconfig.json
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\bin\Debug\net6.0\Genetyczny.dll
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\bin\Debug\net6.0\Genetyczny.pdb
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.csproj.AssemblyReference.cache
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.AssemblyInfoInputs.cache
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.AssemblyInfo.cs
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.csproj.CoreCompileInputs.cache
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.dll
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\refint\Genetyczny.dll
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.pdb
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.genruntimeconfig.cache
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\ref\Genetyczny.dll
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\kacper\Desktop\programowanie\pliki\Genetyczny\Genetyczny\obj\Debug\net6.0\Genetyczny.csproj.CopyComplete

@@ -1,0 +1,17 @@
+services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
+services.Configure<CookieAuthenticationOptions>("Cookie1", options =>
+{
+    options.Cookie.Name = "Cookie1";
+    // ...
+});
+
+services.Configure<CookieAuthenticationOptions>("Cookie2", options =>
+{
+    options.Cookie.Name = "Cookie2";
+    // ...
+});

@@ -1,0 +1,35 @@
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration((hostingContext, config) =>
+        {
+            config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            config.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+            config.AddEnvironmentVariables();
+            config.AddCommandLine(args);
+        })
+        .ConfigureServices((hostContext, services) =>
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddConfiguration(hostContext.Configuration)
+                .Build();
+            services.AddSingleton(configuration);
+            // Dodaj usługi
+        })
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Startup>();
+        });
+
+
+Dodanie services.AddOptions() w metodzie ConfigureServices pozwala na rejestrację typów, które implementują interfejsy 
+IOptions<> i IOptionsSnapshot<> jako usług w kontenerze wstrzykiwania zależności.
+
+ublic static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+    WebHost.CreateDefaultBuilder(args)
+        .UseKestrel(options =>
+        {
+            // Konfiguracja ustawień Kestrel
+            options.Limits.MaxRequestBodySize = null;
+            options.Listen(IPAddress.Any, 5000);
+        })
+        .UseStartup<Startup>();

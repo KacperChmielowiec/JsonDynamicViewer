@@ -1,0 +1,12 @@
+Type type = typeof(MyClass);
+ConstructorInfo[] constructors = type.GetConstructors();
+
+foreach (ConstructorInfo constructor in constructors)
+{
+    ParameterInfo[] parameters = constructor.GetParameters();
+
+    foreach (ParameterInfo parameter in parameters)
+    {
+        Console.WriteLine("Parameter: {0}, Type: {1}", parameter.Name, parameter.ParameterType);
+    }
+}

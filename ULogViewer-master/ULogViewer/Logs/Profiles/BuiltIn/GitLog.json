@@ -1,0 +1,87 @@
+﻿{
+	"DataSource": {
+		"Name": "StandardOutput",
+		"Options": {
+			"Command": "git --no-pager log --parents --stat"
+		}
+	},
+	"Icon": "VersionControl",
+	"IsWorkingDirectoryNeeded": true,
+	"LogPatterns": [
+		{
+			"Regex": "^commit[\\s]+(?<Extra1>[\\d\\w]+)([\\s]+(?<Extra2>[\\d\\w]+))?.*$"
+		},
+		{
+			"Regex": "^Merge:.*$",
+			"IsSkippable": true
+		},
+		{
+			"Regex": "^Author:[\\s]+(?<UserName>.+)$"
+		},
+		{
+			"Regex": "^Date:[\\s]+[\\w]+[\\s]+(?<Timestamp>[\\w]+[\\s]+[\\d]+[\\s]+[\\d]+:[\\d]+:[\\d]+[\\s]+[\\d]+).*$"
+		},
+		{
+			"Regex": "^[\\s]*$"
+		},
+		{
+			"IsRepeatable": true,
+			"IsSkippable": true,
+			"Regex": "^[\\s]{4}(?<Message>.*)$"
+		},
+		{
+			"Regex": "^[\\s]*$"
+		},
+		{
+			"IsRepeatable": true,
+			"IsSkippable": true,
+			"Regex": "^[\\s]+[^\\|]+[\\s]+\\|[\\s]+(Bin|[\\d]+).*$"
+		},
+		{
+			"IsSkippable": true,
+			"Regex": "^[\\s]+(?<Extra3>[\\d]+)[\\s]+file(s)?[\\s]+changed.*$"
+		},
+		{
+			"IsSkippable": true,
+			"Regex": "^[\\s]*$"
+		}
+	],
+	"LogWritingFormats": [
+		"commit: {Extra1} {Extra2}{NewLine}Author: {UserName}{NewLine}Date:   {Timestamp}{NewLine}{NewLine}{Message}{NewLine}"
+	],
+	"SortDirection": "Descending",
+	"TimestampCategoryGranularity": "Day",
+	"TimestampFormatForDisplaying": "yyyy/MM/dd HH:mm:ss",
+	"TimestampFormatsForReading": [
+		"MMM d HH:mm:ss yyyy"
+	],
+	"VisibleLogProperties": [
+		{
+			"Name": "Timestamp",
+			"Width": 180
+		},
+		{
+			"DisplayName": "Commit",
+			"Name": "Extra1",
+			"Width": 150
+		},
+		{
+			"DisplayName": "Parent",
+			"Name": "Extra2",
+			"Width": 150
+		},
+		{
+			"DisplayName": "Author",
+			"Name": "UserName",
+			"Width": 150
+		},
+		{
+			"DisplayName": "Count",
+			"Name": "Extra3",
+			"Width": 50
+		},
+		{
+			"Name": "Message"
+		}
+	]
+}

@@ -1,0 +1,15 @@
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\bin\Debug\net6.0\Solid.exe
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\bin\Debug\net6.0\Solid.deps.json
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\bin\Debug\net6.0\Solid.runtimeconfig.json
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\bin\Debug\net6.0\Solid.dll
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\bin\Debug\net6.0\Solid.pdb
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.csproj.AssemblyReference.cache
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.AssemblyInfoInputs.cache
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.AssemblyInfo.cs
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.csproj.CoreCompileInputs.cache
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.dll
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\refint\Solid.dll
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.pdb
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\Solid.genruntimeconfig.cache
+C:\Users\kacper\Desktop\programowanie\Solid\Solid\obj\Debug\net6.0\ref\Solid.dll

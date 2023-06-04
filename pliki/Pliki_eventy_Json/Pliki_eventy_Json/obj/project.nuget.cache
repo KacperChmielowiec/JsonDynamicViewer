@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "g5FHi2RvDTN0Fta7d4dT2PWKr3I6LEoupJIxKttlpumfxsV4LMwUNo1zdXo7SpSGQ51EtRnUe8zO2zl3lKtbkw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kacper\\Desktop\\programowanie\\pliki\\Pliki_eventy_Json\\Pliki_eventy_Json\\Pliki_eventy_Json.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kacper\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

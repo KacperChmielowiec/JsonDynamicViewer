@@ -1,0 +1,15 @@
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\bin\Debug\net6.0\interpolacja.exe
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\bin\Debug\net6.0\interpolacja.deps.json
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\bin\Debug\net6.0\interpolacja.runtimeconfig.json
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\bin\Debug\net6.0\interpolacja.dll
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\bin\Debug\net6.0\interpolacja.pdb
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.csproj.AssemblyReference.cache
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.AssemblyInfoInputs.cache
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.AssemblyInfo.cs
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.csproj.CoreCompileInputs.cache
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.dll
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\refint\interpolacja.dll
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.pdb
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\interpolacja.genruntimeconfig.cache
+C:\Users\kacper\Desktop\programowanie\pliki\interpolacja\interpolacja\obj\Debug\net6.0\ref\interpolacja.dll

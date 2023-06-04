@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href='style.css' rel='stylesheet'/>
+	<script src="https://code.jquery.com/jquery-3.6.2.slim.js"
+	integrity="sha256-OflJKW8Z8amEUuCaflBZJ4GOg4+JnNh9JdVfoV+6biw="
+	crossorigin="anonymous"></script>
+	
+
+<script>
+window.dispatchEvent(new Event('resize'));
+$.fn.exists = function () {
+    return this.length !== 0;
+}
+$(window).resize(
+		function(){
+				if($(this).width() < 1000){
+						var ul = $('nav').find('ul');
+						$('nav').find('ul').remove();
+						
+						if($('.menu').exists() === false){
+								$('<div/>',{class: 'menu'}).appendTo('#container');
+								$('.menu').css({width: '100%'})
+						}
+						$('.menu').append(ul);
+						var h = $('nav').height();
+						ul.css({height: h+ul.height()+100+'px',width: '100%'})
+						$('.menu').css({position: 'fixed',top: h+'px'})
+						$('.menu').css({height:'0px', overflow: 'hidden'  ,transition: 'height 0.35s ease-in-out'});
+						
+						
+						
+				}
+				else
+				{	
+					var ul = $('.menu').find('ul');	
+					var menu = $('.menu');
+					menu.remove();
+					$('nav').append(ul);
+					ul.css({height: 'auto',position:'static', width: 'auto', top: '0px'});
+					
+					
+				}
+				
+		}
+		
+	)		
+</script>
+
+</head>
+<body>
+		<div id='container' onload='check()'>
+			<nav>
+				<a id="Logo">LOGO <span class="typed-text"></span><span class="cursor">&nbsp;</span></a>
+				
+				<ul>
+					<li>Oferta</li>
+					<li>Cennik</li>
+					<li>O Nas</li>
+					<li>Kontakt</li>
+				</ul>
+			</nav>
+		</div>
+		
+		
+<script>
+	
+	var words  = ['example','choose own']
+	
+	var typedText = $('.typed-text:first');
+	var cursor = $('.cursor:first');
+	var charIndex = 0;
+	var Index = 0;
+	
+	async function type()
+	{
+		
+		charIndex = words[Index].length;
+		await typing.call(typedText,charIndex);
+		await erase.call(typedText);
+		Index++;
+		if(Index == words.length) Index = 0;
+		type();
+	}
+	
+	function delay(time) {
+		return new Promise(resolve => setTimeout(resolve, time));
+	}
+	
+	async function typing(_charIndex)
+	{
+		ch = _charIndex;
+		for(var i = 0 ; i < ch; i++)
+		{
+				this.append(words[Index][i]);
+				await delay(500);
+		}
+	}
+	async function erase()
+	{
+		var tempText = this.text();
+		while(tempText.length > 0)
+		{
+			this.text(tempText.substring(0, tempText.length - 1));
+			tempText = tempText.substring(0,tempText.length - 1);
+			await delay(100);
+		}
+	}
+	$(document).ready(setTimeout(() => type(),300))
+
+</script>
+<script>
+	if(window.innerWidth < 1000) $(window).trigger('resize');
+</script>
+<script>
+	$('nav').click(
+		function(){
+			if(window.innerWidth < 1000)
+			{
+				
+				
+					
+					var container = document.querySelector('.menu');
+				
+					if (!container.classList.contains('active')) {
+      
+							container.classList.add('active');
+							container.style.height = 'auto';
+
+							var height = container.clientHeight + 'px';
+
+							container.style.height = '0px';
+
+							  setTimeout(function () {
+								container.style.height = height;
+							  }, 0);
+      
+					}				
+					else {
+      
+							container.style.height = '0px';
+
+							container.addEventListener('transitionend', function () {
+								container.classList.remove('active');
+							}, {
+								once: true
+							});
+					}
+					
+			}
+			else{return;}
+			
+		}
+	);
+</script>
+<script>
+	
+	$('nav').on('click',
+	
+		function(event)
+		{
+			if($(window).width() < 1000)
+			{
+				if($(this).height() === 0)
+				{
+					autoHeightAnimate($(this),500);
+					
+				}
+				else{
+					$(this).stop();
+					$(this).animate({height: '0'},500);
+				}
+			}
+			else{return;}
+		
+		}
+	
+	
+	)
+	function autoHeightAnimate(elem,time)
+	{
+		var curHeight = elem.height();
+		var autoHeight = element.css('height','auto').height();
+		element.height(curHeight);
+		element.stop().animate({height:autoHeight},time);
+	}
+
+</script>
+</body>
+
+
+
+</html>

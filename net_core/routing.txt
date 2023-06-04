@@ -1,0 +1,84 @@
+[HttpPost]
+public IActionResult Create([FromBody] int value)
+{
+    // logika tworzenia zasobu i zwracania odpowiedzi HTTP
+}
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = "docs";
+});
+
+[Produces("application/json")]
+[Route("api/[controller]")]
+public class MyController : Controller
+{
+    [HttpGet("{id}")]
+    [Produces("application/json")]
+    public IActionResult GetJson(int id)
+    {
+        // return JSON response
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult GetView(int id)
+    {
+        // return view
+    }
+}
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers(); // dodaj wszystkie routingu z atrybutem ApiController
+    endpoints.Map("/api/my-endpoint", async context =>
+    {
+        // wykonaj obsługę żądania
+    }).WithMetadata(new HttpMethodMetadata(new[] { "GET" })) // ustaw metodę HTTP dla tego routingu
+    .WithMetadata(new RouteMetadata("/api/my-endpoint")); // ustaw ścieżkę dla tego routingu
+
+    // dodaj wszystkie routingu poza ApiController i konkretnym routingiem
+    endpoints.MapFallbackToController("Index", "Home");
+});
+
+
+apiEndpoints.MapSwagger()
+
+
+
+ublic void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseRouting();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+        endpoints.MapGet("/hello", async context =>
+        {
+            var controller = context.RequestServices.GetService<MyController>();
+            var result = await controller.MyAction();
+            await context.Response.WriteAsync(result);
+        });
+    });
+}
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("/hello", async context =>
+    {
+        await context.Response.WriteAsync("Hello, world!");
+    });
+
+    endpoints.Map("/api", api =>
+    {
+        api.MapGet("/customers", async context =>
+        {
+            await context.Response.WriteAsync("Customers endpoint");
+        });
+
+        api.MapGet("/orders", async context =>
+        {
+            await context.Response.WriteAsync("Orders endpoint");
+        });
+    });
+});

@@ -1,0 +1,53 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Avalonia3.ViewModels.UserControls"
+             xmlns:local="using:Avalonia3.UserControls"
+             x:Class="Avalonia3.UserControls.ArrayNode">
+    
+    <Design.DataContext>
+        <vm:ArrayNodeViewModel />
+    </Design.DataContext>
+
+    <StackPanel>
+        <Border Classes="row">
+            <DockPanel Margin="{Binding Indentation}">
+                <TextBlock IsVisible="{Binding IsProperty}" Text="{Binding PropertyName}" Classes="code property" />
+            
+                <DockPanel IsVisible="{Binding !Empty}">
+                    <TextBlock Classes="code bracket">[</TextBlock>
+                    <Button Command="{Binding ExpandCommand}" IsVisible="{Binding Collapsed}" Classes="expandCollapseButton">+</Button>
+                    <Button Command="{Binding CollapseCommand}" IsVisible="{Binding !Collapsed}" Classes="expandCollapseButton">-</Button>
+                    
+                    <DockPanel IsVisible="{Binding Collapsed}">
+                        <TextBlock Classes="code bracket">]</TextBlock>
+                        <TextBlock IsVisible="{Binding !Last}" Classes="code bracket">,</TextBlock>
+                    </DockPanel>
+                </DockPanel>
+                
+                <DockPanel IsVisible="{Binding Empty}">
+					<TextBlock PointerReleased="SelectableTextBlock_OnPointerReleased" Classes="value">[]</TextBlock>
+                    <TextBlock IsVisible="{Binding !Last}" Classes="code bracket">,</TextBlock>
+                </DockPanel>
+            </DockPanel>
+        </Border>
+        
+        <Panel IsVisible="{Binding !Empty}">
+            <ItemsControl Items="{Binding Items}" IsVisible="{Binding !Collapsed}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:ValueNode DataContext="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Panel>
+        
+        <Border IsVisible="{Binding !Collapsed}" Classes="row">
+            <DockPanel Margin="{Binding Indentation}">
+                <TextBlock Classes="code bracket">]</TextBlock>
+                <TextBlock IsVisible="{Binding !Last}" Classes="code bracket">,</TextBlock>
+            </DockPanel>
+        </Border>
+
+    </StackPanel>
+    
+</UserControl>

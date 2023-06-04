@@ -1,0 +1,318 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ia="using:Avalonia.Xaml.Interactivity"
+        xmlns:iaCore="using:Avalonia.Xaml.Interactions.Core"
+		xmlns:abControls="using:CarinaStudio.Controls"
+		xmlns:asControls="using:CarinaStudio.AppSuite.Controls"
+		xmlns:asMedia="using:CarinaStudio.AppSuite.Media"
+        xmlns:appControls="using:CarinaStudio.ULogViewer.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CarinaStudio.ULogViewer.Controls.LogDataSourceOptionsDialog"
+        Classes="Dialog"
+        Title="{DynamicResource String/LogDataSourceOptionsDialog.Title}"
+        Width="{DynamicResource Double/LogDataSourceOptionsDialog.Width}">
+
+	<!-- Styles -->
+	<Window.Styles>
+		
+		<Style Selector="ListBox.Commands">
+			<Setter Property="ItemTemplate">
+				<Setter.Value>
+					<DataTemplate>
+						<Grid ColumnDefinitions="*,Auto">
+							<asControls:SyntaxHighlightingTextBlock DefinitionSet="{Binding $parent[Window].CommandSyntaxHighlightingDefinitionSet}" FontFamily="{Binding PatternFontFamily, Source={x:Static appControls:ControlFonts.Default}}" Text="{Binding}" TextTrimming="None" TextWrapping="NoWrap" VerticalAlignment="Center"/>
+							<Border Classes="InPlaceAction_Reserved"/>
+							<StackPanel Grid.Column="1" IsVisible="{Binding $parent[ListBoxItem].IsPointerOver}" Orientation="Horizontal">
+								<Button Classes="InPlaceAction_Button" Command="{Binding $parent[Window].RemoveSetupTeardownCommandCommand}" CommandParameter="{Binding $parent[ListBoxItem]}" ToolTip.Tip="{DynamicResource String/Common.Delete}">
+									<asControls:Image Classes="InPlaceAction_Icon">
+										<DrawingImage>
+											<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Delete}"/>
+										</DrawingImage>
+									</asControls:Image>
+								</Button>
+								<Button Classes="InPlaceAction_Button" Command="{Binding $parent[Window].EditSetupTeardownCommandCommand}" CommandParameter="{Binding $parent[ListBoxItem]}" ToolTip.Tip="{DynamicResource String/Common.Edit}">
+									<asControls:Image Classes="InPlaceAction_Icon">
+										<DrawingImage>
+											<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.Edit}"/>
+										</DrawingImage>
+									</asControls:Image>
+								</Button>
+								<Button Classes="InPlaceAction_Button" Command="{Binding $parent[Window].MoveSetupTeardownCommandUpCommand}" CommandParameter="{Binding $parent[ListBoxItem]}" ToolTip.Tip="{DynamicResource String/Common.MoveUp}">
+									<asControls:Image Classes="InPlaceAction_Icon">
+										<DrawingImage>
+											<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.MoveUp}"/>
+										</DrawingImage>
+									</asControls:Image>
+								</Button>
+								<Button Classes="InPlaceAction_Button" Command="{Binding $parent[Window].MoveSetupTeardownCommandDownCommand}" CommandParameter="{Binding $parent[ListBoxItem]}" ToolTip.Tip="{DynamicResource String/Common.MoveDown}">
+									<asControls:Image Classes="InPlaceAction_Icon">
+										<DrawingImage>
+											<GeometryDrawing Brush="{Binding $parent[ListBoxItem].Foreground}" Geometry="{StaticResource Geometry/Icon.MoveDown}"/>
+										</DrawingImage>
+									</asControls:Image>
+								</Button>
+							</StackPanel>
+						</Grid>
+					</DataTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="ListBoxItem">
+			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+			<Setter Property="Padding" Value="{DynamicResource Thickness/Dialog.ListBox.Item.WithInPlaceActions.Padding}"/>
+		</Style>
+		
+	</Window.Styles>
+	
+	<!-- Content -->
+	<Panel>
+		<DockPanel>
+
+			<!-- Control buttons -->
+			<Border Classes="Dialog_ControlButtonsPanel">
+				<StackPanel Classes="Dialog_ControlButtonsPanel">
+					<Button Classes="Dialog_ControlButton" Command="{Binding $parent[Window].GenerateResultCommand}" Content="{DynamicResource String/Common.OK}"/>
+					<Button Classes="Dialog_ControlButton" Command="{Binding $parent[Window].Close}" Content="{DynamicResource String/Common.Cancel}"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Content -->
+			<ScrollViewer HorizontalScrollBarVisibility="Disabled" MaxHeight="{StaticResource Double/LogDataSourceOptionsDialog.Content.MaxHeight}">
+				<Border Classes="Dialog_ContentPanel_WithItemsGroups">
+					<Border Classes="Dialog_ItemsGroup_Container">
+						<StackPanel Name="itemsPanel">
+
+							<!-- Category -->
+							<Grid Name="categoryItemGrid" Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto" IsVisible="{Binding $parent[Window].IsCategorySupported}">
+								<StackPanel Classes="Dialog_Item_Text_Container">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.Category}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsCategoryRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}"/>
+									</StackPanel>
+									<abControls:LinkTextBlock Classes="Dialog_LinkTextBlock_Description" IsVisible="{Binding $parent[Window].CategoryReferenceUri, Converter={x:Static ObjectConverters.IsNotNull}}" Text="{DynamicResource String/Common.References}" Uri="{Binding $parent[Window].CategoryReferenceUri}"/>
+								</StackPanel>
+								<TextBox Name="categoryTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" PropertyChanged="OnEditorControlPropertyChanged" Watermark="{DynamicResource String/Common.None}"/>
+							</Grid>
+							<Separator Classes="Dialog_Item_Separator" IsVisible="{Binding #categoryItemGrid.IsVisible}"/>
+
+							<!-- Command -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsCommandSupported}">
+								<Border Name="commandItemGrid" Classes="Dialog_Item_Container">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.Command}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsCommandRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}" VerticalAlignment="Center"/>
+									</StackPanel>
+								</Border>
+								<Line Classes="Dialog_Item_Separator_Inner"/>
+								<asControls:SyntaxHighlightingTextBox Name="commandTextBox" Classes="Dialog_Item_TextBox" DefinitionSet="{Binding $parent[Window].CommandSyntaxHighlightingDefinitionSet}" FontFamily="{Binding PatternFontFamily, Source={x:Static appControls:ControlFonts.Default}}" Height="{StaticResource Double/LogDataSourceOptionsDialog.Command.Height}" PropertyChanged="OnEditorControlPropertyChanged" TextAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Watermark="{DynamicResource String/Common.None}"/>
+								<Separator Classes="Dialog_Separator_Small" IsVisible="{Binding $parent[Window].IsAzureRelatedDataSourceProvider}"/>
+								<Button Name="selectAzureResourcesButton" Classes="Dialog_Item_Button" Command="{Binding $parent[Window].SelectAzureResources}" Content="{DynamicResource String/LogDataSourceOptionsDialog.SelectAzureResources}" HorizontalAlignment="Right" IsVisible="{Binding $parent[Window].IsAzureRelatedDataSourceProvider}"/>
+								<Line Classes="Dialog_Item_Separator_Inner" IsVisible="{Binding $parent[Window].CommandReferenceUri, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+								<abControls:LinkTextBlock Classes="Dialog_LinkTextBlock_Description" IsVisible="{Binding $parent[Window].CommandReferenceUri, Converter={x:Static ObjectConverters.IsNotNull}}" Text="{DynamicResource String/Common.References}" Uri="{Binding $parent[Window].CommandReferenceUri}"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Include standard error -->
+							<Grid Name="includeStderrItemGrid" Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto" IsVisible="{Binding $parent[Window].IsIncludeStandardErrorSupported}">
+								<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.IncludeStandardError}"/>
+								<ToggleSwitch Name="includeStderrSwitch" Classes="Dialog_Item_ToggleSwitch" Grid.Column="1"/>
+							</Grid>
+							<Separator Classes="Dialog_Item_Separator" IsVisible="{Binding #includeStderrItemGrid.IsVisible}"/>
+
+							<!-- Use text shell -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsUseTextShellSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.UseTextShell}"/>
+									<ToggleSwitch Name="useTextShellSwitch" Classes="Dialog_Item_ToggleSwitch" Grid.Column="1"/>
+								</Grid>
+								<Separator Classes="Dialog_Separator_Small"/>
+								<Button Classes="Dialog_Item_Button" Command="{Binding $parent[Window].ShowDefaultTextShellOptions}" Content="{DynamicResource String/Common.Options.WithDialog}" HorizontalAlignment="Right"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+							
+							<!-- File name -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsFileNameSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="Auto,*">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.FileName}"/>
+									<TextBox Name="fileNameTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" Watermark="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<Separator Classes="Dialog_Separator_Small"/>
+								<Button Classes="Dialog_Item_Button" Command="{Binding $parent[Window].SelectFileName}" Content="{DynamicResource String/LogDataSourceOptions.SelectFileName}" HorizontalAlignment="Right"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Working directory -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsWorkingDirectorySupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="Auto,*">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.WorkingDirectory}"/>
+									<TextBox Name="workingDirectoryTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" Watermark="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<Separator Classes="Dialog_Separator_Small"/>
+								<Button Classes="Dialog_Item_Button" Command="{Binding $parent[Window].SelectWorkingDirectory}" Content="{DynamicResource String/LogDataSourceOptions.SelectWorkingDirectory}" HorizontalAlignment="Right"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- IP endpoint -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsIPEndPointSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="Auto,*">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/IPEndPointInputDialog.Address}"/>
+									<abControls:IPAddressTextBox Name="ipAddressTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" PropertyChanged="OnEditorControlPropertyChanged" Watermark="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="Auto,*">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/IPEndPointInputDialog.Port}"/>
+									<abControls:IntegerTextBox Name="portTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" IsNullValueAllowed="False" Maximum="65535" Minimum="1" Value="32678"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- URI -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsUriSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="Auto,*">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.Uri}"/>
+									<abControls:UriTextBox Name="uriTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" PropertyChanged="OnEditorControlPropertyChanged" Watermark="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Encoding -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsEncodingSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.Encoding}"/>
+									<ComboBox Name="encodingComboBox" Classes="Dialog_Item_ComboBox" Grid.Column="1" Items="{Binding $parent[Window].Encodings}">
+										<ComboBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding EncodingName}"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Format JSON data -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsFormatJsonDataSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.FormatJsonData}"/>
+									<ToggleSwitch Name="formatJsonDataSwitch" Classes="Dialog_Item_ToggleSwitch" Grid.Column="1"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Format XML data -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsFormatXmlDataSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto">
+									<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.FormatXmlData}"/>
+									<ToggleSwitch Name="formatXmlDataSwitch" Classes="Dialog_Item_ToggleSwitch" Grid.Column="1"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Connection string -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsConnectionStringSupported}">
+								<Border Classes="Dialog_Item_Container">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.ConnectionString}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsConnectionStringRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}" VerticalAlignment="Center"/>
+									</StackPanel>
+								</Border>
+								<Line Classes="Dialog_Item_Separator_Inner"/>
+								<TextBox Name="connectionStringStringTextBox" Classes="Dialog_Item_TextBox" AcceptsReturn="True" AcceptsTab="True" FontFamily="{Binding PatternFontFamily, Source={x:Static appControls:ControlFonts.Default}}" Height="{StaticResource Double/LogDataSourceOptionsDialog.ConnectionStringTextBox.Height}" PropertyChanged="OnEditorControlPropertyChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextAlignment="Left" Watermark="{DynamicResource String/Common.None}"/>
+								<Line Classes="Dialog_Item_Separator_Inner" IsVisible="{Binding $parent[Window].ConnectionStringReferenceUri, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+								<abControls:LinkTextBlock Classes="Dialog_LinkTextBlock_Description" IsVisible="{Binding $parent[Window].ConnectionStringReferenceUri, Converter={x:Static ObjectConverters.IsNotNull}}" Text="{DynamicResource String/Common.References}" Uri="{Binding $parent[Window].ConnectionStringReferenceUri}"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Resource on Azure -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsResourceOnAzureSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto">
+									<StackPanel Classes="Dialog_Item_Text_Container">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.IsResourceOnAzure}"/>
+										<TextBlock Classes="Dialog_TextBlock_Description" Text="{DynamicResource String/LogDataSourceOptionsDialog.IsResourceOnAzure.Description}"/>
+									</StackPanel>
+									<ToggleSwitch Name="isResourceOnAzureSwitch" Classes="Dialog_Item_ToggleSwitch" Grid.Column="1"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Query string -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsQueryStringSupported}">
+								<Border Classes="Dialog_Item_Container">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.QueryString}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsQueryStringRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}" VerticalAlignment="Center"/>
+									</StackPanel>
+								</Border>
+								<Line Classes="Dialog_Item_Separator_Inner"/>
+								<asControls:SyntaxHighlightingTextBox Name="queryStringTextBox" Classes="Dialog_Item_TextBox" AcceptsReturn="True" AcceptsTab="True" DefinitionSet="{Binding $parent[Window].SqlSyntaxHighlightingDefinitionSet}" FontFamily="{Binding PatternFontFamily, Source={x:Static appControls:ControlFonts.Default}}" Height="{StaticResource Double/LogDataSourceOptionsDialog.QueryStringTextBox.Height}" PropertyChanged="OnEditorControlPropertyChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextAlignment="Left" Watermark="{DynamicResource String/Common.None}"/>
+								<Line Classes="Dialog_Item_Separator_Inner" IsVisible="{Binding $parent[Window].QueryStringReferenceUri, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+								<abControls:LinkTextBlock Classes="Dialog_LinkTextBlock_Description" IsVisible="{Binding $parent[Window].QueryStringReferenceUri, Converter={x:Static ObjectConverters.IsNotNull}}" Text="{DynamicResource String/Common.References}" Uri="{Binding $parent[Window].QueryStringReferenceUri}"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- User name -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsUserNameSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="Auto,*">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.UserName}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsUserNameRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}"/>
+									</StackPanel>
+									<TextBox Name="userNameTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" PropertyChanged="OnEditorControlPropertyChanged" Watermark="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Password -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsPasswordSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="Auto,*">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.Password}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsPasswordRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}"/>
+									</StackPanel>
+									<TextBox Name="passwordTextBox" Classes="Dialog_Item_TextBox" Grid.Column="1" PasswordChar="●" PropertyChanged="OnEditorControlPropertyChanged" Watermark="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Setup commands -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsSetupCommandsSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.SetupCommands}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsSetupCommandsRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}" VerticalAlignment="Center"/>
+									</StackPanel>
+									<TextBlock Classes="Dialog_TextBlock" Grid.Column="1" IsVisible="{Binding !$parent[Window].SetupCommands.Count}" Text="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<asControls:ListBox Name="setupCommandsListBox" Classes="Dialog_Item_ListBox Commands" DoubleClickOnItem="OnListBoxDoubleClickOnItem" Items="{Binding $parent[Window].SetupCommands}" LostFocus="OnListBoxLostFocus" SelectionChanged="OnListBoxSelectionChanged"/>
+								<Separator Classes="Dialog_Separator_Small"/>
+								<Button Classes="Dialog_Item_Button" Command="{Binding $parent[Window].AddSetupCommand}" Content="{DynamicResource String/Common.Add.WithDialog}" HorizontalAlignment="Right"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+							<!-- Teardown commands -->
+							<StackPanel IsVisible="{Binding $parent[Window].IsTeardownCommandsSupported}">
+								<Grid Classes="Dialog_Item_Container" ColumnDefinitions="*,Auto">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Classes="Dialog_TextBlock_Label" Text="{DynamicResource String/LogDataSourceOptions.TeardownCommands}" VerticalAlignment="Center"/>
+										<TextBlock Classes="Dialog_TextBlock_Label" IsVisible="{Binding $parent[Window].IsTeardownCommandsRequired}" Text="{DynamicResource String/LogDataSourceOptionsDialog.Required}" VerticalAlignment="Center"/>
+									</StackPanel>
+									<TextBlock Classes="Dialog_TextBlock" Grid.Column="1" IsVisible="{Binding !$parent[Window].TeardownCommands.Count}" Text="{DynamicResource String/Common.None}"/>
+								</Grid>
+								<asControls:ListBox Name="teardownCommandsListBox" Classes="Dialog_Item_ListBox Commands" DoubleClickOnItem="OnListBoxDoubleClickOnItem" Items="{Binding $parent[Window].TeardownCommands}" LostFocus="OnListBoxLostFocus" SelectionChanged="OnListBoxSelectionChanged"/>
+								<Separator Classes="Dialog_Separator_Small"/>
+								<Button Classes="Dialog_Item_Button" Command="{Binding $parent[Window].AddTeardownCommand}" Content="{DynamicResource String/Common.Add.WithDialog}" HorizontalAlignment="Right"/>
+								<Separator Classes="Dialog_Item_Separator"/>
+							</StackPanel>
+
+						</StackPanel>
+					</Border>
+				</Border>
+			</ScrollViewer>
+			
+		</DockPanel>
+		<asControls:FullWindowTutorialPresenter Name="tutorialPresenter"/>
+	</Panel>
+  
+</Window>

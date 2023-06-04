@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:templateSelectors="clr-namespace:AvaloniaApplication2.TemplateSelectors"
+			 xmlns:valueConverters="clr-namespace:AvaloniaApplication2.ValueConverters"
+			 xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
+			 
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaApplication2.Views.TreeViewer">
+			
+
+	<UserControl.Resources>
+		
+			<valueConverters:MethodToValueConverter x:Key="MethodToValueConverter"/>
+			<valueConverters:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
+			<valueConverters:JValueConverter x:Key="JValueConverter"/>
+			<valueConverters:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
+			<valueConverters:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
+			<valueConverters:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
+
+			<TreeDataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Children, Converter={StaticResource MethodToValueConverter}}">
+				<StackPanel Orientation="Horizontal" Margin="1">
+					<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+					<TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+				</StackPanel>
+			</TreeDataTemplate>
+			
+			
+		</UserControl.Resources>
+
+		<UserControl.DataTemplates>
+
+			<templateSelectors:JPropertyDataTemplateSelector>
+
+				<DataTemplate DataType="jlinq:JValue">
+					<TextBlock Width="300"
+							   TextWrapping="Wrap" Text="TEST"
+							   Foreground="SaddleBrown" />
+				</DataTemplate>
+
+			</templateSelectors:JPropertyDataTemplateSelector>
+
+		</UserControl.DataTemplates>
+
+
+	<TreeView Padding="20" Margin="3" Name="JsonTreeView"  BorderThickness="0" Items="{Binding children}">
+			
+		
+	</TreeView>
+
+	
+	
+</UserControl>

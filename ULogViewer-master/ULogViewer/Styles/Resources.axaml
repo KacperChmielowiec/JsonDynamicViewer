@@ -1,0 +1,275 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+	<!-- AppOptionsDialog -->
+	<sys:Double x:Key="Double/AppOptionsDialog.FontFamily.ExtraInfo.Opacity">0.5</sys:Double>
+	<Thickness x:Key="Thickness/AppOptionsDialog.FontFamily.ExtraInfo.Margin">5,0,5,0</Thickness>
+
+	<!-- AzureResourcesDialog -->
+	<sys:Double x:Key="Double/AzureResourcesDialog.Height">450</sys:Double>
+	<sys:Double x:Key="Double/AzureResourcesDialog.Width">450</sys:Double>
+
+	<!-- CopyVarEditorDialog -->
+	<sys:Double x:Key="Double/CopyVarEditorDialog.Width">300</sys:Double>
+
+	<!-- DateTimeSelectionDialog -->
+	<sys:Double x:Key="Double/DateTimeSelectionDialog.Width">500</sys:Double>
+
+	<!-- DequeueToVarEditorDialog -->
+	<sys:Double x:Key="Double/DequeueToVarEditorDialog.Width">300</sys:Double>
+	
+	<!-- Dialog -->
+	<Thickness x:Key="Thickness/Dialog.ListBox.Item.Padding">10,5,10,5</Thickness>
+	<Thickness x:Key="Thickness/Dialog.ListBox.Item.WithInPlaceActions.Padding">10,5,20,5</Thickness>
+
+	<!-- EnqueueVarEditorDialog -->
+	<sys:Double x:Key="Double/EnqueueVarEditorDialog.Width">300</sys:Double>
+
+	<!-- IPEndPointInputDialog -->
+	<sys:Double x:Key="Double/IPEndPointInputDialog.Width">400</sys:Double>
+
+	<!-- JsonLogsSavingOptionsDialog -->
+	<sys:Double x:Key="Double/JsonLogsSavingOptionsDialog.ListBox.Height">200</sys:Double>
+	<sys:Double x:Key="Double/JsonLogsSavingOptionsDialog.Width">450</sys:Double>
+	<Thickness x:Key="Thickness/JsonLogsSavingOptionsDialog.ListBox.Key.Margin">20,0,0,0</Thickness>
+
+	<!-- KeyLogAnalysisRuleEditorDialog -->
+	<sys:Double x:Key="Double/KeyLogAnalysisRuleEditorDialog.Content.MaxHeight">500</sys:Double>
+	<sys:Double x:Key="Double/KeyLogAnalysisRuleEditorDialog.MessageInput.Height">100</sys:Double>
+	<sys:Double x:Key="Double/KeyLogAnalysisRuleEditorDialog.PatternInput.Height">100</sys:Double>
+	<sys:Double x:Key="Double/KeyLogAnalysisRuleEditorDialog.Width">500</sys:Double>
+
+	<!-- KeyLogAnalysisRuleSetEditorDialog -->
+	<sys:Double x:Key="Double/KeyLogAnalysisRuleSetEditorDialog.RuleListBox.Height">400</sys:Double>
+	<sys:Double x:Key="Double/KeyLogAnalysisRuleSetEditorDialog.RuleListBox.Item.Message.Opacity">0.7</sys:Double>
+	<sys:Double x:Key="Double/KeyLogAnalysisRuleSetEditorDialog.Width">500</sys:Double>
+	<Thickness x:Key="Thickness/KeyLogAnalysisRuleSetEditorDialog.RuleListBox.Item.Message.Margin">0,3,0,0</Thickness>
+
+	<!-- LogAnalysisScriptSetEditorDialog -->
+	<sys:Double x:Key="Double/LogAnalysisScriptSetEditorDialog.ScriptCompilationResults.MaxHeight">300</sys:Double>
+	<sys:Double x:Key="Double/LogAnalysisScriptSetEditorDialog.Height">550</sys:Double>
+	<sys:Double x:Key="Double/LogAnalysisScriptSetEditorDialog.MinHeight">400</sys:Double>
+	<sys:Double x:Key="Double/LogAnalysisScriptSetEditorDialog.MinWidth">300</sys:Double>
+	<sys:Double x:Key="Double/LogAnalysisScriptSetEditorDialog.ScriptEditor.Height">300</sys:Double>
+	<sys:Double x:Key="Double/LogAnalysisScriptSetEditorDialog.Width">650</sys:Double>
+	<Thickness x:Key="Thickness/LogAnalysisScriptSetEditorDialog.ScriptCompilationResults.Item.Padding">3</Thickness>
+	<Thickness x:Key="Thickness/LogAnalysisScriptSetEditorDialog.ScriptCompilationResults.Margin">-3,0,-3,0</Thickness>
+
+	<!-- LogAnalysisScriptSetSelectionDialog -->
+	<sys:Double x:Key="Double/LogAnalysisScriptSetSelectionDialog.MaxHeight">600</sys:Double>
+	<sys:Double x:Key="Double/LogAnalysisScriptSetSelectionDialog.Width">400</sys:Double>
+
+	<!-- LogDataSourceOptionsDialog -->
+	<sys:Double x:Key="Double/LogDataSourceOptionsDialog.Command.Height">80</sys:Double>
+	<sys:Double x:Key="Double/LogDataSourceOptionsDialog.CommandListBox.Height">150</sys:Double>
+	<sys:Double x:Key="Double/LogDataSourceOptionsDialog.ConnectionStringTextBox.Height">150</sys:Double>
+	<sys:Double x:Key="Double/LogDataSourceOptionsDialog.Content.MaxHeight">500</sys:Double>
+	<sys:Double x:Key="Double/LogDataSourceOptionsDialog.QueryStringTextBox.Height">150</sys:Double>
+	<sys:Double x:Key="Double/LogDataSourceOptionsDialog.Width">500</sys:Double>
+
+	<!-- LogLevelMapEntryEditor -->
+	<sys:Double x:Key="Double/LogLevelMapEntryEditor.Width">300</sys:Double>
+
+	<!-- LogPatternEditorDialog -->
+	<sys:Double x:Key="Double/LogPatternEditorDialog.RegexInput.Height">100</sys:Double>
+	<sys:Double x:Key="Double/LogPatternEditorDialog.Width">600</sys:Double>
+	
+	<!-- LogProfileEditorDialog -->
+	<sys:Double x:Key="Double/LogProfileEditorDialog.Content.MaxHeight">600</sys:Double>
+	<sys:Double x:Key="Double/LogProfileEditorDialog.LogWritingFormatTextBox.Height">100</sys:Double>
+	<sys:Double x:Key="Double/LogProfileEditorDialog.VisibleLogPropertyListBox.Name.Opacity">0.5</sys:Double>
+	<sys:Double x:Key="Double/LogProfileEditorDialog.Width">550</sys:Double>
+	<Thickness x:Key="Thickness/LogProfileEditorDialog.VisibleLogPropertyListBox.Name.Margin">20,0,0,0</Thickness>
+
+	<!-- LogProfileSelectionContextMenu -->
+	<sys:Double x:Key="Double/LogProfileSelectionContextMenu.CurrentLogProfile.Opacity">0.5</sys:Double>
+
+	<!-- LogProfileIconColorComboBox -->
+	<CornerRadius x:Key="CornerRadius/LogProfileIconColorComboBox.Icon">2</CornerRadius>
+	<Thickness x:Key="Thickness/LogProfileIconColorComboBox.Icon.Border">1</Thickness>
+
+	<!-- LogProfileSelectionDialog -->
+	<CornerRadius x:Key="CornerRadius/LogProfileSelectionDialog.Label">2</CornerRadius>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.Content.MaxHeight">500</sys:Double>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.LogProfile.Description.FontSize">12</sys:Double>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.LogProfile.Description.Opacity">0.8</sys:Double>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.LogProfile.Icon.Size">28</sys:Double>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.LogProfile.Label.FontSize">10</sys:Double>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.LogProfile.Name.FontSize">16</sys:Double>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.LogProfile.ProVersionIcon.Size">18</sys:Double>
+	<sys:Double x:Key="Double/LogProfileSelectionDialog.Width">500</sys:Double>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.Label.Margin">10,10,10,4</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.Description.Margin">0,0,5,5</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.Icon.Margin">0,5,15,0</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.Label.Margin">0,2,5,0</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.Label.Padding">2</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.Margin">11,1,11,1</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.Name.Margin">0,0,5,5</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.Padding">15,10,15,10</Thickness>
+	<Thickness x:Key="Thickness/LogProfileSelectionDialog.LogProfile.ProVersionIcon.Margin">5,0,5,5</Thickness>
+
+	<!-- LogReadingPreconditionDialog -->
+	<sys:Double x:Key="Double/LogReadingPreconditionDialog.Width">500</sys:Double>
+
+	<!-- LogStringPropertyDialog -->
+	<sys:Double x:Key="Double/LogStringPropertyDialog.Height">500</sys:Double>
+	<sys:Double x:Key="Double/LogStringPropertyDialog.MinHeight">350</sys:Double>
+	<sys:Double x:Key="Double/LogStringPropertyDialog.MinWidth">300</sys:Double>
+	<sys:Double x:Key="Double/LogStringPropertyDialog.Width">600</sys:Double>
+
+	<!-- LogWritingFormatEditorDialog -->
+	<sys:Double x:Key="Double/LogWritingFormatEditorDialog.FormatTextBox.Height">100</sys:Double>
+	<sys:Double x:Key="Double/LogWritingFormatEditorDialog.Width">600</sys:Double>
+
+	<!-- MainWindow -->
+	<sys:Double x:Key="Double/MainWindow.MinHeight">150</sys:Double>
+	<sys:Double x:Key="Double/MainWindow.MinWidth">300</sys:Double>
+	<sys:Double x:Key="Double/MainWindow.TabItem.ToolTip.Icon.Size">12</sys:Double>
+	<Thickness x:Key="Thickness/MainWindow.TabItem.ToolTip.Icon.Margin">0,0,3,0</Thickness>
+	<Thickness x:Key="Thickness/MainWindow.TabItem.ToolTip.Padding">5</Thickness>
+
+	<!-- OperationCountingAnalysisRuleEditorDialog -->
+	<sys:Double x:Key="Double/OperationCountingAnalysisRuleEditorDialog.Content.MaxHeight">500</sys:Double>
+	<sys:Double x:Key="Double/OperationCountingAnalysisRuleEditorDialog.PatternTextBox.Height">100</sys:Double>
+	<sys:Double x:Key="Double/OperationCountingAnalysisRuleEditorDialog.Width">500</sys:Double>
+
+	<!-- OperationCountingAnalysisRuleSetEditorDialog -->
+	<sys:Double x:Key="Double/OperationCountingAnalysisRuleSetEditorDialog.RuleListBox.Height">300</sys:Double>
+	<sys:Double x:Key="Double/OperationCountingAnalysisRuleSetEditorDialog.Width">500</sys:Double>
+
+	<!-- OperationDurationAnalysisRuleEditorDialog -->
+	<sys:Double x:Key="Double/OperationDurationAnalysisRuleEditorDialog.Content.MaxHeight">500</sys:Double>
+	<sys:Double x:Key="Double/OperationDurationAnalysisRuleEditorDialog.CustomMessageTextBox.Height">100</sys:Double>
+	<sys:Double x:Key="Double/OperationDurationAnalysisRuleEditorDialog.PatternTextBox.Height">100</sys:Double>
+	<sys:Double x:Key="Double/OperationDurationAnalysisRuleEditorDialog.Width">500</sys:Double>
+
+	<!-- OperationDurationAnalysisRuleSetEditorDialog -->
+	<sys:Double x:Key="Double/OperationDurationAnalysisRuleSetEditorDialog.RuleListBox.Height">300</sys:Double>
+	<sys:Double x:Key="Double/OperationDurationAnalysisRuleSetEditorDialog.Width">500</sys:Double>
+
+	<!-- PatternEditor -->
+	<sys:Double x:Key="Double/PatternEditor.MinHeight">130</sys:Double>
+
+	<!-- PeekQueueToVarEditorDialog -->
+	<sys:Double x:Key="Double/PeekQueueToVarEditorDialog.Width">300</sys:Double>
+
+	<!-- PeekStackToVarEditorDialog -->
+	<sys:Double x:Key="Double/PeekStackToVarEditorDialog.Width">300</sys:Double>
+
+	<!-- PopToVarEditorDialog -->
+	<sys:Double x:Key="Double/PopToVarEditorDialog.Width">300</sys:Double>
+
+	<!-- PredefinedLogTextFilterEditorDialog -->
+	<sys:Double x:Key="Double/PredefinedLogTextFilterEditorDialog.RegexInput.Height">100</sys:Double>
+	<sys:Double x:Key="Double/PredefinedLogTextFilterEditorDialog.Width">500</sys:Double>
+
+	<!-- PushVarEditorDialog -->
+	<sys:Double x:Key="Double/PushVarEditorDialog.Width">300</sys:Double>
+
+	<!-- RegexEditorDialog -->
+	<sys:Double x:Key="Double/RegexEditorDialog.Content.MaxHeight">550</sys:Double>
+	<sys:Double x:Key="Double/RegexEditorDialog.RegexInput.Height">100</sys:Double>
+	<sys:Double x:Key="Double/RegexEditorDialog.TestLogLine.Height">75</sys:Double>
+	<sys:Double x:Key="Double/RegexEditorDialog.Width">600</sys:Double>
+
+	<!-- ScriptLogDataSourceProviderEditorDialog -->
+	<sys:Double x:Key="Double/ScriptLogDataSourceProviderEditorDialog.Height">550</sys:Double>
+	<sys:Double x:Key="Double/ScriptLogDataSourceProviderEditorDialog.MinHeight">400</sys:Double>
+	<sys:Double x:Key="Double/ScriptLogDataSourceProviderEditorDialog.MinWidth">300</sys:Double>
+	<sys:Double x:Key="Double/ScriptLogDataSourceProviderEditorDialog.ScriptCompilationResults.MaxHeight">300</sys:Double>
+	<sys:Double x:Key="Double/ScriptLogDataSourceProviderEditorDialog.ScriptEditor.Height">300</sys:Double>
+	<sys:Double x:Key="Double/ScriptLogDataSourceProviderEditorDialog.Width">650</sys:Double>
+
+	<!-- ScriptLogDataSourceProvidersDialog -->
+	<sys:Double x:Key="Double/ScriptLogDataSourceProvidersDialog.ProviderListBox.Height">300</sys:Double>
+	
+	<!-- SessionView -->
+	<CornerRadius x:Key="CornerRadius/SessionView.LogListBox.Item.Column.Border">0</CornerRadius>
+	<CornerRadius x:Key="CornerRadius/SessionView.LogListBox.MarkIndicator.Border">7</CornerRadius>
+	<CornerRadius x:Key="CornerRadius/SessionView.MarkedLogListBox.Item.Border">4</CornerRadius>
+	<CornerRadius x:Key="CornerRadius/SessionView.Menu.MarkColorIcon">8</CornerRadius>
+	<sys:Double x:Key="Double/SessionView.Hint.NoLogToShow.FontSize">20</sys:Double>
+	<sys:Double x:Key="Double/SessionView.Hint.SelectLogProfile.FontSize">20</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogAnalysisResult.Icon.Size">14</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogAnalysisResult.SubInfo.Icon.Size">10</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogAnalysisResult.SubInfo.FontSize">12</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogAnalysisRuleSetListBox.Icon.Size">14</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogAnalysisRuleSetsPopup.MaxHeight">520</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogAnalysisRuleSetsPopup.Width">400</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogFileInfo.FileName.FontSize">14</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogFileInfo.Icon.Size">20</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogFileInfo.Summary.FontSize">13</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogHeader.MinWidth">25</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogListBox.ColorIndicator.Width">8</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogListBox.Item.MaxWidth">65536</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogListBox.LogAnalysisResultIndicator.Size">14</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogListBox.MarkIndicator.Size">14</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogListBox.MinSizeToCloseSidePanel">100</sys:Double>
+	<sys:Double x:Key="Double/SessionView.LogsProgessingBar.Height">2</sys:Double>
+	<sys:Double x:Key="Double/SessionView.PredefinedLogTextFilterListBox.Icon.Size">12</sys:Double>
+	<sys:Double x:Key="Double/SessionView.PredefinedLogTextFilterListBox.MaxHeight">400</sys:Double>
+	<sys:Double x:Key="Double/SessionView.PredefinedLogTextFilterListBox.MinHeight">100</sys:Double>
+	<sys:Double x:Key="Double/SessionView.PredefinedLogTextFiltersPopup.Width">300</sys:Double>
+	<sys:Double x:Key="Double/SessionView.SidePanel.Header.Button.Size">24</sys:Double>
+	<sys:Double x:Key="Double/SessionView.SidePanel.Header.FontSize">14</sys:Double>
+	<sys:Double x:Key="Double/SessionView.SidePanel.Header.Icon.Size">16</sys:Double>
+	<sys:Double x:Key="Double/SessionView.ToolBar.LogLevelFilter.Width">140</sys:Double>
+	<sys:Double x:Key="Double/SessionView.ToolBar.LogProcessIdFilter.Width">85</sys:Double>
+	<sys:Double x:Key="Double/SessionView.ToolBar.LogTextFilterItemsPanel.MinWidth">250</sys:Double>
+	<Thickness x:Key="Thickness/SessionView.Hint.Margin">20</Thickness>
+	<Thickness x:Key="Thickness/SessionView.Hint.SelectLogProfile.Icon.Margin">8,0,8,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisResult.Icon.Margin">3</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisResult.SubInfo.Icon.Margin">0,1,5,1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisResult.SubInfoPanel.Padding">5,0,5,3</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Margin">3,3,3,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisRuleSetListBox.Header.Padding">7,6,17,6</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisRuleSetListBox.Icon.Margin">0,0,8,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisRuleSetListBox.Item.Padding">8,5,20,5</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisRuleSetsPopup.Border">1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogAnalysisRuleSetsPopup.Padding">10</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogFileInfo.FileName.Margin">0,0,0,4</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogFileInfo.Icon.Margin">0,3,5,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogFileInfo.Summary.Margin">0,1,0,1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogFileListBox.Item.Padding">6</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogHeader.Margin">3,8,3,8</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogHeader.Padding">5,0,5,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.ColorIndicator.Border">0,0,2,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.Item.Column.Border">1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.Item.Padding">0,0,20,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.Item.Property.Padding">2,3,2,3</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.LogAnalysisResultIndicator.Margin">3,0,3,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.MarkIndicator.Border">1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.MarkIndicator.Margin">3,0,3,0</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogListBox.Padding">0,0,0,20</Thickness>
+	<Thickness x:Key="Thickness/SessionView.LogsTimeInfoPanel.Arrow.Margin">10,5,10,5</Thickness>
+	<Thickness x:Key="Thickness/SessionView.MarkedLogListBox.Item.Border.Selected">1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.MarkedLogListBox.Item.Padding">5,3,5,3</Thickness>
+	<Thickness x:Key="Thickness/SessionView.Menu.MarkColorIcon.Border">1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.NoLogAnalysisRuleSetHint.Margin">10</Thickness>
+	<Thickness x:Key="Thickness/SessionView.NoPredefinedLogTextFilterHint.Margin">10</Thickness>
+	<Thickness x:Key="Thickness/SessionView.PredefinedLogTextFilterListBox.Item.Padding">8,5,20,5</Thickness>
+	<Thickness x:Key="Thickness/SessionView.PredefinedLogTextFiltersPopup.Border">1</Thickness>
+	<Thickness x:Key="Thickness/SessionView.PredefinedLogTextFiltersPopup.Padding">10</Thickness>
+	<Thickness x:Key="Thickness/SessionView.SidePanel.FullPanelHint.Text.Margin">10</Thickness>
+	<Thickness x:Key="Thickness/SessionView.SidePanel.Header.Button.Padding">5</Thickness>
+	<Thickness x:Key="Thickness/SessionView.SidePanel.Header.Padding">3</Thickness>
+	<Thickness x:Key="Thickness/SessionView.SidePanel.Header.Text.Left.Margin">5,5,0,5</Thickness>
+	<Thickness x:Key="Thickness/SessionView.SidePanel.Header.Text.Right.Margin">0,5,5,5</Thickness>
+	
+	<!-- StringLogPropertyMapEntryEditorDialog -->
+	<sys:Double x:Key="Double/StringLogPropertyMapEntryEditorDialog.Width">450</sys:Double>
+	<Thickness x:Key="Thickness/StringLogPropertyMapEntryEditorDialog.LogPropertyComboBox.Name.Margin">20,0,0,0</Thickness>
+
+	<!-- TextShellCommandInputDialog -->
+	<sys:Double x:Key="Double/TextShellCommandInputDialog.Command.Height">100</sys:Double>
+
+	<!-- VarAndConstComparisonEditorDialog -->
+	<sys:Double x:Key="Double/VarAndConstComparisonEditorDialog.ComparisonType.MinWidth">100</sys:Double>
+	<sys:Double x:Key="Double/VarAndConstComparisonEditorDialog.Width">600</sys:Double>
+
+	<!-- VisibleLogPropertyEditorDialog -->
+	<sys:Double x:Key="Double/VisibleLogPropertyEditorDialog.Width">500</sys:Double>
+	<Thickness x:Key="Thickness/VisibleLogPropertyEditorDialog.NameComboBox.Name.Margin">20,0,0,0</Thickness>
+	
+</ResourceDictionary>

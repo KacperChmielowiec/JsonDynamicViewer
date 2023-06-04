@@ -1,0 +1,13 @@
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
+    RequestPath = "/StaticFiles",
+    ContentTypeProvider = new FileExtensionContentTypeProvider(
+        new Dictionary<string, string>
+        {
+            { ".html", "text/html" },
+            { ".css", "text/css" }
+        })
+});
+app.UseHsts(options => options.MaxAge = TimeSpan.FromDays(30));
