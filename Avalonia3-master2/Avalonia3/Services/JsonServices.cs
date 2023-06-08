@@ -29,12 +29,15 @@ namespace Avalonia3.Services
         private ObservableCollection<ITabItem> Schemes = TabControlReferences.Schemes;
         private MainModelView View = MainModelView.Instance;
 
+       
+
+
         public void LoadTextJson(ItreeToken token)
         {
             if (token != null)
-                View.Schemes[View.Selected].Text = token.ToString();
+                View.Schemes[TabControlReferences.Tab.SelectedIndex].Text = token.ToString();
             else
-                View.Schemes[View.Selected].Text = string.Empty;
+                View.Schemes[TabControlReferences.Tab.SelectedIndex].Text = string.Empty;
             View.Enable = true;
             
             return;
@@ -121,15 +124,41 @@ namespace Avalonia3.Services
             return jObject;
 
         }
-        public async Task SetProcess(string Content, string Name, ButtonResult result)
+        public async Task<Guid> SetProcess(string Content, string Name, ButtonResult result)
         {
          
             Dictionary<Guid, ObjectContext> keyValuePairs = new Dictionary<Guid, ObjectContext>();
-            Guid guid = Guid.NewGuid();
-            ItreeToken Data = await this.LoadFromTextJson(Content, keyValuePairs, guid);
-            JsonMap.files.Add(new JsonFile(guid, keyValuePairs, Data.Id, Name));
-            if (guid != Guid.Empty || guid != null)
-                this.LoadDialogJson(guid,result);
+            Guid guid = Guid.Empty;
+            if (result == ButtonResult.Yes)
+            {
+                guid = Guid.NewGuid();
+                ItreeToken Data = await this.LoadFromTextJson(Content, keyValuePairs, guid);
+                JsonMap.files.Add(new JsonFile(guid, keyValuePairs, Data.Id, Name));
+                if (guid != Guid.Empty || guid != null)
+                    this.LoadDialogJson(guid, result);
+
+            }
+            else if (result == ButtonResult.No)
+            {
+                if (TabControlReferences.Tab.SelectedIndex > -1)
+                {
+                    Guid SelectedItem = View.SelectedTabItem.File;
+                    if (guid != Guid.Empty && guid != null)
+                    {
+
+                        this.LoadDialogJson(guid, result);
+                    }
+                    else
+                    {
+                        guid = Guid.NewGuid();
+                        ItreeToken Data = await this.LoadFromTextJson(Content, keyValuePairs, guid);
+                        JsonMap.files.Add(new JsonFile(guid, keyValuePairs, Data.Id, Name));
+                        if (guid != Guid.Empty || guid != null)
+                            this.LoadDialogJson(guid, result);
+                    }
+                }
+            }
+            return guid;
 
             
         }
