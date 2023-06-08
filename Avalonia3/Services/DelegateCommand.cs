@@ -17,6 +17,7 @@ namespace Avalonia3.Services
         public DelegateCommand(Action<object> execute)
             : this(execute, null)
         {
+
         }
 
         public DelegateCommand(Action<object> execute,
