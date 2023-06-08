@@ -11,7 +11,7 @@ namespace Avalonia3.References
     public static class WindowReferences
     {
         public static TextWindow TextWin {get;set;}
-        public static MainModelView MainModel { get; set; } = new MainModelView();
+        public static MainModelView MainModel { get; set; }
 
         public static ContentViewTree ContentViewMain { get; set; }
 

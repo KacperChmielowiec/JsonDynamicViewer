@@ -21,12 +21,11 @@ namespace Avalonia3
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                
+                WindowReferences.MainModel = new MainModelView();
                 WindowReferences.ContentViewMain = new ContentViewTree();
                 WindowReferences.AdvanceViewMain = new AdvanceView();
                 TabControlReferences.Tab = WindowReferences.ContentViewMain.FindControl<TabControl>("tabControl");
                 WindowReferences.MainModel.CurrentContent = WindowReferences.ContentViewMain;
-
                 desktop.MainWindow = new MainWindow()
                 {
 

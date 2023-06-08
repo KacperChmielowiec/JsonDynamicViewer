@@ -23,7 +23,7 @@
                        FontSize="14"
                        WordWrap="False">
 			<i:Interaction.Behaviors>
-				<behaviors:DocumentTextBindingBehavior  Text="{Binding Text, Mode=TwoWay}"/>
+				<behaviors:DocumentTextBindingBehavior Text="{Binding Text, Mode=TwoWay}"/>
 			</i:Interaction.Behaviors>
 			 
 		</ae:TextEditor>
