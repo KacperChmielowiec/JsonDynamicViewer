@@ -1,8 +1,0 @@
-Aby dodać migrację w konsoli Package Manager, wykonaj następujące kroki:
-
-Upewnij się, że konsola Package Manager jest ustawiona na projekt, w którym chcesz dodać migrację.
-Wpisz komendę Add-Migration Initial -Context AppIdentityDbContext i naciśnij Enter. Ta komenda doda migrację o nazwie "Initial" do kontekstu AppIdentityDbContext.
-Po wykonaniu tej komendy, nowa migracja zostanie utworzona w folderze Migrations w projekcie.
-Aby zaktualizować bazę danych za pomocą migracji, wykonaj następujące kroki:
-
-Wpisz komendę Update-Database -Context AppIdentityDbContext i naciśnij Enter. Ta komenda zaktualizuje bazę danych zgodnie z najnowszą migracją w kontekście AppIdentityDbContext.
