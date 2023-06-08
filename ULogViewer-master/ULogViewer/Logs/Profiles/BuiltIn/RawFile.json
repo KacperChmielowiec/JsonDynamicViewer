@@ -1,9 +1,0 @@
-﻿{
-	"AllowMultipleFiles": false,
-	"DataSource": {
-		"Name": "File"
-	},
-	"ColorIndicator": "FileName",
-	"Icon": "File",
-	"SortKey": "Id"
-}
