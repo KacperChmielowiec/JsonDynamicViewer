@@ -43,6 +43,7 @@ namespace Avalonia3.Views
             if (ModelView != null)
             {
                 var curr = ModelView.CurrentContent.FindControl<TabControl>("tabControl");
+
                 if (curr != null)
                 {
                     var tempItem = new Models.TabItemContent() { Text = "", Tag = 0 };

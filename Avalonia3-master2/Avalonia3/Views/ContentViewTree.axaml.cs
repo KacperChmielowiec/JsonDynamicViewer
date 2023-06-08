@@ -45,8 +45,11 @@ namespace Avalonia3.Views
         }
         public void SetTabItem(object sender, SelectionChangedEventArgs args)
         {
-            if (ModelView != null)
+            if (ModelView != null && !(sender is Image) && TabControlReferences.Tab.SelectedIndex > -1)
+            {
                 ModelView.SelectedTabItem = TabControlReferences.Schemes[TabControlReferences.Tab.SelectedIndex];
+                //ModelView.SelectedItem = TabControlReferences.Schemes[TabControlReferences.Tab.SelectedIndex].Json;
+            }
            
         }
     }

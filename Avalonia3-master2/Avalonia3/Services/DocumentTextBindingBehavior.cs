@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Xaml.Interactivity;
 using AvaloniaEdit;
@@ -12,14 +13,17 @@ namespace Avalonia3.Behaviors
         private TextEditor _textEditor = null;
 
         public static readonly StyledProperty<string> TextProperty =
-            AvaloniaProperty.Register<DocumentTextBindingBehavior, string>(nameof(Text));
+            AvaloniaProperty.Register<DocumentTextBindingBehavior, string>(nameof(Text), defaultBindingMode: BindingMode.TwoWay);
 
+        private string _text;
         public string Text
         {
-            get => GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
+            get => _text;
+            set
+            {
+                SetAndRaise(TextProperty, ref _text, value);
+            }
         }
-
         protected override void OnAttached()
         {
             base.OnAttached();

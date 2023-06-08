@@ -11,13 +11,13 @@
              x:Class="Avalonia3.Views.AdvanceView">
 	<UserControl.Resources>
 		<services:RowConverter x:Key="RowConverter"/>
-		
+
 	</UserControl.Resources>
 	<UserControl.Styles>
-		
+		<StyleInclude Source="/Styles/ArrayAndObjectNode.axaml" />
 		<StyleInclude Source="/Styles/ValueNode.axaml" />
 		<Style Selector="StackPanel.StackPanelAdvance">
-			<Setter Property="Background" Value="#202424" />
+			<Setter Property="Background" Value="#262626" />
 		</Style>
 		<Style Selector="StackPanel#EditorPanel">
 			<Setter Property="Background" Value="WhiteSmoke" />
@@ -134,7 +134,7 @@
 				</DockPanel>
 			</Button>
 		</DockPanel>
-		<DockPanel Name="DockMain" Grid.Row="1" Margin="100 50 100 50">
+		<DockPanel Name="DockMain" Grid.Row="1" Margin="100 50 100 50" MaxHeight="600">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"></ColumnDefinition>
@@ -143,21 +143,21 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"></RowDefinition>
 				</Grid.RowDefinitions>
-
+				<Border CornerRadius="8" Grid.Column="0"  Padding="10" Background="WhiteSmoke">
 					<ScrollViewer>
-						<StackPanel Name="EditorPanel"   Grid.Column="0" >
-							<v:EditorControl Name="Editor" DataContext="{Binding SelectedTabItem}" BackgroundProp="test" />
+						<StackPanel  Name="EditorPanel"   Grid.Column="0" >
+							<v:EditorControl  Name="Editor" DataContext="{Binding SelectedTabItem, Mode=TwoWay}" BackgroundProp="test" />
 						</StackPanel>
 					</ScrollViewer>
+				</Border>
+				<Border Grid.Column="1"  BorderThickness="1 0 0 0" >
 				
-				<Border Grid.Column="1"  BorderBrush="Black" BorderThickness="1 0 0 0">
-				<StackPanel  Classes="StackPanelAdvance">
-					<Border  Classes="presenter"  VerticalAlignment="Stretch">
+					<Border  Classes="presenter">
 						<ScrollViewer IsVisible="{Binding !Empty}" Classes="jsonWrap">
-							<u:ValueNode DataContext="{Binding ValueNode}" VerticalAlignment="Stretch"/>
+							<u:ValueNode DataContext="{Binding ValueNode}"/>
 						</ScrollViewer>
 					</Border>
-				</StackPanel>
+			
 				</Border>
 			</Grid>
 		</DockPanel>

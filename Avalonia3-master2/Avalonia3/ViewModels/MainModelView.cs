@@ -53,6 +53,7 @@ namespace Avalonia3.ViewModels
         private ITabItem _selectedTabItem;
         public Window Parent { get; set; }
 
+
         public TabControl TabControl { get; set; }
 
         [ObservableProperty]
@@ -71,13 +72,13 @@ namespace Avalonia3.ViewModels
         private UserControl _currentContent;
 
         [ObservableProperty]
-        private ValueNodeViewModel _valueNode = new ValueNodeViewModel();
+        private ValueNodeViewModel _valueNode;
 
         public ObservableCollection<ITabItem> Schemes { get; set; } = TabControlReferences.Schemes;
 
         private JsonServices _jsonServices;
         private TabControlService _tabControlService;
-
+        private AdvanceJsonService _advanceJsonService;
     
 
 
@@ -90,24 +91,23 @@ namespace Avalonia3.ViewModels
             RemoveCommand = new DelegateCommand(RemoveItem);
             OpenTextDialog = new RelayCommand(OpenText);
             SwapContent = new RelayCommand(Swap);
+
             _enable = false;
             Dialog = new DialogFileServieces("JsonDOM", ".json", "Text documents (.json)|*.json");
             this.Selected = 0;
-            
+            TabControl = TabControlReferences.Tab;
+            _valueNode = new ValueNodeViewModel();
             _jsonServices = new JsonServices();
             _tabControlService = new TabControlService(Parent);
+            _advanceJsonService = new AdvanceJsonService();
            
         }
         public void Swap()
         {
             if (this.CurrentContent is ContentViewTree)
-            {
                 this.CurrentContent = WindowReferences.AdvanceViewMain;
-            }
             else
-            {
                 this.CurrentContent = WindowReferences.ContentViewMain;
-            }   
         }
         public void RemoveItem(object item)
         {
@@ -121,6 +121,14 @@ namespace Avalonia3.ViewModels
         public void removeLeftButton()
         {
             _tabControlService.RemoveItem();
+            if(TabControlReferences.Tab.SelectedIndex > -1)
+            {
+                this.SelectedTabItem = this.Schemes[TabControlReferences.Tab.SelectedIndex] ?? null;
+            }
+            else
+            {
+                this.SelectedTabItem = new TabItemContent() { Text = ""};
+            }
         }
         public void CreateTab(ITabItem item)
         {
@@ -151,7 +159,11 @@ namespace Avalonia3.ViewModels
                     string Content = await Dialog.ShowFileDialog(Parent);
                     if (!string.IsNullOrEmpty(Content))
                     {
-                        _jsonServices.SetProcess(Content, Dialog.FileName,result);
+                        Guid _guid = await _jsonServices.SetProcess(Content, Dialog.FileName,result);
+                        if (_guid != Guid.Empty && _guid != null)
+                        {
+                            _advanceJsonService.LoadDataToChart(_guid,ValueNode);
+                        }
                     }
 
                 }
